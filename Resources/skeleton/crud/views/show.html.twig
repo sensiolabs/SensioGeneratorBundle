@@ -1,0 +1,18 @@
+<h1>{{ entity }} details</h1>
+
+<table class="record_properties">
+    <tbody>
+        {%- for field in fields %}
+
+        <tr>
+            <th>{{ field|capitalize }}</th>
+            <td>{{ '{{ entity.'~ field ~' }}' }}</td>
+        </tr>
+
+        {%- endfor %}
+
+    </tbody>
+</table>
+
+{% set hide_edit, hide_delete = false, false %}
+{% include dir ~'/views/others/record_actions.html.twig' %}

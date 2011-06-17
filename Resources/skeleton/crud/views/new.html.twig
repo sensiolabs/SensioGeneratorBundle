@@ -1,0 +1,11 @@
+<h1>Create new {{ entity }} entry</h1>
+
+<form action="{{ "{{ path('"~ route_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+    {{ "{{ form_widget(form) }}" }}
+    <p>
+        <button type="submit">Create</button>
+    </p>
+</form>
+
+{% set hide_edit, hide_delete = true, true %}
+{% include dir ~'/views/others/record_actions.html.twig' %}

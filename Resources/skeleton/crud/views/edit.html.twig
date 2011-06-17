@@ -1,0 +1,11 @@
+<h1>Edit an existing {{ entity }} entry</h1>
+
+<form action="{{ "{{ path('"~ route_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" method="post" {{ "{{ form_enctype(form) }}" }}>
+    {{ "{{ form_widget(form) }}" }}
+    <p>
+        <button type="submit">Edit</button>
+    </p>
+</form>
+
+{% set hide_edit, hide_delete = true, false %}
+{% include dir ~'/views/others/record_actions.html.twig' %}
