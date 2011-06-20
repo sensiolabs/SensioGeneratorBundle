@@ -12,8 +12,6 @@
 namespace Sensio\Bundle\GeneratorBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Sensio\Bundle\FrameworkExtraBundle\DependencyInjection\Compiler\AddParamConverterPass;
 
 /**
  * SensioGeneratorBundle.

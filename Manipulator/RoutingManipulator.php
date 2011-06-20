@@ -33,27 +33,26 @@ class RoutingManipulator extends Manipulator
     /**
      * Adds a routing resource at the top of the existing ones.
      *
-     * @param string $namespace
      * @param string $bundle
      * @param string $format
      *
      * @return Boolean true if it worked, false otherwise
      */
-    public function addResource($namespace, $bundle, $format)
+    public function addResource($bundle, $format, $prefix = '/', $path = 'routing')
     {
-        if (!file_exists($this->file)) {
-            return false;
-        }
-
-        $code = sprintf("%s:\n", $bundle);
+        $code = sprintf("%s:\n", $bundle.('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
         if ('annotation' == $format) {
-            $code .= sprintf("    resource: \"@%s/Resources/Controller/\"\n    type:     annotation\n", $bundle);
+            $code .= sprintf("    resource: \"@%s/Controller/\"\n    type:     annotation\n", $bundle);
         } else {
-            $code .= sprintf("    resource: \"@%s/Resources/config/routing.%s\"\n", $bundle, $format);
+            $code .= sprintf("    resource: \"@%s/Resources/config/%s.%s\"\n", $bundle, $path, $format);
         }
-        $code .= "    prefix:   /\n";
+        $code .= sprintf("    prefix:   %s\n", $prefix);
 
-        $code .= "\n".file_get_contents($this->file);
+        $code .= "\n";
+
+        if (file_exists($this->file)) {
+            $code .= file_get_contents($this->file);
+        }
 
         if (false === file_put_contents($this->file, $code)) {
             return false;
