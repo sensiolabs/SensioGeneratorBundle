@@ -11,10 +11,10 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
+use Symfony\Bundle\DoctrineBundle\Command\DoctrineCommand;
 
-abstract class GenerateDoctrineCommand extends Command
+abstract class GenerateDoctrineCommand extends DoctrineCommand
 {
     protected function parseShortcutNotation($shortcut)
     {
@@ -24,17 +24,12 @@ abstract class GenerateDoctrineCommand extends Command
             throw new \InvalidArgumentException(sprintf('The entity name must contain a : ("%s" given, expecting something like AcmeBlogBundle:Blog/Post)', $entity));
         }
 
-        $bundle = substr($entity, 0, $pos);
-        $entity = substr($entity, $pos + 1);
-
-        return array($bundle, $entity);
+        return array(substr($entity, 0, $pos), substr($entity, $pos + 1));
     }
 
     protected function getEntityMetadata($entity)
     {
-        $container = $this->getApplication()->getKernel()->getContainer();
-
-        $factory = new MetadataFactory($container->get('doctrine'));
+        $factory = new MetadataFactory($this->getContainer()->get('doctrine'));
 
         return $factory->getClassMetadata($entity)->getMetadata();
     }

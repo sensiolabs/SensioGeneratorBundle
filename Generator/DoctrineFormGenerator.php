@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Hugo Hamon <hugo.hamon@sensio.com>
  */
-class FormGenerator extends Generator
+class DoctrineFormGenerator extends Generator
 {
     private $filesystem;
     private $skeletonDir;

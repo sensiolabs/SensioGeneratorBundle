@@ -11,6 +11,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use {{ namespace }}\Entity\{{ entity }};
 use {{ namespace }}\Form\{{ entity }}Type;
 
+/**
+ * {{ entity }} controller.
+ *
+{% if 'annotation' == format %}
+ * @Route("/{{ route_prefix }}")
+{% endif %}
+ */
 class {{ entity_class }}Controller extends Controller
 {
 

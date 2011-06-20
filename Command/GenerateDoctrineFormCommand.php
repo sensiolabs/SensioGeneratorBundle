@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
-use Sensio\Bundle\GeneratorBundle\Generator\FormGenerator;
+use Sensio\Bundle\GeneratorBundle\Generator\DoctrineFormGenerator;
 
 /**
  * Generates a form type class for a given Doctrine entity.
@@ -28,8 +28,6 @@ use Sensio\Bundle\GeneratorBundle\Generator\FormGenerator;
  */
 class GenerateDoctrineFormCommand extends GenerateDoctrineCommand
 {
-    private $container;
-
     /**
      * @see Command
      */
@@ -56,17 +54,13 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->container = $this->getApplication()->getKernel()->getContainer();
-
         list($bundle, $entity) = $this->parseShortcutNotation($input->getArgument('entity'));
 
-        $entityClass = $this->container->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
+        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
         $metadata = $this->getEntityMetadata($entityClass);
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
-        $filesystem = $this->container->get('filesystem');
-
-        $generator = new FormGenerator($filesystem,  __DIR__.'/../Resources/skeleton/form');
+        $generator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'),  __DIR__.'/../Resources/skeleton/form');
         $generator->generate($bundle, $entity, $metadata[0]);
 
         $output->writeln(sprintf(

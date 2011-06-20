@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class CrudGenerator extends Generator
+class DoctrineCrudGenerator extends Generator
 {
     private $filesystem;
     private $skeletonDir;
@@ -29,36 +29,20 @@ class CrudGenerator extends Generator
     private $entity;
     private $metadata;
     private $format;
-    private $actions = array('index', 'show');
+    private $actions;
 
     /**
      * Constructor.
      *
      * @param Filesystem $filesystem A Filesystem instance
      * @param string $skeletonDir Path to the skeleton directory
-     * @param string $routePrefix The route name prefix
-     * @param array $needWriteActions Wether or not to generate write actions
      */
-    public function __construct(Filesystem $filesystem, $skeletonDir, $routePrefix, $needWriteActions = false)
+    public function __construct(Filesystem $filesystem, $skeletonDir)
     {
         parent::__construct();
 
         $this->filesystem  = $filesystem;
         $this->skeletonDir = $skeletonDir;
-        $this->routePrefix = $routePrefix;
-        $this->setWriteActions($needWriteActions);
-    }
-
-    /**
-     * Sets the list of write actions to generate.
-     *
-     * @param Boolean $mode Wether or not to generate write actions
-     */
-    public function setWriteActions($boolean)
-    {
-        if ($boolean) {
-            $this->actions = array_merge($this->actions, array('new', 'edit', 'delete'));
-        }
     }
 
     /**
@@ -68,10 +52,16 @@ class CrudGenerator extends Generator
      * @param string $entity The entity relative class name
      * @param ClassMetadataInfo $metadata The entity class metadata
      * @param string $format The configuration format (xml, yaml, annotation)
+     * @param string $routePrefix The route name prefix
+     * @param array $needWriteActions Wether or not to generate write actions
+     *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions)
     {
+        $this->routePrefix = $routePrefix;
+        $this->actions = $needWriteActions ? array('index', 'show', 'new', 'edit', 'delete') : array('index', 'show');
+
         if (count($metadata->identifier) > 1) {
             throw new \RuntimeException('The CRUD generator does not support entity classes with multiple primary keys.');
         }
@@ -141,7 +131,7 @@ class CrudGenerator extends Generator
         }
 
         $target = sprintf(
-            '%s/Resources/config/%s.routing.%s', 
+            '%s/Resources/config/routing/%s.%s', 
             $this->bundle->getPath(),
             strtolower(str_replace('\\', '_', $this->entity)),
             $this->format
