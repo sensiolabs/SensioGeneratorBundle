@@ -141,11 +141,7 @@ EOT
 
         // Entity exists?
         $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
-        try {
-            $metadata = $this->getEntityMetadata($entityClass);
-        } catch (MappingException $e) {
-            $this->generateEntity($bundle, $entity);
-        }
+        $metadata = $this->getEntityMetadata($entityClass);
 
         // write?
         $withWrite = $input->getOption('with-write') ?: false;
@@ -201,11 +197,6 @@ EOT
         }
 
         return array($bundle, $entity, $format, $prefix, $withWrite);
-    }
-
-    private function generateEntity($bundle, $entity)
-    {
-        exit('Not implemented yet...');
     }
 
     /**
