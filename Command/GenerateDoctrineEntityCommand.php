@@ -190,7 +190,7 @@ EOT
         }
         $output->writeln('');
 
-        $validator = function ($type) use ($types) {
+        $fieldValidator = function ($type) use ($types) {
             // FIXME: take into account user-defined field types
             if (!in_array($type, $types)) {
                 throw new \InvalidArgumentException(sprintf('Invalid type "%s".', $type));
@@ -199,14 +199,26 @@ EOT
             return $type;
         };
 
+        $lengthValidator = function ($length) {
+            $result = filter_var($length, FILTER_VALIDATE_INT, array(
+                'options' => array('min_range' => 1)
+            ));
+
+            if (false === $result) {
+                throw new \InvalidArgumentException(sprintf('Invalid length "%s".', $length));
+            }
+
+            return $length;
+        };
+
         while (true) {
             $output->writeln('');
             $name = $dialog->ask($output, $dialog->getQuestion('New field name (type return to stop adding fields)', null));
             if (!$name) {
                 break;
             }
-            $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $validator, false, 'string');
-            $length = $dialog->ask($output, $dialog->getQuestion('Field length', null), null);
+            $type   = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $fieldValidator, false, 'string');
+            $length = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', null), $lengthValidator, false, null);
 
             $fields[] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
         }
