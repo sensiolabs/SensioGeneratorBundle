@@ -211,7 +211,7 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $name = $dialog->ask($output, $dialog->getQuestion('New field name (type return to stop adding fields)', null));
+            $name = $dialog->ask($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null));
             if (!$name) {
                 break;
             }
