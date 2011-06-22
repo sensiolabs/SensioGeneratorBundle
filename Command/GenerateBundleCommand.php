@@ -38,11 +38,11 @@ class GenerateBundleCommand extends ContainerAwareCommand
     {
         $this
             ->setDefinition(array(
-                new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create', null),
-                new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle', null),
-                new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name', null),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or , annotation)', null),
-                new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure', null),
+                new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
+                new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
+                new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or , annotation)', 'annotation'),
+                new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure'),
             ))
             ->setDescription('Generates a bundle')
             ->setHelp(<<<EOT
@@ -78,16 +78,31 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $dialog = $this->getDialogHelper();
+
         if ($input->isInteractive()) {
-            if (false === $elements = $this->getInteractiveParameters($input, $output)) {
+            if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
+                $output->writeln('<error>Command aborted</error>');
+
                 return 1;
             }
-            list($namespace, $bundle, $dir, $format, $structure) = $elements;
-        } else {
-            list($namespace, $bundle, $dir, $format, $structure) = $this->getParameters($input, $output);
         }
 
-        $dialog = $this->getDialogHelper();
+        foreach (array('namespace', 'dir') as $option) {
+            if (null === $input->getOption($option)) {
+                throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
+            }
+        }
+
+        $namespace = Validators::validateNamespace($input->getOption('namespace'));
+        if (!$bundle = $input->getOption('bundle-name')) {
+            $bundle = strtr($namespace, array('\\' => ''));
+        }
+        $bundle = Validators::validateBundleName($bundle);
+        $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
+        $format = Validators::validateFormat($input->getOption('format'));
+        $structure = $input->getOption('structure');
+
         $dialog->writeSection($output, 'Bundle generation');
 
         if (!$this->getContainer()->get('filesystem')->isAbsolutePath($dir)) {
@@ -114,30 +129,7 @@ EOT
         $dialog->writeGeneratorSummary($output, $errors);
     }
 
-    private function getParameters(InputInterface $input, OutputInterface $output)
-    {
-        foreach (array('namespace', 'dir') as $option) {
-            if (null === $input->getOption($option)) {
-                throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
-            }
-        }
-
-        $namespace = Validators::validateNamespace($input->getOption('namespace'));
-
-        if (!$bundle = $input->getOption('bundle-name')) {
-            $bundle = strtr($namespace, array('\\' => ''));
-        }
-        $bundle = Validators::validateBundleName($bundle);
-
-        $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
-
-        $format = $input->getOption('format') ?: 'annotation';
-        $structure = $input->getOption('structure');
-
-        return array($namespace, $bundle, $dir, $format, $structure);
-    }
-
-    private function getInteractiveParameters(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getDialogHelper();
         $dialog->writeSection($output, 'Welcome to the Symfony2 bundle generator');
@@ -159,7 +151,7 @@ EOT
         ));
 
         $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateNamespace'), false, $input->getOption('namespace'));
-        $namespace = Validators::validateNamespace($namespace);
+        $input->setOption('namespace', $namespace);
 
         // bundle name
         $bundle = $input->getOption('bundle-name') ?: strtr($namespace, array('\\' => ''));
@@ -172,7 +164,7 @@ EOT
             '',
         ));
         $bundle = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle name', $bundle), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $bundle);
-        $bundle = Validators::validateBundleName($bundle);
+        $input->setOption('bundle-name', $bundle);
 
         // target dir
         $dir = $input->getOption('dir') ?: dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src';
@@ -183,17 +175,16 @@ EOT
             '',
         ));
         $dir = $dialog->askAndValidate($output, $dialog->getQuestion('Target directory', $dir), function ($dir) use ($bundle, $namespace) { return Validators::validateTargetDir($dir, $bundle, $namespace); }, false, $dir);
-        $dir = Validators::validateTargetDir($dir, $bundle, $namespace);
+        $input->setOption('dir', $dir);
 
         // format
-        $format = $input->getOption('format') ?: 'annotation';
         $output->writeln(array(
             '',
             'Determine the format to use for the generated configuration.',
             '',
         ));
-        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $format);
-        $format = Validators::validateFormat($format);
+        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $input->getOption('format')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $input->getOption('format'));
+        $input->setOption('format', $format);
 
         // optional files to generate
         $output->writeln(array(
@@ -207,6 +198,7 @@ EOT
         if (!$structure && $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the whole directory structure', 'no', '?'), false)) {
             $structure = true;
         }
+        $input->setOption('structure', $structure);
 
         // summary
         $output->writeln(array(
@@ -216,14 +208,6 @@ EOT
             sprintf("You are going to generate a \"<info>%s\\%s</info>\" bundle\nin \"<info>%s</info>\" using the \"<info>%s</info>\" format.", $namespace, $bundle, $dir, $format),
             '',
         ));
-
-        if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
-            $output->writeln('<error>Command aborted</error>');
-
-            return false;
-        }
-
-        return array($namespace, $bundle, $dir, $format, $structure);
     }
 
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)

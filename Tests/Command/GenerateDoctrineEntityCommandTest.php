@@ -42,10 +42,10 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
     public function getInteractiveCommandData()
     {
         return array(
-            array(array(), "AcmeBlogBundle:Blog/Post\n", array('Blog\\Post', 'yml', array())),
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), '', array('Blog\\Post', 'yml', array())),
-            array(array(), "AcmeBlogBundle:Blog/Post\nannotation\n\n", array('Blog\\Post', 'annotation', array())),
-            array(array(), "AcmeBlogBundle:Blog/Post\nannotation\ntitle\n\n255\ndescription\ntext\n\n", array('Blog\\Post', 'annotation', array(
+            array(array(), "AcmeBlogBundle:Blog/Post\n", array('Blog\\Post', 'annotation', array())),
+            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), '', array('Blog\\Post', 'annotation', array())),
+            array(array(), "AcmeBlogBundle:Blog/Post\nyml\n\n", array('Blog\\Post', 'yml', array())),
+            array(array(), "AcmeBlogBundle:Blog/Post\nyml\ntitle\n\n255\ndescription\ntext\n\n", array('Blog\\Post', 'yml', array(
                 array('fieldName' => 'title', 'type' => 'string', 'length' => 255),
                 array('fieldName' => 'description', 'type' => 'text', 'length' => ''),
             ))),
@@ -73,8 +73,8 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
     public function getNonInteractiveCommandData()
     {
         return array(
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), array('Blog\\Post', 'yml', array())),
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post', '--format' => 'annotation', '--fields' => 'title:string(255) description:text'), array('Blog\\Post', 'annotation', array(
+            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), array('Blog\\Post', 'annotation', array())),
+            array(array('--entity' => 'AcmeBlogBundle:Blog/Post', '--format' => 'yml', '--fields' => 'title:string(255) description:text'), array('Blog\\Post', 'yml', array(
                 array('fieldName' => 'title', 'type' => 'string', 'length' => 255),
                 array('fieldName' => 'description', 'type' => 'text', 'length' => ''),
             ))),

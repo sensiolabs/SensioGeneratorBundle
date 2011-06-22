@@ -54,7 +54,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        list($bundle, $entity) = $this->parseShortcutNotation($input->getArgument('entity'));
+        $entity = Validators::validateEntityName($input->getArgument('entity'));
+        list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
         $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
         $metadata = $this->getEntityMetadata($entityClass);

@@ -43,7 +43,7 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
                 new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
                 new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
             ))
             ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
@@ -68,16 +68,23 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $dialog = $this->getDialogHelper();
+
         if ($input->isInteractive()) {
-            if (false === $elements = $this->getInteractiveParameters($input, $output)) {
+            if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
+                $output->writeln('<error>Command aborted</error>');
+
                 return 1;
             }
-            list($bundle, $entity, $format, $prefix, $withWrite) = $elements;
-        } else {
-            list($bundle, $entity, $format, $prefix, $withWrite) = $this->getParameters($input, $output);
         }
 
-        $dialog = $this->getDialogHelper();
+        $entity = Validators::validateEntityName($input->getOption('entity'));
+        list($bundle, $entity) = $this->parseShortcutNotation($entity);
+
+        $format = Validators::validateFormat($input->getOption('format'));
+        $prefix = $this->getRoutePrefix($input, $entity);
+        $withWrite = $input->getOption('with-write');
+
         $dialog->writeSection($output, 'CRUD generation');
 
         $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
@@ -106,20 +113,7 @@ EOT
         $dialog->writeGeneratorSummary($output, $errors);
     }
 
-    private function getParameters(InputInterface $input, OutputInterface $output)
-    {
-        list($bundle, $entity) = $this->parseShortcutNotation($input->getOption('entity'));
-
-        return array(
-            $bundle,
-            $entity,
-            $input->getOption('format') ?: 'annotation',
-            $this->getRoutePrefix($input, $entity),
-            $input->getOption('with-write'),
-        );
-    }
-
-    private function getInteractiveParameters(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getDialogHelper();
         $dialog->writeSection($output, 'Welcome to the Doctrine2 CRUD generator');
@@ -136,7 +130,7 @@ EOT
         ));
 
         $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
-        $entity = Validators::validateEntityName($entity);
+        $input->setOption('entity', $entity);
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
         // Entity exists?
@@ -152,33 +146,28 @@ EOT
             '',
         ));
         $withWrite = $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the "write" actions', $withWrite ? 'yes' : 'no', '?'), $withWrite);
+        $input->setOption('with-write', $withWrite);
 
         // format
-        $format = $input->getOption('format') ?: 'annotation';
+        $format = $input->getOption('format');
         $output->writeln(array(
             '',
             'Determine the format to use for the generated CRUD.',
             '',
         ));
         $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $format);
-        $format = Validators::validateFormat($format);
+        $input->setOption('format', $format);
 
         // route prefix
         $prefix = $this->getRoutePrefix($input, $entity);
-        if ($prefix && '/' !== $prefix[0]) {
-            $prefix = '/'.$prefix;
-        }
-
         $output->writeln(array(
             '',
             'Determine the routes prefix (all the routes will be "mounted" under this',
             'prefix: /prefix/, /prefix/new, ...).',
             '',
         ));
-        $prefix = $dialog->ask($output, $dialog->getQuestion('Routes prefix', $prefix), $prefix);
-        if ($prefix && '/' === $prefix[0]) {
-            $prefix = substr($prefix, 1);
-        }
+        $prefix = $dialog->ask($output, $dialog->getQuestion('Routes prefix', '/'.$prefix), '/'.$prefix);
+        $input->setOption('route-prefix', $prefix);
 
         // summary
         $output->writeln(array(
@@ -189,14 +178,6 @@ EOT
             sprintf("using the \"<info>%s</info>\" format.", $format),
             '',
         ));
-
-        if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
-            $output->writeln('<error>Command aborted</error>');
-
-            return false;
-        }
-
-        return array($bundle, $entity, $format, $prefix, $withWrite);
     }
 
     /**
@@ -239,7 +220,13 @@ EOT
 
     protected function getRoutePrefix(InputInterface $input, $entity)
     {
-        return $input->getOption('route-prefix') ?: strtolower(str_replace(array('\\', '/'), '_', $entity));
+        $prefix = $input->getOption('route-prefix') ?: strtolower(str_replace(array('\\', '/'), '_', $entity));
+
+        if ($prefix && '/' === $prefix[0]) {
+            $prefix = substr($prefix, 1);
+        }
+
+        return $prefix;
     }
 
     protected function getGenerator()

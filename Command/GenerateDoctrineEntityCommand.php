@@ -36,7 +36,7 @@ class GenerateDoctrineEntityCommand extends GenerateDoctrineCommand
             ->setDescription('Generates a new Doctrine entity inside a bundle')
             ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)')
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'The fields to create with the new entity')
-            ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'The mapping type to to use for the entity')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation')
             ->setHelp(<<<EOT
 The <info>doctrine:generate:entity</info> task generates a new Doctrine
 entity inside a bundle:
@@ -64,16 +64,21 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $dialog = $this->getDialogHelper();
+
         if ($input->isInteractive()) {
-            if (false === $elements = $this->getInteractiveParameters($input, $output)) {
+            if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
+                $output->writeln('<error>Command aborted</error>');
+
                 return 1;
             }
-            list($bundle, $entity, $format, $fields) = $elements;
-        } else {
-            list($bundle, $entity, $format, $fields) = $this->getParameters($input, $output);
         }
 
-        $dialog = $this->getDialogHelper();
+        $entity = Validators::validateEntityName($input->getOption('entity'));
+        list($bundle, $entity) = $this->parseShortcutNotation($entity);
+        $format = Validators::validateFormat($input->getOption('format'));
+        $fields = $this->parseFields($input->getOption('fields'));
+
         $dialog->writeSection($output, 'Entity generation');
 
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
@@ -86,14 +91,7 @@ EOT
         $dialog->writeGeneratorSummary($output, array());
     }
 
-    private function getParameters(InputInterface $input, OutputInterface $output)
-    {
-        list($bundle, $entity) = $this->parseShortcutNotation($input->getOption('entity'));
-
-        return array($bundle, $entity, $input->getOption('format') ?: 'annotation', $this->parseFields($input->getOption('fields')));
-    }
-
-    private function getInteractiveParameters(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getDialogHelper();
         $dialog->writeSection($output, 'Welcome to the Doctrine2 entity generator');
@@ -108,21 +106,21 @@ EOT
             ''
         ));
         $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
-        $entity = Validators::validateEntityName($entity);
+        $input->setOption('entity', $entity);
+
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
         // format
-        $format = $input->getOption('format') ?: 'annotation';
         $output->writeln(array(
             '',
             'Determine the format to use for the mapping information.',
             '',
         ));
-        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $format);
-        $format = Validators::validateFormat($format);
+        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $input->getOption('format')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $input->getOption('format'));
+        $input->setOption('format', $format);
 
         // fields
-        $fields = $this->addFields($input, $output, $dialog);
+        $input->setOption('fields', $this->addFields($input, $output, $dialog));
 
         // summary
         $output->writeln(array(
@@ -133,18 +131,14 @@ EOT
             sprintf("using the \"<info>%s</info>\" format.", $format),
             '',
         ));
-
-        if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
-            $output->writeln('<error>Command aborted</error>');
-
-            return false;
-        }
-
-        return array($bundle, $entity, $format, $fields);
     }
 
     private function parseFields($input)
     {
+        if (is_array($input)) {
+            return $input;
+        }
+
         $fields = array();
         foreach (explode(' ', $input) as $value) {
             $elements = explode(':', $value);
@@ -200,6 +194,10 @@ EOT
         };
 
         $lengthValidator = function ($length) {
+            if (!$length) {
+                return $length;
+            }
+
             $result = filter_var($length, FILTER_VALIDATE_INT, array(
                 'options' => array('min_range' => 1)
             ));
