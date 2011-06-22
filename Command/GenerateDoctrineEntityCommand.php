@@ -102,7 +102,7 @@ EOT
             'This command helps you generate Doctrine2 entities.',
             '',
             'First, you need to give the entity name you want to generate.',
-            'You must use the shortcut notation like <comment>BlogBundle:Post</comment>.',
+            'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
             ''
         ));
         $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));

@@ -126,7 +126,9 @@ EOT
             'First, you need to give the entity for which you want to generate a CRUD.',
             'You can give an entity that does not exist yet and the wizard will help',
             'you defining it.',
-            ''
+            '',
+            'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
+            '',
         ));
 
         $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
