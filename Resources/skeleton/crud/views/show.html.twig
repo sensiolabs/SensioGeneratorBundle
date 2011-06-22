@@ -1,12 +1,16 @@
-<h1>{{ entity }} details</h1>
+<h1>{{ entity }}</h1>
 
 <table class="record_properties">
     <tbody>
-        {%- for field in fields %}
+        {%- for field, metadata in fields %}
 
         <tr>
             <th>{{ field|capitalize }}</th>
-            <td>{{ '{{ entity.'~ field ~' }}' }}</td>
+            {%- if metadata.type in ['date', 'datetime'] %}
+                <td>{{ '{{ entity.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}' }}</td>
+            {%- else %}
+                <td>{{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}</td>
+            {%- endif %}
         </tr>
 
         {%- endfor %}

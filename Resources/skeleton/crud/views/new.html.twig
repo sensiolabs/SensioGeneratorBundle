@@ -1,4 +1,4 @@
-<h1>Create new {{ entity }} entry</h1>
+<h1>{{ entity }} creation</h1>
 
 <form action="{{ "{{ path('"~ route_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
     {{ "{{ form_widget(form) }}" }}

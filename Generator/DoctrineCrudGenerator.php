@@ -227,7 +227,7 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile($target, array(
             'dir'            => $this->skeletonDir,
             'entity'         => $this->entity,
-            'fields'         => $this->metadata->fieldNames,
+            'fields'         => $this->metadata->fieldMappings,
             'actions'        => $this->actions,
             'record_actions' => $this->getRecordActions(),
             'route_prefix'   => $this->routePrefix,
@@ -247,7 +247,7 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile($target, array(
             'dir'          => $this->skeletonDir,
             'entity'       => $this->entity,
-            'fields'       => $this->metadata->fieldNames,
+            'fields'       => $this->metadata->fieldMappings,
             'actions'      => $this->actions,
             'route_prefix' => $this->routePrefix,
         ));
