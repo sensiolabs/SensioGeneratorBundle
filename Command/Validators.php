@@ -25,7 +25,7 @@ class Validators
         }
 
         $namespace = strtr($namespace, '/', '\\');
-        if (preg_match('/[^A-Za-z0-9_\\\-]/', $namespace)) {
+        if (!preg_match('/^(?:[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*\\\?)+$/', $namespace)) {
             throw new \InvalidArgumentException('The namespace contains invalid characters.');
         }
 
