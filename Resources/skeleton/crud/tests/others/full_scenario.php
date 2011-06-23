@@ -36,7 +36,7 @@
         $this->assertTrue($crawler->filter('[value="Foo"]')->count() > 0);
 
         // Delete the entity
-        $client->click($crawler->selectLink('Delete')->link());
+        $client->submit($crawler->selectButton('Delete')->form());
         $crawler = $client->followRedirect();
 
         // Check the entity has been delete on the list

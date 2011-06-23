@@ -13,9 +13,10 @@
 {% endif %}
 {% if ('delete' in actions) and (not hide_delete) %}
     <li>
-        <a href="{{ "{{ path('"~ route_prefix ~"_delete', { 'id': entity.id }) }}" }}">
-            Delete
-        </a>
+        <form action="{{ "{{ path('"~ route_prefix ~"_delete', { 'id': entity.id }) }}" }}" method="post">
+            {{ '{{ form_widget(delete_form) }}' }}
+            <button type="submit">Delete</button>
+        </form>
     </li>
 {% endif %}
 </ul>

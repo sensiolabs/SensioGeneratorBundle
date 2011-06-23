@@ -19,6 +19,7 @@
 
     <route id="{{ route_prefix }}_create" pattern="/create">
         <default key="_controller">{{ bundle }}:{{ entity }}:create</default>
+        <requirement key="_method">post</requirement>
     </route>
 {% endif %}
 
@@ -29,12 +30,14 @@
 
     <route id="{{ route_prefix }}_update" pattern="/{id}/update">
         <default key="_controller">{{ bundle }}:{{ entity }}:update</default>
+        <requirement key="_method">post</requirement>
     </route>
 {% endif %}
 
 {% if 'delete' in actions %}
     <route id="{{ route_prefix }}_delete" pattern="/{id}/delete">
         <default key="_controller">{{ bundle }}:{{ entity }}:delete</default>
+        <requirement key="_method">post</requirement>
     </route>
 {% endif %}
 

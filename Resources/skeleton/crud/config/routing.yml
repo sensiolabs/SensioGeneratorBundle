@@ -18,6 +18,7 @@
 {{ route_prefix }}_create:
     pattern:  /create
     defaults: { _controller: "{{ bundle }}:{{ entity }}:create" }
+    requirements: { _method: post }
 {% endif %}
 
 {% if 'edit' in actions %}
@@ -28,10 +29,12 @@
 {{ route_prefix }}_update:
     pattern:  /{id}/update
     defaults: { _controller: "{{ bundle }}:{{ entity }}:update" }
+    requirements: { _method: post }
 {% endif %}
 
 {% if 'delete' in actions %}
 {{ route_prefix }}_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
+    requirements: { _method: post }
 {% endif %}

@@ -17,11 +17,17 @@
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
+        $deleteForm = $this->createDeleteForm($id);
+
 {% if 'annotation' == format %}
-        return array('entity' => $entity);
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            'entity' => $entity
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
         ));
 {% endif %}
     }

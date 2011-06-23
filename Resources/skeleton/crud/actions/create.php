@@ -4,6 +4,7 @@
      *
 {% if 'annotation' == format %}
      * @Route("/create", name="{{ route_prefix }}_create")
+     * @Method("post")
      * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
 {% endif %}
      */
