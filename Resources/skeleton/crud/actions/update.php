@@ -4,6 +4,7 @@
      *
 {% if 'annotation' == format %}
      * @Route("/{id}/update", name="{{ route_prefix }}_update")
+     * @Method("post")
      * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
 {% endif %}
      */
@@ -17,14 +18,15 @@
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
-        $form = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $editForm   = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $editForm->bindRequest($request);
 
-            if ($form->isValid()) {
+            if ($editForm->isValid()) {
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($entity);
                 $em->flush();
@@ -35,13 +37,15 @@
 
 {% if 'annotation' == format %}
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView()
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView()
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
         ));
 {% endif %}
     }

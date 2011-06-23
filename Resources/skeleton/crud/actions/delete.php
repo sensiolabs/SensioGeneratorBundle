@@ -4,20 +4,37 @@
      *
 {% if 'annotation' == format %}
      * @Route("/{id}/delete", name="{{ route_prefix }}_delete")
+     * @Method("post")
 {% endif %}
      */
     public function deleteAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $form = $this->createDeleteForm($id);
+        $request = $this->getRequest();
 
-        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+
+                if (!$entity) {
+                    throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+                }
+
+                $em->remove($entity);
+                $em->flush();
+            }
         }
 
-        $em->remove($entity);
-        $em->flush();
-
         return $this->redirect($this->generateUrl('{{ route_prefix }}'));
+    }
+
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }

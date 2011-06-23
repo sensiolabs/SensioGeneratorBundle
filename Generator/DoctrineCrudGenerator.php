@@ -111,6 +111,7 @@ class DoctrineCrudGenerator extends Generator
         switch ($format) {
             case 'yml':
             case 'xml':
+            case 'php':
             case 'annotation':
                 $this->format = $format;
                 break;
@@ -126,7 +127,7 @@ class DoctrineCrudGenerator extends Generator
      */
     private function generateConfiguration()
     {
-        if (!in_array($this->format, array('yml', 'xml'))) {
+        if (!in_array($this->format, array('yml', 'xml', 'php'))) {
             return;
         }
 
@@ -290,14 +291,14 @@ class DoctrineCrudGenerator extends Generator
     }
 
     /**
-     * Returns an array of record actions to generate (edit, show, delete).
+     * Returns an array of record actions to generate (edit, show).
      *
      * @return array
      */
     private function getRecordActions()
     {
         return array_filter($this->actions, function($item) {
-            return in_array($item, array('show', 'edit', 'delete'));
+            return in_array($item, array('show', 'edit'));
         });
     }
 }
