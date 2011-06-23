@@ -52,6 +52,8 @@ class RoutingManipulator extends Manipulator
 
         if (file_exists($this->file)) {
             $code .= file_get_contents($this->file);
+        } else if(!is_dir($dir = dirname($this->file))) {
+            mkdir($dir, true);
         }
 
         if (false === file_put_contents($this->file, $code)) {

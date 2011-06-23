@@ -30,7 +30,14 @@ abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
 
     protected function getBundle()
     {
-        return $this->getMock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $bundle
+            ->expects($this->any())
+            ->method('getPath')
+            ->will($this->returnValue(sys_get_temp_dir()))
+        ;
+
+        return $bundle;
     }
 
     protected function getInputStream($input)
@@ -62,7 +69,7 @@ abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
         $container->set('kernel', $kernel);
         $container->set('filesystem', $filesystem);
 
-        $container->setParameter('kernel.root_dir', '/tmp');
+        $container->setParameter('kernel.root_dir', sys_get_temp_dir());
 
         return $container;
     }
