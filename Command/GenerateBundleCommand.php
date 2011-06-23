@@ -94,7 +94,7 @@ EOT
             }
         }
 
-        $namespace = Validators::validateNamespace($input->getOption('namespace'));
+        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'));
         if (!$bundle = $input->getOption('bundle-name')) {
             $bundle = strtr($namespace, array('\\' => ''));
         }
@@ -150,7 +150,7 @@ EOT
             '',
         ));
 
-        $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateNamespace'), false, $input->getOption('namespace'));
+        $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleNamespace'), false, $input->getOption('namespace'));
         $input->setOption('namespace', $namespace);
 
         // bundle name
