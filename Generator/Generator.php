@@ -19,14 +19,10 @@ namespace Sensio\Bundle\GeneratorBundle\Generator;
 class Generator
 {
     private $twig;
-    private $stringLoader;
-    private $fileLoader;
 
     public function __construct()
     {
-        $this->fileLoader = new \Twig_Loader_Filesystem('/');
-        $this->stringLoader = new \Twig_Loader_String();
-        $this->twig = new \Twig_Environment($this->fileLoader, array(
+        $this->twig = new \Twig_Environment(new \Twig_Loader_String(), array(
             'debug'            => true,
             'cache'            => false,
             'strict_variables' => true,
@@ -44,13 +40,7 @@ class Generator
      */
     public function renderString($string, array $parameters)
     {
-        $this->twig->setLoader($this->stringLoader);
-
-        $ret = $this->twig->render($string, $parameters);
-
-        $this->twig->setLoader($this->fileLoader);
-
-        return $ret;
+        return $this->twig->render($string, $parameters);
     }
 
     /**
@@ -61,7 +51,7 @@ class Generator
      */
     public function renderFile($file, array $parameters)
     {
-        file_put_contents($file, $this->twig->render($file, $parameters));
+        file_put_contents($file, $this->twig->render(file_get_contents($file), $parameters));
     }
 
     /**
