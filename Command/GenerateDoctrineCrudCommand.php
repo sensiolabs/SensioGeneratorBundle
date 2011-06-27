@@ -51,11 +51,11 @@ The <info>doctrine:generate:crud</info> command generates a CRUD based on a Doct
 
 The default command only generates the list and show actions.
 
-<info>./app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
+<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
 
 Using the --write option allows to generate the new, edit and delete actions.
 
-<info>./app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
+<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
 EOT
             )
             ->setName('doctrine:generate:crud')
