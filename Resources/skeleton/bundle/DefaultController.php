@@ -13,7 +13,7 @@ class DefaultController extends Controller
 {
     {% if 'annotation' == format -%}
     /**
-     * @Route("/{name}")
+     * @Route("/hello/{name}")
      * @Template()
      */
     {%- endif %}

@@ -30,8 +30,6 @@ class DoctrineFormGenerator extends Generator
 
     public function __construct(Filesystem $filesystem, $skeletonDir)
     {
-        parent::__construct();
-
         $this->filesystem = $filesystem;
         $this->skeletonDir = $skeletonDir;
     }
@@ -60,7 +58,7 @@ class DoctrineFormGenerator extends Generator
 
         $this->className = $entityClass.'Type';
         $dirPath         = $bundle->getPath().'/Form';
-        $this->classPath = $dirPath .'/'. str_replace('\\', '/', $entity) .'Type.php';
+        $this->classPath = $dirPath.'/'.str_replace('\\', '/', $entity).'Type.php';
 
         if (file_exists($this->classPath)) {
             throw new \RuntimeException(sprintf('Unable to generate the %s form class as it already exists under the %s file', $this->className, $this->classPath));
@@ -70,12 +68,10 @@ class DoctrineFormGenerator extends Generator
             throw new \RuntimeException('The form generator does not support entity classes with multiple primary keys.');
         }
 
-        $this->filesystem->copy($this->skeletonDir.'/FormType.php', $this->classPath);
-
         $parts = explode('\\', $entity);
         array_pop($parts);
 
-        $this->renderFile($this->classPath, array(
+        $this->renderFile($this->skeletonDir, 'FormType.php', $this->classPath, array(
             'dir'              => $this->skeletonDir,
             'fields'           => $this->getFieldsFromMetadata($metadata),
             'namespace'        => $bundle->getNamespace(),

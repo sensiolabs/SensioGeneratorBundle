@@ -25,24 +25,31 @@ class BundleGenerator extends Generator
 
     public function __construct(Filesystem $filesystem, $skeletonDir)
     {
-        parent::__construct();
-
         $this->filesystem = $filesystem;
         $this->skeletonDir = $skeletonDir;
     }
 
     public function generate($namespace, $bundle, $dir, $format, $structure)
     {
-        $dir .= strtr($namespace, '\\', '/');
+        $dir .= '/'.strtr($namespace, '\\', '/');
         if (file_exists($dir)) {
             throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" is not empty.', realpath($dir)));
         }
 
-        $this->filesystem->mirror($this->skeletonDir.'/generic', $dir);
+        $parameters = array(
+            'namespace' => $namespace,
+            'bundle'    => $bundle,
+            'format'    => $format,
+        );
+
+        $this->renderFile($this->skeletonDir, 'Bundle.php', $dir.'/'.$bundle.'.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'DefaultController.php', $dir.'/Controller/DefaultController.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'DefaultControllerTest.php', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'index.html.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
+
         if ('annotation' != $format) {
-            $this->filesystem->mirror($this->skeletonDir.'/'.$format, $dir);
+            $this->renderFile($this->skeletonDir, 'routing.'.$format, $dir.'/Resources/config/routing.'.$format, $parameters);
         }
-        rename($dir.'/Bundle.php', $dir.'/'.$bundle.'.php');
 
         if ($structure) {
             $this->filesystem->mkdir($dir.'/Resources/doc');
@@ -53,11 +60,5 @@ class BundleGenerator extends Generator
             $this->filesystem->mkdir($dir.'/Resources/public/images');
             $this->filesystem->mkdir($dir.'/Resources/public/js');
         }
-
-        $this->renderDir($dir, array(
-            'namespace' => $namespace,
-            'bundle'    => $bundle,
-            'format'    => $format,
-        ));
     }
 }

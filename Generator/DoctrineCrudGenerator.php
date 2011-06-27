@@ -39,8 +39,6 @@ class DoctrineCrudGenerator extends Generator
      */
     public function __construct(Filesystem $filesystem, $skeletonDir)
     {
-        parent::__construct();
-
         $this->filesystem  = $filesystem;
         $this->skeletonDir = $skeletonDir;
     }
@@ -80,7 +78,7 @@ class DoctrineCrudGenerator extends Generator
         $dir = sprintf('%s/Resources/views/%s', $this->bundle->getPath(), str_replace('\\', '/', $this->entity));
 
         if (!file_exists($dir)) {
-            $this->filesystem->mkdir($dir, 0755);
+            $this->filesystem->mkdir($dir, 0777);
         }
 
         $this->generateIndexView($dir);
@@ -138,12 +136,7 @@ class DoctrineCrudGenerator extends Generator
             $this->format
         );
 
-        $this->filesystem->copy(
-            $this->skeletonDir.'/config/routing.'.$this->format,
-            $target
-        );
-
-        $this->renderFile($target, array(
+        $this->renderFile($this->skeletonDir, 'config/routing.'.$this->format, $target, array(
             'actions'      => $this->actions,
             'route_prefix' => $this->routePrefix,
             'bundle'       => $this->bundle->getName(),
@@ -174,9 +167,7 @@ class DoctrineCrudGenerator extends Generator
             throw new \RuntimeException('Unable to generate the controller as it already exists.');
         }
 
-        $this->filesystem->copy($this->skeletonDir.'/controller.php', $target);
-
-        $this->renderFile($target, array(
+        $this->renderFile($this->skeletonDir, 'controller.php', $target, array(
             'actions'          => $this->actions,
             'route_prefix'     => $this->routePrefix,
             'dir'              => $this->skeletonDir,
@@ -202,9 +193,7 @@ class DoctrineCrudGenerator extends Generator
         $dir    = $this->bundle->getPath() .'/Tests/Controller';
         $target = $dir .'/'. str_replace('\\', '/', $entityNamespace).'/'. $entityClass .'ControllerTest.php';
 
-        $this->filesystem->copy($this->skeletonDir.'/tests/test.php', $target);
-
-        $this->renderFile($target, array(
+        $this->renderFile($this->skeletonDir, 'tests/test.php', $target, array(
             'route_prefix'     => $this->routePrefix, 
             'entity'           => $this->entity,
             'entity_class'     => $entityClass,
@@ -222,10 +211,7 @@ class DoctrineCrudGenerator extends Generator
      */
     private function generateIndexView($dir)
     {
-        $target = $dir.'/index.html.twig';
-        $this->filesystem->copy($this->skeletonDir.'/views/index.html.twig', $target);
-
-        $this->renderFile($target, array(
+        $this->renderFile($this->skeletonDir, 'views/index.html.twig', $dir.'/index.html.twig', array(
             'dir'            => $this->skeletonDir,
             'entity'         => $this->entity,
             'fields'         => $this->metadata->fieldMappings,
@@ -242,10 +228,7 @@ class DoctrineCrudGenerator extends Generator
      */
     private function generateShowView($dir)
     {
-        $target = $dir.'/show.html.twig';
-        $this->filesystem->copy($this->skeletonDir.'/views/show.html.twig', $target);
-
-        $this->renderFile($target, array(
+        $this->renderFile($this->skeletonDir, 'views/show.html.twig', $dir.'/show.html.twig', array(
             'dir'          => $this->skeletonDir,
             'entity'       => $this->entity,
             'fields'       => $this->metadata->fieldMappings,
@@ -261,10 +244,7 @@ class DoctrineCrudGenerator extends Generator
      */
     private function generateNewView($dir)
     {
-        $target = $dir.'/new.html.twig';
-        $this->filesystem->copy($this->skeletonDir.'/views/new.html.twig', $target);
-
-        $this->renderFile($target, array(
+        $this->renderFile($this->skeletonDir, 'views/new.html.twig', $dir.'/new.html.twig', array(
             'dir'          => $this->skeletonDir,
             'route_prefix' => $this->routePrefix,
             'entity'       => $this->entity,
@@ -279,10 +259,7 @@ class DoctrineCrudGenerator extends Generator
      */
     private function generateEditView($dir)
     {
-        $target = $dir.'/edit.html.twig';
-        $this->filesystem->copy($this->skeletonDir.'/views/edit.html.twig', $target);
-
-        $this->renderFile($target, array(
+        $this->renderFile($this->skeletonDir, 'views/edit.html.twig', $dir.'/edit.html.twig', array(
             'dir'          => $this->skeletonDir,
             'route_prefix' => $this->routePrefix,
             'entity'       => $this->entity,

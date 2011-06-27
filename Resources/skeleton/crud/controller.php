@@ -23,25 +23,25 @@ class {{ entity_class }}Controller extends Controller
 {
 
     {%- if 'index' in actions %}
-        {%- include dir ~ '/actions/index.php' %}
+        {%- include 'actions/index.php' %}
     {%- endif %}
 
     {%- if 'show' in actions %}
-        {%- include dir ~ '/actions/show.php' %}
+        {%- include 'actions/show.php' %}
     {%- endif %}
 
     {%- if 'new' in actions %}
-        {%- include dir ~ '/actions/new.php' %}
-        {%- include dir ~ '/actions/create.php' %}
+        {%- include 'actions/new.php' %}
+        {%- include 'actions/create.php' %}
     {%- endif %}
 
     {%- if 'edit' in actions %}
-        {%- include dir ~ '/actions/edit.php' %}
-        {%- include dir ~ '/actions/update.php' %}
+        {%- include 'actions/edit.php' %}
+        {%- include 'actions/update.php' %}
     {%- endif %}
 
     {%- if 'delete' in actions %}
-        {%- include dir ~ '/actions/delete.php' %}
+        {%- include 'actions/delete.php' %}
     {%- endif %}
 
 }

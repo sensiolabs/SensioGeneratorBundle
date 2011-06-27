@@ -18,54 +18,19 @@ namespace Sensio\Bundle\GeneratorBundle\Generator;
  */
 class Generator
 {
-    private $twig;
-
-    public function __construct()
+    protected function renderFile($skeletonDir, $template, $target, $parameters)
     {
-        $this->twig = new \Twig_Environment(new \Twig_Loader_String(), array(
+        if (!is_dir(dirname($target))) {
+            mkdir(dirname($target), 0777, true);
+        }
+
+        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($skeletonDir), array(
             'debug'            => true,
             'cache'            => false,
             'strict_variables' => true,
             'autoescape'       => false,
         ));
-    }
 
-    /**
-     * Renders a string.
-     *
-     * @param string $string     The string to render
-     * @param array  $parameters The parameters
-     *
-     * @return string The rendered string
-     */
-    public function renderString($string, array $parameters)
-    {
-        return $this->twig->render($string, $parameters);
-    }
-
-    /**
-     * Renders a file in-place.
-     *
-     * @param string $file       The template filename to render
-     * @param array  $parameters The parameters
-     */
-    public function renderFile($file, array $parameters)
-    {
-        file_put_contents($file, $this->twig->render(file_get_contents($file), $parameters));
-    }
-
-    /**
-     * Renders a directory recursively
-     *
-     * @param string $dir Path to the directory that will be recursively rendered
-     * @param array $parameters
-     */
-    public function renderDir($dir, array $parameters)
-    {
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
-            if ($file->isFile()) {
-                $this->renderFile((string) $file, $parameters);
-            }
-        }
+        file_put_contents($target, $twig->render($template, $parameters));
     }
 }
