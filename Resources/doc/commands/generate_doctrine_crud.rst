@@ -18,7 +18,12 @@ By default the command is run in the interactive mode and asks questions to
 determine the entity name, the route prefix or whether or not to generate write
 actions.::
 
-    $ ./app/console generate:doctrine:crud
+    php app/console generate:doctrine:crud
+
+To deactivate the interactive mode, use the `--no-interaction` option but don't
+forget to pass all needed options.::
+
+    php app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post --format=annotation --with-write --no-interaction
 
 Available Options
 -----------------
@@ -28,18 +33,18 @@ Available Options
     which the entity is located and the name of the entity. For example:
     ``AcmeBlogBundle:Post``.::
 
-    $ ./app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post
+    php app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post
 
 * ``--route-prefix``:
     The prefix to use for each route that identifies an action.::
 
-    $ ./app/console generate:doctrine:crud --route-prefix=acme_post
+    php app/console generate:doctrine:crud --route-prefix=acme_post
 
 * ``--with-write``: (**no**) [values: yes|no]
     Whether or not to generate the `new`, `create`, `edit`, `update` and
     `delete` actions.::
 
-    $ ./app/console generate:doctrine:crud --with-write=yes
+    php app/console generate:doctrine:crud --with-write
 
 * ``--format``: (**annotation**) [values: yml, xml, php or annotation]
     Determine the format to use for the generated configuration files like
@@ -47,4 +52,4 @@ Available Options
     the ``annotation`` format expects the ``SensioFrameworkExtraBundle`` is
     already installed.::
 
-    $ ./app/console generate:doctrine:crud --format=annotation
+    php app/console generate:doctrine:crud --format=annotation

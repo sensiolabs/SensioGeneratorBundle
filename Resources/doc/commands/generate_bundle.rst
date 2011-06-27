@@ -11,7 +11,12 @@ By default the command is run in the interactive mode and asks questions to
 determine the bundle name, location, configuration format and default
 structure.::
 
-    $ ./app/console generate:bundle
+    php app/console generate:bundle
+
+To deactivate the interactive mode, use the `--no-interaction` option but don't
+forget to pass all needed options.::
+
+    php app/console generate:bundle --namespace=Acme/Bundle/BlogBundle --no-interaction
 
 Available Options
 -----------------
@@ -23,19 +28,19 @@ Available Options
     should end with the bundle name itself (which must have Bundle as a
     suffix).::
 
-    $ ./app/console generate:bundle --namespace=Acme/Bundle/BlogBundle
+    php app/console generate:bundle --namespace=Acme/Bundle/BlogBundle
 
 * ``--bundle-name``:
     The optional bundle name. It must be a string ending with the ``Bundle``
     suffix.::
 
-    $ ./app/console generate:bundle --bundle-name=AcmeBlogBundle
+    php app/console generate:bundle --bundle-name=AcmeBlogBundle
 
 * ``--dir``:
     The directory in which to store the bundle. By convention, the command
     detects and uses the applications's ``src/`` folder.::
 
-    $ ./app/console generate:bundle --dir=/var/www/myproject/src
+    php app/console generate:bundle --dir=/var/www/myproject/src
 
 * ``--format``: (**annotation**) [values: yml, xml, php or annotation]
     Determine the format to use for the generated configuration files like
@@ -43,11 +48,11 @@ Available Options
     the ``annotation`` format expects the ``SensioFrameworkExtraBundle`` is
     already installed.::
 
-    $ ./app/console generate:bundle --format=annotation
+    php app/console generate:bundle --format=annotation
 
 * ``--structure``: (**no**) [values: yes|no]
     Whether or not to generate a complete default directory structure including
     empty public folders for documentation, web assets and translations
     dictionnaries.::
 
-    $ ./app/console generate:bundle --structure=yes
+    php app/console generate:bundle --structure=yes

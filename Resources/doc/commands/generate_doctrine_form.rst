@@ -7,7 +7,7 @@ Usage
 The ``generate:doctrine:form`` generates a basic form type class by using the
 metadata mapping of a given entity class.
 
-    $ ./app/console generate:doctrine:form AcmeBlogBundle:Post
+    php app/console generate:doctrine:form AcmeBlogBundle:Post
 
 Required Arguments
 ------------------
@@ -17,4 +17,4 @@ Required Arguments
     which the entity is located and the name of the entity. For example:
     ``AcmeBlogBundle:Post``.::
 
-    $ ./app/console generate:doctrine:form AcmeBlogBundle:Post
+    php app/console generate:doctrine:form AcmeBlogBundle:Post
