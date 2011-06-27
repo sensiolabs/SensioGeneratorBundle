@@ -84,7 +84,7 @@ EOT
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator();
-        $generator->generate($bundle, $entity, $format, $fields);
+        $generator->generate($bundle, $entity, $format, array_values($fields));
 
         $output->writeln('Generating the entity code: <info>OK</info>');
 
@@ -164,7 +164,7 @@ EOT
                 $type = isset($matches[1][0]) ? $matches[1][0] : $type;
                 $length = isset($matches[2][0]) ? $matches[2][0] : null;
 
-                $fields[] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
+                $fields[$name] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
             }
         }
 
@@ -177,7 +177,7 @@ EOT
         $output->writeln(array(
             '',
             'Instead of starting with a blank entity, you can add some fields now.',
-            'Note that the primary key will be added automatically.',
+            'Note that the primary key will be added automatically (named <comment>id</comment>).',
             '',
         ));
         $output->write('<info>Available types:</info> ');
@@ -226,14 +226,20 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $name = $dialog->ask($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null));
+            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields) {
+                if (isset($fields[$name]) || 'id' == $name) {
+                    throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
+                }
+
+                return $name;
+            });
             if (!$name) {
                 break;
             }
             $type   = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $fieldValidator, false, 'string');
             $length = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', null), $lengthValidator, false, null);
 
-            $fields[] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
+            $fields[$name] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
         }
 
         return $fields;
