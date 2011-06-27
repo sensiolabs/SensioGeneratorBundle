@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Tools\EntityGenerator;
+use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
 
 /**
@@ -35,7 +36,7 @@ class DoctrineEntityGenerator extends Generator
         $this->registry = $registry;
     }
 
-    public function generate(BundleInterface $bundle, $entity, $format, array $fields)
+    public function generate(BundleInterface $bundle, $entity, $format, array $fields, $withRepository)
     {
         // configure the bundle (needed if the bundle does not contain any Entities yet)
         $config = $this->registry->getEntityManager(null)->getConfiguration();
@@ -51,6 +52,9 @@ class DoctrineEntityGenerator extends Generator
         }
 
         $class = new ClassMetadataInfo($entityClass);
+        if ($withRepository) {
+            $class->customRepositoryClassName = $entityClass.'Repository';
+        }
         $class->mapField(array('fieldName' => 'id', 'type' => 'integer', 'id' => true));
         $class->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_AUTO);
         foreach ($fields as $field) {
@@ -83,6 +87,11 @@ class DoctrineEntityGenerator extends Generator
             $this->filesystem->mkdir(dirname($mappingPath));
             file_put_contents($mappingPath, $mappingCode);
         }
+
+        if ($withRepository) {
+            $path = $bundle->getPath().str_repeat('/..', substr_count(get_class($bundle), '\\'));
+            $this->getRepositoryGenerator()->writeEntityRepositoryClass($class->customRepositoryClassName, $path);
+        }
     }
 
     protected function getEntityGenerator()
@@ -96,5 +105,10 @@ class DoctrineEntityGenerator extends Generator
         $entityGenerator->setAnnotationPrefix('ORM\\');
 
         return $entityGenerator;
+    }
+
+    protected function getRepositoryGenerator()
+    {
+        return new EntityRepositoryGenerator();
     }
 }
