@@ -105,10 +105,25 @@ EOT
             'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
             ''
         ));
-        $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
-        $input->setOption('entity', $entity);
 
-        list($bundle, $entity) = $this->parseShortcutNotation($entity);
+        while (true) {
+            $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
+
+            list($bundle, $entity) = $this->parseShortcutNotation($entity);
+
+            try {
+                $b = $this->getContainer()->get('kernel')->getBundle($bundle);
+
+                if (!file_exists($b->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
+                    break;
+                }
+
+                $output->writeln(sprintf('<bg=red>Entity "%s:%s" already exists</>.', $bundle, $entity));
+            } catch (\Exception $e) {
+                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exist.</>', $bundle));
+            }
+        }
+        $input->setOption('entity', $bundle.':'.$entity);
 
         // format
         $output->writeln(array(
