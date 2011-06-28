@@ -252,10 +252,24 @@ EOT
             if (!$name) {
                 break;
             }
-            $type   = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $fieldValidator, false, 'string');
-            $length = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', null), $lengthValidator, false, null);
 
-            $fields[$name] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
+            $defaultType = 'string';
+
+            if (substr($name, -3) == '_at') {
+                $defaultType = 'datetime';
+            } else if (substr($name, -3) == '_id') {
+                $defaultType = 'integer';
+            }
+
+            $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', $defaultType), $fieldValidator, false, $defaultType);
+
+            $data = array('fieldName' => $name, 'type' => $type);
+
+            if ($type == 'string') {
+                $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);
+            }
+
+            $fields[$name] = $data;
         }
 
         return $fields;
