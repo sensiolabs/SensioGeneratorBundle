@@ -47,7 +47,7 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
             array(array(), "AcmeBlogBundle:Blog/Post\nyml\n\n", array('Blog\\Post', 'yml', array())),
             array(array(), "AcmeBlogBundle:Blog/Post\nyml\ntitle\n\n255\ndescription\ntext\n\n", array('Blog\\Post', 'yml', array(
                 array('fieldName' => 'title', 'type' => 'string', 'length' => 255),
-                array('fieldName' => 'description', 'type' => 'text', 'length' => ''),
+                array('fieldName' => 'description', 'type' => 'text'),
             ))),
         );
     }
