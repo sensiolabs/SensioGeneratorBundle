@@ -55,7 +55,7 @@ class BundleGenerator extends Generator
             $this->filesystem->mkdir($dir.'/Resources/doc');
             $this->filesystem->touch($dir.'/Resources/doc/index.rst');
             $this->filesystem->mkdir($dir.'/Resources/translations');
-            $this->filesystem->copy($this->skeletonDir.'/structure/messages.fr.xliff', $dir.'/Resources/translations/messages.fr.xliff');
+            $this->filesystem->copy($this->skeletonDir.'/messages.fr.xliff', $dir.'/Resources/translations/messages.fr.xliff');
             $this->filesystem->mkdir($dir.'/Resources/public/css');
             $this->filesystem->mkdir($dir.'/Resources/public/images');
             $this->filesystem->mkdir($dir.'/Resources/public/js');
