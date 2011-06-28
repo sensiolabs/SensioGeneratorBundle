@@ -42,20 +42,30 @@ class GenerateDoctrineEntityCommand extends GenerateDoctrineCommand
 The <info>doctrine:generate:entity</info> task generates a new Doctrine
 entity inside a bundle:
 
-<info>./app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post</info>
+<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post</info>
 
-The above would initialize a new entity in the following entity namespace
-<info>Acme\BlogBundle\Entity\Blog\Post</info>.
+The above command would initialize a new entity in the following entity
+namespace <info>Acme\BlogBundle\Entity\Blog\Post</info>.
 
 You can also optionally specify the fields you want to generate in the new
 entity:
 
-<info>./app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"</info>
+<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"</info>
+
+The command can also generate the corresponding entity repository class with the
+<comment>--with-repository</comment> option:
+
+<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --with-repository</info>
 
 By default, the command uses YAML for the mapping information; change it
 with <comment>--format</comment>:
 
-<info>./app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation</info>
+<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation</info>
+
+To deactivate the interaction mode, simply use the `--no-interaction` option
+whitout forgetting to pass all needed options:
+
+<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --field="title:string(255) body:text" --with-repository --no-interaction</info>
 EOT
         );
     }

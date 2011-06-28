@@ -53,7 +53,7 @@ Any passed option will be used as a default value for the interaction
 (<comment>--namespace</comment> is the only one needed if you follow the
 conventions):
 
-<info>./app/console generate:bundle --namespace=Acme/BlogBundle</info>
+<info>php app/console generate:bundle --namespace=Acme/BlogBundle</info>
 
 Note that you can use <comment>/</comment> instead of <comment>\\</comment> for the namespace delimiter to avoid any
 problem.
@@ -61,7 +61,7 @@ problem.
 If you want to disable any user interaction, use `--no-interaction` but don't
 forget to pass all needed options:
 
-<info>./app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
+<info>php app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
 
 Note that the bundle namespace must end with "Bundle".
 EOT
