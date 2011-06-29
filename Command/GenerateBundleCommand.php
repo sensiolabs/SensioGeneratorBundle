@@ -233,15 +233,23 @@ EOT
 
         $output->write('Enabling the bundle inside the Kernel: ');
         $manip = new KernelManipulator($kernel);
-        $ret = $auto ? $manip->addBundle($namespace.'\\'.$bundle) : false;
-        if (!$ret) {
-            $reflected = new \ReflectionObject($kernel);
+        try {
+            $ret = $auto ? $manip->addBundle($namespace.'\\'.$bundle) : false;
 
+            if (!$ret) {
+                $reflected = new \ReflectionObject($kernel);
+
+                return array(
+                    sprintf('- Edit <comment>%s</comment>', $reflected->getFilename()),
+                    '  and add the following bundle in the <comment>AppKernel::registerBundles()</comment> method:',
+                    '',
+                    sprintf('    <comment>new %s(),</comment>', $namespace.'\\'.$bundle),
+                    '',
+                );
+            }
+        } catch (\RuntimeException $e) {
             return array(
-                sprintf('- Edit <comment>%s</comment>', $reflected->getFilename()),
-                '  and add the following bundle in the <comment>AppKernel::registerBundles()</comment> method:',
-                '',
-                sprintf('    <comment>new %s(),</comment>', $namespace.'\\'.$bundle),
+                sprintf('Bundle <comment>%s</comment> is already defined in <comment>AppKernel::registerBundles()</comment>.', $namespace.'\\'.$bundle),
                 '',
             );
         }
@@ -256,20 +264,27 @@ EOT
 
         $output->write('Importing the bundle routing resource: ');
         $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml');
-        $ret = $auto ? $routing->addResource($bundle, $format) : false;
-        if (!$ret) {
-            if ('annotation' === $format) {
-                $help = sprintf("        <comment>resource: \"@%s/Resources/Controller/\"</comment>\n        <comment>type:     annotation</comment>", $bundle);
-            } else {
-                $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing.%s\"</comment>\n", $bundle, $format);
-            }
-            $help .= "        <comment>prefix:   /</comment>\n";
+        try {
+            $ret = $auto ? $routing->addResource($bundle, $format) : false;
+            if (!$ret) {
+                if ('annotation' === $format) {
+                    $help = sprintf("        <comment>resource: \"@%s/Resources/Controller/\"</comment>\n        <comment>type:     annotation</comment>", $bundle);
+                } else {
+                    $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing.%s\"</comment>\n", $bundle, $format);
+                }
+                $help .= "        <comment>prefix:   /</comment>\n";
 
+                return array(
+                    '- Import the bundle\'s routing resource in the app main routing file:',
+                    '',
+                    sprintf('    <comment>%s:</comment>', $bundle),
+                    $help,
+                    '',
+                );
+            }
+        } catch (\RuntimeException $e) {
             return array(
-                '- Import the bundle\'s routing resource in the app main routing file:',
-                '',
-                sprintf('    <comment>%s:</comment>', $bundle),
-                $help,
+                sprintf('Bundle <comment>%s</comment> is already imported.', $bundle),
                 '',
             );
         }
