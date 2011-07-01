@@ -27,6 +27,9 @@ class BundleGeneratorTest extends GeneratorTest
             'Resources/views/Default/index.html.twig',
             'Resources/config/routing.yml',
             'Tests/Controller/DefaultControllerTest.php',
+            'Resources/config/services.yml',
+            'DependencyInjection/Configuration.php',
+            'DependencyInjection/FooBarExtension.php',
         );
         foreach ($files as $file) {
             $this->assertTrue(file_exists($this->tmpDir.'/Foo/BarBundle/'.$file), sprintf('%s has been generated', $file));
