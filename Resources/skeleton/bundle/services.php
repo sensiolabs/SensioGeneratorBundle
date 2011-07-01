@@ -4,6 +4,8 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Parameter;
 
+/*
+
 $container->setDefinition(
     '{{ extension_alias }}.example',
     new Definition(
@@ -15,3 +17,5 @@ $container->setDefinition(
         )
     )
 );
+
+*/

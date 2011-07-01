@@ -21,7 +21,7 @@ class {{ bundle_basename }}Extension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $processor = new Processor();
-        $configuration = new Configuration($container->getParameter('kernel.debug'));
+        $configuration = new Configuration();
         $config = $processor->processConfiguration($configuration, $configs);
 
         {% if format == 'yml' -%}
