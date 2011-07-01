@@ -1,0 +1,7 @@
+parameters:
+#    {{ extension_alias }}.example.class: {{ namespace }}\Example
+
+services:
+#    {{ extension_alias }}.example:
+#        class: %{{ extension_alias }}.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
