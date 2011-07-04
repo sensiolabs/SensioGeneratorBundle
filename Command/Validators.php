@@ -29,6 +29,14 @@ class Validators
             throw new \InvalidArgumentException('The namespace contains invalid characters.');
         }
 
+        // validate reserved keywords
+        $reserved = self::getReservedWords();
+        foreach (explode('\\', $namespace) as $word) {
+            if (in_array(strtolower($word), $reserved)) {
+                throw new \InvalidArgumentException(sprintf('The namespace cannot contain PHP reserved words ("%s").', $word));
+            }
+        }
+
         // validate that the namespace is at least one level deep
         if (false === strpos($namespace, '\\')) {
             $msg = array();
@@ -74,5 +82,79 @@ class Validators
         }
 
         return $entity;
+    }
+
+    static public function getReservedWords()
+    {
+        return array(
+            'abstract',
+            'and',
+            'array',
+            'as',
+            'break',
+            'case',
+            'catch',
+            'class',
+            'clone',
+            'const',
+            'continue',
+            'declare',
+            'default',
+            'do',
+            'else',
+            'elseif',
+            'enddeclare',
+            'endfor',
+            'endforeach',
+            'endif',
+            'endswitch',
+            'endwhile',
+            'extends',
+            'final',
+            'for',
+            'foreach',
+            'function',
+            'global',
+            'goto',
+            'if',
+            'implements',
+            'interface',
+            'instanceof',
+            'namespace',
+            'new',
+            'or',
+            'private',
+            'protected',
+            'public',
+            'static',
+            'switch',
+            'throw',
+            'try',
+            'use',
+            'var',
+            'while',
+            'xor',
+            '__CLASS__',
+            '__DIR__',
+            '__FILE__',
+            '__LINE__',
+            '__FUNCTION__',
+            '__METHOD__',
+            '__NAMESPACE__',
+            'die',
+            'echo',
+            'empty',
+            'exit',
+            'eval',
+            'include',
+            'include_once',
+            'isset',
+            'list',
+            'require',
+            'require_once',
+            'return',
+            'print',
+            'unset',
+        );
     }
 }
