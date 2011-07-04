@@ -40,6 +40,8 @@ class KernelManipulator extends Manipulator
      * @param string $bundle The bundle class name
      *
      * @return Boolean true if it worked, false otherwise
+     *
+     * @throws \RuntimeException If bundle is already defined
      */
     public function addBundle($bundle)
     {
@@ -47,10 +49,14 @@ class KernelManipulator extends Manipulator
             return false;
         }
 
-// FIXME: avoid adding the same bundle twice?
         $src = file($this->reflected->getFilename());
         $method = $this->reflected->getMethod('registerBundles');
         $lines = array_slice($src, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1);
+
+        // Don't add same bundle twice
+        if (false !== strpos(implode('', $lines), $bundle)) {
+            throw new \RuntimeException(sprintf('Bundle "%s" is already defined in "AppKernel::registerBundles()".', $bundle));
+        }
 
         $this->setCode(token_get_all('<?php '.implode('', $lines)), $method->getStartLine());
         while ($token = $this->next()) {

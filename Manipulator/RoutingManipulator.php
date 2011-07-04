@@ -35,8 +35,12 @@ class RoutingManipulator extends Manipulator
      *
      * @param string $bundle
      * @param string $format
+     * @param string $prefix
+     * @param string $path
      *
      * @return Boolean true if it worked, false otherwise
+     *
+     * @throws \RuntimeException If bundle is already imported
      */
     public function addResource($bundle, $format, $prefix = '/', $path = 'routing')
     {
@@ -54,6 +58,11 @@ class RoutingManipulator extends Manipulator
             $code .= file_get_contents($this->file);
         } elseif (!is_dir($dir = dirname($this->file))) {
             mkdir($dir, 0777, true);
+        }
+
+        // Don't add same bundle twice
+        if (false !== strpos($code, $bundle)) {
+            throw new \RuntimeException(sprintf('Bundle "%s" is already imported.', $bundle));
         }
 
         if (false === file_put_contents($this->file, $code)) {
