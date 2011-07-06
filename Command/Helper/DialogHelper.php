@@ -27,7 +27,7 @@ class DialogHelper extends BaseDialogHelper
             $this->writeSection($output, 'You can now start using the generated code!');
         } else {
             $this->writeSection($output, array(
-                'The command was not able to configure your everything automatically.',
+                'The command was not able to configure everything automatically.',
                 'You must do the following changes manually.',
             ), 'error');
 
