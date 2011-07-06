@@ -77,6 +77,7 @@ class DoctrineFormGenerator extends Generator
             'namespace'        => $bundle->getNamespace(),
             'entity_namespace' => implode('\\', $parts),
             'form_class'       => $this->className,
+            'form_type_name'   => strtolower(str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$this->className),
         ));
     }
 
