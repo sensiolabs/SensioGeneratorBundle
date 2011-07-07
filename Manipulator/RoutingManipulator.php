@@ -44,6 +44,18 @@ class RoutingManipulator extends Manipulator
      */
     public function addResource($bundle, $format, $prefix = '/', $path = 'routing')
     {
+        $current = '';
+        if (file_exists($this->file)) {
+            $current = file_get_contents($this->file);
+
+            // Don't add same bundle twice
+            if (false !== strpos($current, $bundle)) {
+                throw new \RuntimeException(sprintf('Bundle "%s" is already imported.', $bundle));
+            }
+        } elseif (!is_dir($dir = dirname($this->file))) {
+            mkdir($dir, 0777, true);
+        }
+
         $code = sprintf("%s:\n", $bundle.('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
         if ('annotation' == $format) {
             $code .= sprintf("    resource: \"@%s/Controller/\"\n    type:     annotation\n", $bundle);
@@ -51,19 +63,8 @@ class RoutingManipulator extends Manipulator
             $code .= sprintf("    resource: \"@%s/Resources/config/%s.%s\"\n", $bundle, $path, $format);
         }
         $code .= sprintf("    prefix:   %s\n", $prefix);
-
         $code .= "\n";
-
-        if (file_exists($this->file)) {
-            $code .= file_get_contents($this->file);
-        } elseif (!is_dir($dir = dirname($this->file))) {
-            mkdir($dir, 0777, true);
-        }
-
-        // Don't add same bundle twice
-        if (false !== strpos($code, $bundle)) {
-            throw new \RuntimeException(sprintf('Bundle "%s" is already imported.', $bundle));
-        }
+        $code .= $current;
 
         if (false === file_put_contents($this->file, $code)) {
             return false;
