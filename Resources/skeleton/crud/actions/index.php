@@ -3,7 +3,7 @@
      * Lists all {{ entity }} entities.
      *
 {% if 'annotation' == format %}
-     * @Route("/", name="{{ route_prefix }}")
+     * @Route("/", name="{{ route_name_prefix }}")
      * @Template()
 {% endif %}
      */

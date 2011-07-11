@@ -3,7 +3,7 @@
      * Displays a form to edit an existing {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}/edit", name="{{ route_prefix }}_edit")
+     * @Route("/{id}/edit", name="{{ route_name_prefix }}_edit")
      * @Template()
 {% endif %}
      */

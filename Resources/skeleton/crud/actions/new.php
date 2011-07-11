@@ -3,7 +3,7 @@
      * Displays a form to create a new {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/new", name="{{ route_prefix }}_new")
+     * @Route("/new", name="{{ route_name_prefix }}_new")
      * @Template()
 {% endif %}
      */
