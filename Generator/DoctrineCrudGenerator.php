@@ -25,6 +25,7 @@ class DoctrineCrudGenerator extends Generator
     private $filesystem;
     private $skeletonDir;
     private $routePrefix;
+    private $routeNamePrefix;
     private $bundle;
     private $entity;
     private $metadata;
@@ -58,6 +59,7 @@ class DoctrineCrudGenerator extends Generator
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions)
     {
         $this->routePrefix = $routePrefix;
+        $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
         $this->actions = $needWriteActions ? array('index', 'show', 'new', 'edit', 'delete') : array('index', 'show');
 
         if (count($metadata->identifier) > 1) {
@@ -137,10 +139,11 @@ class DoctrineCrudGenerator extends Generator
         );
 
         $this->renderFile($this->skeletonDir, 'config/routing.'.$this->format, $target, array(
-            'actions'      => $this->actions,
-            'route_prefix' => $this->routePrefix,
-            'bundle'       => $this->bundle->getName(),
-            'entity'       => $this->entity,
+            'actions'           => $this->actions,
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
         ));
     }
 
