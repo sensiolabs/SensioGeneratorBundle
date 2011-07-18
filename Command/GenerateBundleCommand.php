@@ -58,8 +58,7 @@ conventions):
 Note that you can use <comment>/</comment> instead of <comment>\\</comment> for the namespace delimiter to avoid any
 problem.
 
-If you want to disable any user interaction, use `--no-interaction` but don't
-forget to pass all needed options:
+If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
 
 <info>php app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
 
