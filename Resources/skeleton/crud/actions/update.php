@@ -26,7 +26,6 @@
         $editForm->bindRequest($request);
 
         if ($editForm->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
             $em->persist($entity);
             $em->flush();
 
