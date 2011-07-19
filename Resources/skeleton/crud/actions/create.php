@@ -13,22 +13,19 @@
         $entity  = new {{ entity_class }}();
         $request = $this->getRequest();
         $form    = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $form->bindRequest($request);
 
-        if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
 
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
+            {% if 'show' in actions -%}
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $entity->getId())));
+            {% else -%}
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
+            {%- endif %}
 
-                {% if 'show' in actions -%}
-                    return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $entity->getId())));
-                {% else -%}
-                    return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
-                {%- endif %}
-
-            }
         }
 
 {% if 'annotation' == format %}

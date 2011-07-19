@@ -23,16 +23,14 @@
 
         $request = $this->getRequest();
 
-        if ('POST' === $request->getMethod()) {
-            $editForm->bindRequest($request);
+        $editForm->bindRequest($request);
 
-            if ($editForm->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
-                $em->flush();
+        if ($editForm->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
 
-                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', array('id' => $id)));
-            }
+            return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', array('id' => $id)));
         }
 
 {% if 'annotation' == format %}
