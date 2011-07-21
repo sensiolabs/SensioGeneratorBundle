@@ -16,18 +16,24 @@
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
+{% if 'delete' in actions %}
 
         $deleteForm = $this->createDeleteForm($id);
+{% endif %}
 
 {% if 'annotation' == format %}
         return array(
             'entity'      => $entity,
+{% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
+{%- endif %}
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
             'entity'      => $entity,
+{% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
+{% endif %}
         ));
 {% endif %}
     }
