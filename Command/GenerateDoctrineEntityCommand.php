@@ -122,6 +122,13 @@ EOT
 
             list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
+            // check reserved words
+            $keywordList = $this->getContainer()->get('doctrine')->getConnection()->getDatabasePlatform()->getReservedKeywordsList();
+            if($keywordList->isKeyword($entity)){
+                $output->writeln(sprintf('<bg=red> "%s" is a reserved word</>.', $entity));
+                continue;
+            }
+
             try {
                 $b = $this->getContainer()->get('kernel')->getBundle($bundle);
 
@@ -242,9 +249,15 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields) {
+            $keywordList = $this->getContainer()->get('doctrine')->getConnection()->getDatabasePlatform()->getReservedKeywordsList();
+            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields,$keywordList) {
                 if (isset($fields[$name]) || 'id' == $name) {
                     throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
+                }
+
+                // check reserved words
+                if($keywordList->isKeyword($name)){
+                    throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 
                 return $name;
