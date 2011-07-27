@@ -13,7 +13,7 @@ namespace Sensio\Bundle\GeneratorBundle\Tests\Generator;
 
 use Symfony\Component\HttpKernel\Util\Filesystem;
 
-class GeneratorTest extends \PHPUnit_Framework_TestCase
+abstract class GeneratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $filesystem;
     protected $tmpDir;
