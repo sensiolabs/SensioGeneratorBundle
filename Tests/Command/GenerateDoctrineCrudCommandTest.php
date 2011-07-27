@@ -42,11 +42,11 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
     public function getInteractiveCommandData()
     {
         return array(
-            array(array(), "AcmeBlogBundle:Blog/Post\n\n\n\n\n", array('Blog\\Post', 'annotation', 'blog_post', false)),
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), "\n\n\n\n\n", array('Blog\\Post', 'annotation', 'blog_post', false)),
-            array(array(), "AcmeBlogBundle:Blog/Post\ny\nyml\nfoobar\n\n\n", array('Blog\\Post', 'yml', 'foobar', true)),
-            array(array(), "AcmeBlogBundle:Blog/Post\ny\nyml\n/foobar\n\n\n", array('Blog\\Post', 'yml', 'foobar', true)),
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post', '--format' => 'yml', '--route-prefix' => 'foo', '--with-write' => true), "\n\n\n\n\n\n", array('Blog\\Post', 'yml', 'foo', true)),
+            array(array(), "AcmeBlogBundle:Blog/Post\n", array('Blog\\Post', 'annotation', 'blog_post', false)),
+            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), '', array('Blog\\Post', 'annotation', 'blog_post', false)),
+            array(array(), "AcmeBlogBundle:Blog/Post\ny\nyml\nfoobar\n", array('Blog\\Post', 'yml', 'foobar', true)),
+            array(array(), "AcmeBlogBundle:Blog/Post\ny\nyml\n/foobar\n", array('Blog\\Post', 'yml', 'foobar', true)),
+            array(array('--entity' => 'AcmeBlogBundle:Blog/Post', '--format' => 'yml', '--route-prefix' => 'foo', '--with-write' => true), '', array('Blog\\Post', 'yml', 'foo', true)),
         );
     }
 
