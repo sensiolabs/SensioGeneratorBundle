@@ -26,6 +26,7 @@
             'entity'      => $entity,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
+
 {%- endif %}
         );
 {% else %}
@@ -33,6 +34,7 @@
             'entity'      => $entity,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
+
 {% endif %}
         ));
 {% endif %}
