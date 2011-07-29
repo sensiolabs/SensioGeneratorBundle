@@ -57,10 +57,10 @@ The command can also generate the corresponding entity repository class with the
 
 <info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --with-repository</info>
 
-By default, the command uses YAML for the mapping information; change it
+By default, the command uses annotations for the mapping information; change it
 with <comment>--format</comment>:
 
-<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation</info>
+<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=yml</info>
 
 To deactivate the interaction mode, simply use the `--no-interaction` option
 whitout forgetting to pass all needed options:
