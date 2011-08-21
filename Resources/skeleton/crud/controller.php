@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 {%- endif %}
 
 use {{ namespace }}\Entity\{{ entity }};
-{% if 'new' in actions and 'edit' in actions %}
+{% if 'new' in actions or 'edit' in actions %}
 use {{ namespace }}\Form\{{ entity }}Type;
 {% endif %}
 
