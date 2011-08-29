@@ -94,6 +94,11 @@ class DoctrineEntityGenerator extends Generator
         }
     }
 
+    public function isReservedKeyword($keyword)
+    {
+        return $this->registry->getConnection()->getDatabasePlatform()->getReservedKeywordsList()->isKeyword($keyword);
+    }
+
     protected function getEntityGenerator()
     {
         $entityGenerator = new EntityGenerator();

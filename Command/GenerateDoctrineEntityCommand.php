@@ -123,8 +123,7 @@ EOT
             list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
             // check reserved words
-            $keywordList = $this->getContainer()->get('doctrine')->getConnection()->getDatabasePlatform()->getReservedKeywordsList();
-            if($keywordList->isKeyword($entity)){
+            if ($this->getGenerator()->isReservedKeyword($entity)){
                 $output->writeln(sprintf('<bg=red> "%s" is a reserved word</>.', $entity));
                 continue;
             }
@@ -249,14 +248,14 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $keywordList = $this->getContainer()->get('doctrine')->getConnection()->getDatabasePlatform()->getReservedKeywordsList();
-            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields,$keywordList) {
+            $self = $this;
+            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields, $self) {
                 if (isset($fields[$name]) || 'id' == $name) {
                     throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
                 }
 
                 // check reserved words
-                if($keywordList->isKeyword($name)){
+                if ($self->getGenerator()->isReservedKeyword($name)){
                     throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 
@@ -288,7 +287,7 @@ EOT
         return $fields;
     }
 
-    protected function getGenerator()
+    public function getGenerator()
     {
         if (null === $this->generator) {
             $this->generator = new DoctrineEntityGenerator($this->getContainer()->get('filesystem'), $this->getContainer()->get('doctrine'));

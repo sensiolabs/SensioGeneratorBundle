@@ -65,6 +65,11 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
             ->method('generate')
             ->with($this->getBundle(), $entity, $format, $fields)
         ;
+        $generator
+            ->expects($this->any())
+            ->method('isReservedKeyword')
+            ->will($this->returnValue(false))
+        ;
 
         $tester = new CommandTester($this->getCommand($generator, ''));
         $tester->execute($options, array('interactive' => false));
@@ -97,7 +102,7 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
         return $this
             ->getMockBuilder('Sensio\Bundle\GeneratorBundle\Generator\DoctrineEntityGenerator')
             ->disableOriginalConstructor()
-            ->setMethods(array('generate'))
+            ->setMethods(array('generate', 'isReservedKeyword'))
             ->getMock()
         ;
     }
