@@ -267,7 +267,7 @@ EOT
             $ret = $auto ? $routing->addResource($bundle, $format) : false;
             if (!$ret) {
                 if ('annotation' === $format) {
-                    $help = sprintf("        <comment>resource: \"@%s/Resources/Controller/\"</comment>\n        <comment>type:     annotation</comment>", $bundle);
+                    $help = sprintf("        <comment>resource: \"@%s/Controller/\"</comment>\n        <comment>type:     annotation</comment>\n", $bundle);
                 } else {
                     $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing.%s\"</comment>\n", $bundle, $format);
                 }
