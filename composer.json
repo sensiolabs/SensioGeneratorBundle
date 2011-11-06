@@ -1,0 +1,23 @@
+{
+    "name": "sensio/generator-bundle",
+    "description": "Generates Symfony2 bundles, entities, forms, CRUD, and more...",
+    "keywords": ["code generation"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "2.*"
+    },
+    "recommend": {
+        "symfony/doctrine-bundle": "2.*"
+    },
+    "autoload": {
+        "psr-0": { "Sensio\\Bundle\\GeneratorBundle": "" }
+    },
+    "target-dir": "Sensio/Bundle/GeneratorBundle"
+}
