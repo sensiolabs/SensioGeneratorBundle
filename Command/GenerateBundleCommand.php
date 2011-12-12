@@ -214,7 +214,7 @@ EOT
         $output->write('Checking that the bundle is autoloaded: ');
         if (!class_exists($namespace.'\\'.$bundle)) {
             return array(
-                '- Edit the <comment>app/autoloader.php</comment> file and register the bundle',
+                '- Edit the <comment>app/autoload.php</comment> file and register the bundle',
                 '  namespace at the top of the <comment>registerNamespaces()</comment> call:',
                 '',
                 sprintf('<comment>    \'%s\' => \'%s\',</comment>', $namespace, realpath($dir)),
