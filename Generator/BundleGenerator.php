@@ -11,7 +11,7 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Generator;
 
-use Symfony\Component\HttpKernel\Util\Filesystem;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
