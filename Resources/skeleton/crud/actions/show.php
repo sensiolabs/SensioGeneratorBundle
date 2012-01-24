@@ -33,7 +33,7 @@
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
             'entity'      => $entity,
 {% if 'delete' in actions %}
-            'delete_form' => $deleteForm->createView()
+            'delete_form' => $deleteForm->createView(),
 
 {%- endif %}
         ));
