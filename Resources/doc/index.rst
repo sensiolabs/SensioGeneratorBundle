@@ -26,7 +26,7 @@ Then, like for any other bundle, include it in your Kernel class::
 List of Available Commands
 --------------------------
 
-The ``SensioGeneratorBundle`` come with four new commands that can be run in
+The ``SensioGeneratorBundle`` comes with four new commands that can be run in
 interactive mode or not. The interactive mode asks you some questions to
 configure the command parameters to generate the definitive code. The list of
 new commands are listed below:
