@@ -18,12 +18,8 @@ namespace Sensio\Bundle\GeneratorBundle\Generator;
  */
 class Generator
 {
-    protected function renderFile($skeletonDir, $template, $target, $parameters)
+    protected function render($skeletonDir, $template, $parameters)
     {
-        if (!is_dir(dirname($target))) {
-            mkdir(dirname($target), 0777, true);
-        }
-
         $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($skeletonDir), array(
             'debug'            => true,
             'cache'            => false,
@@ -31,6 +27,15 @@ class Generator
             'autoescape'       => false,
         ));
 
-        file_put_contents($target, $twig->render($template, $parameters));
+        return $twig->render($template, $parameters);
+    }
+
+    protected function renderFile($skeletonDir, $template, $target, $parameters)
+    {
+        if (!is_dir(dirname($target))) {
+            mkdir(dirname($target), 0777, true);
+        }
+
+        return file_put_contents($target, $this->render($skeletonDir, $template, $parameters));
     }
 }
