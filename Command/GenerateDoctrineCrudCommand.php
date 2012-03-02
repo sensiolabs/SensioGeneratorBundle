@@ -204,7 +204,12 @@ EOT
         $output->write('Importing the CRUD routes: ');
         $this->getContainer()->get('filesystem')->mkdir($bundle->getPath().'/Resources/config/');
         $routing = new RoutingManipulator($bundle->getPath().'/Resources/config/routing.yml');
-        $ret = $auto ? $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity))) : false;
+        try {
+            $ret = $auto ? $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity))) : false;
+        } catch (\RuntimeException $exc) {
+            $ret = false;
+        }
+
         if (!$ret) {
             $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing/%s.%s\"</comment>\n", $bundle->getName(), strtolower(str_replace('\\', '_', $entity)), $format);
             $help .= sprintf("        <comment>prefix:   /%s</comment>\n", $prefix);
