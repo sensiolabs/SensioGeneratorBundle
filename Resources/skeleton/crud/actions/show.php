@@ -26,15 +26,13 @@
             'entity'      => $entity,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
-
-{%- endif %}
+{% endif %}
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
             'entity'      => $entity,
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
-
 {% endif %}
         ));
 {% endif %}
