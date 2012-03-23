@@ -14,7 +14,7 @@
         "symfony/framework-bundle": "2.*"
     },
     "recommend": {
-        "symfony/doctrine-bundle": "2.*"
+        "doctrine/doctrine-bundle": "2.*"
     },
     "autoload": {
         "psr-0": { "Sensio\\Bundle\\GeneratorBundle": "" }
