@@ -6,8 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-{%- endif %}
-
+{% endif %}
 
 class DefaultController extends Controller
 {
@@ -16,8 +15,7 @@ class DefaultController extends Controller
      * @Route("/hello/{name}")
      * @Template()
      */
-    {%- endif %}
-
+    {% endif -%}
     public function indexAction($name)
     {
         {% if 'annotation' != format -%}
