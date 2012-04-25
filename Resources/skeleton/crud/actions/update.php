@@ -10,7 +10,7 @@
      */
     public function updateAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
