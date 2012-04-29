@@ -63,7 +63,7 @@ with <comment>--format</comment>:
 <info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=yml</info>
 
 To deactivate the interaction mode, simply use the `--no-interaction` option
-whitout forgetting to pass all needed options:
+without forgetting to pass all needed options:
 
 <info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(255) body:text" --with-repository --no-interaction</info>
 EOT
