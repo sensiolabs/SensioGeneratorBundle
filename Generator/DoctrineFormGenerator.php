@@ -47,8 +47,8 @@ class DoctrineFormGenerator extends Generator
     /**
      * Generates the entity form class if it does not exist.
      *
-     * @param BundleInterface $bundle The bundle in which to create the class
-     * @param string $entity The entity relative class name
+     * @param BundleInterface   $bundle   The bundle in which to create the class
+     * @param string            $entity   The entity relative class name
      * @param ClassMetadataInfo $metadata The entity metadata class
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata)

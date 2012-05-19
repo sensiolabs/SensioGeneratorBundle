@@ -11,13 +11,8 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\FormatterHelper;
-use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineEntityCommand;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
-use Symfony\Component\DependencyInjection\Container;
 
 class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
 {

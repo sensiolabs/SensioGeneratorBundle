@@ -11,7 +11,6 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Manipulator;
 
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Changes the PHP code of a Kernel.

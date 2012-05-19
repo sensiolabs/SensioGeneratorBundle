@@ -12,7 +12,6 @@
 namespace Sensio\Bundle\GeneratorBundle\Tests\Generator;
 
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
-use Symfony\Component\HttpKernel\Util\Filesystem;
 
 class DoctrineCrudGeneratorTest extends GeneratorTest
 {

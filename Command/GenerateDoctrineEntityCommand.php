@@ -16,7 +16,6 @@ use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -269,7 +268,7 @@ EOT
 
             if (substr($name, -3) == '_at') {
                 $defaultType = 'datetime';
-            } else if (substr($name, -3) == '_id') {
+            } elseif (substr($name, -3) == '_id') {
                 $defaultType = 'integer';
             }
 

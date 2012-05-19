@@ -11,13 +11,8 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\FormatterHelper;
-use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateBundleCommand;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
-use Symfony\Component\DependencyInjection\Container;
 
 class GenerateBundleCommandTest extends GenerateCommandTest
 {
@@ -42,6 +37,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
     public function getInteractiveCommandData()
     {
         $tmp = sys_get_temp_dir();
+
         return array(
             array(array('--dir' => $tmp), "Foo/BarBundle\n", array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
             array(array('--dir' => $tmp), "Foo/BarBundle\nBarBundle\nfoo\nyml\nn", array('Foo\BarBundle', 'BarBundle', 'foo/', 'yml', false)),
@@ -70,6 +66,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
     public function getNonInteractiveCommandData()
     {
         $tmp = sys_get_temp_dir();
+
         return array(
             array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle'), array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
             array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle', '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),

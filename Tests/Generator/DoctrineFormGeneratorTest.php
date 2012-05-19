@@ -12,7 +12,6 @@
 namespace Sensio\Bundle\GeneratorBundle\Tests\Generator;
 
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineFormGenerator;
-use Symfony\Component\HttpKernel\Util\Filesystem;
 
 class DoctrineFormGeneratorTest extends GeneratorTest
 {
