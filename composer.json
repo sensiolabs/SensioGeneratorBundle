@@ -11,13 +11,18 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "2.*"
+        "symfony/framework-bundle": "2.1.*"
     },
-    "recommend": {
-        "doctrine/doctrine-bundle": "2.*"
+    "suggest": {
+        "doctrine/doctrine-bundle": "to generate entities and their crud controller"
     },
     "autoload": {
         "psr-0": { "Sensio\\Bundle\\GeneratorBundle": "" }
     },
-    "target-dir": "Sensio/Bundle/GeneratorBundle"
+    "target-dir": "Sensio/Bundle/GeneratorBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1.x-dev"
+        }
+    }
 }
