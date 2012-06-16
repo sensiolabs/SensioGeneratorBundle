@@ -56,7 +56,7 @@ abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getBundle()))
         ;
 
-        $filesystem = $this->getMock('Symfony\Component\HttpKernel\Util\Filesystem');
+        $filesystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
         $filesystem
             ->expects($this->any())
             ->method('isAbsolutePath')
