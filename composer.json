@@ -1,7 +1,7 @@
 {
     "name": "sensio/generator-bundle",
-    "description": "Generates Symfony2 bundles, entities, forms, CRUD, and more...",
-    "keywords": ["code generation"],
+    "description": "This bundle generates code for you",
+    "keywords": [],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
@@ -11,10 +11,10 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "2.1.*"
-    },
-    "suggest": {
-        "doctrine/doctrine-bundle": "to generate entities and their crud controller"
+        "symfony/framework-bundle": "2.1.*",
+        "symfony/doctrine-bridge": "2.1.*",
+        "doctrine/orm": ">=2.1,<2.4-dev",
+        "twig/twig": ">=1.8,<2.0-dev"
     },
     "autoload": {
         "psr-0": { "Sensio\\Bundle\\GeneratorBundle": "" }
