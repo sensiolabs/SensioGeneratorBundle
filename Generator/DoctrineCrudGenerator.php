@@ -22,15 +22,15 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  */
 class DoctrineCrudGenerator extends Generator
 {
-    private $filesystem;
-    private $skeletonDir;
-    private $routePrefix;
-    private $routeNamePrefix;
-    private $bundle;
-    private $entity;
-    private $metadata;
-    private $format;
-    private $actions;
+    protected $filesystem;
+    protected $skeletonDir;
+    protected $routePrefix;
+    protected $routeNamePrefix;
+    protected $bundle;
+    protected $entity;
+    protected $metadata;
+    protected $format;
+    protected $actions;
 
     /**
      * Constructor.
