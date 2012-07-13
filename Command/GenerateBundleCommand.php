@@ -55,7 +55,7 @@ conventions):
 
 <info>php app/console generate:bundle --namespace=Acme/BlogBundle</info>
 
-Note that you can use <comment>/</comment> instead of <comment>\\</comment> for the namespace delimiter to avoid any
+Note that you can use <comment>/</comment> instead of <comment>\\ </comment>for the namespace delimiter to avoid any
 problem.
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
