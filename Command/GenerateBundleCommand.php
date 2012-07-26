@@ -148,7 +148,7 @@ EOT
             'See http://symfony.com/doc/current/cookbook/bundles/best_practices.html#index-1 for more',
             'details on bundle naming conventions.',
             '',
-            'Use <comment>/</comment> instead of <comment>\\</comment> for the namespace delimiter to avoid any problem.',
+            'Use <comment>/</comment> instead of <comment>\\ </comment> for the namespace delimiter to avoid any problem.',
             '',
         ));
 
