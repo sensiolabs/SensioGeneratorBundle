@@ -4,16 +4,15 @@
      *
 {% if 'annotation' == format %}
      * @Route("/create", name="{{ route_name_prefix }}_create")
-     * @Method("post")
+     * @Method("POST")
      * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
 {% endif %}
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $entity  = new {{ entity_class }}();
-        $request = $this->getRequest();
-        $form    = $this->createForm(new {{ entity_class }}Type(), $entity);
-        $form->bindRequest($request);
+        $form = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

@@ -4,15 +4,13 @@
      *
 {% if 'annotation' == format %}
      * @Route("/{id}/delete", name="{{ route_name_prefix }}_delete")
-     * @Method("post")
+     * @Method("POST")
 {% endif %}
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->bindRequest($request);
+        $form->bind($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
