@@ -4,11 +4,11 @@
      *
 {% if 'annotation' == format %}
      * @Route("/{id}/update", name="{{ route_name_prefix }}_update")
-     * @Method("post")
+     * @Method("POST")
      * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
 {% endif %}
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -18,12 +18,9 @@
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
-        $editForm   = $this->createForm(new {{ entity_class }}Type(), $entity);
         $deleteForm = $this->createDeleteForm($id);
-
-        $request = $this->getRequest();
-
-        $editForm->bindRequest($request);
+        $editForm = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
