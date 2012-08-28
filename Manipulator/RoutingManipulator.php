@@ -11,6 +11,8 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Manipulator;
 
+use Symfony\Component\DependencyInjection\Container;
+
 /**
  * Changes the PHP code of a YAML routing file.
  *
@@ -56,7 +58,7 @@ class RoutingManipulator extends Manipulator
             mkdir($dir, 0777, true);
         }
 
-        $code = sprintf("%s:\n", $bundle.('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
+        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
         if ('annotation' == $format) {
             $code .= sprintf("    resource: \"@%s/Controller/\"\n    type:     annotation\n", $bundle);
         } else {
