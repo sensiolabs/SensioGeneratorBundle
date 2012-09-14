@@ -11,7 +11,7 @@
 
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
-            '{{ entity_class|lower }}[field_name]'  => 'Test',
+            '{{ form_type_name|lower }}[field_name]'  => 'Test',
             // ... other fields to fill
         ));
 
@@ -25,7 +25,7 @@
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
         $form = $crawler->selectButton('Edit')->form(array(
-            '{{ entity_class|lower }}[field_name]'  => 'Foo',
+            '{{ form_type_name|lower }}[field_name]'  => 'Foo',
             // ... other fields to fill
         ));
 

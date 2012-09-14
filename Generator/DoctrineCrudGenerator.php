@@ -205,6 +205,7 @@ class DoctrineCrudGenerator extends Generator
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
             'actions'           => $this->actions,
+            'form_type_name'    => strtolower(str_replace('\\', '_', $this->bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$entityClass.'Type'),
             'dir'               => $this->skeletonDir,
         ));
     }
