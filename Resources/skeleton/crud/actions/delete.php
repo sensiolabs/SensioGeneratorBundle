@@ -3,8 +3,8 @@
      * Deletes a {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}/delete", name="{{ route_name_prefix }}_delete")
-     * @Method("POST")
+     * @Route("/{id}", name="{{ route_name_prefix }}_delete")
+     * @Method("DELETE")
 {% endif %}
      */
     public function deleteAction(Request $request, $id)

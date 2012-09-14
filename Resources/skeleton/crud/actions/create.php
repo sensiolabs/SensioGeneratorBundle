@@ -3,7 +3,7 @@
      * Creates a new {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/create", name="{{ route_name_prefix }}_create")
+     * @Route("/", name="{{ route_name_prefix }}_create")
      * @Method("POST")
      * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
 {% endif %}

@@ -3,8 +3,8 @@
      * Edits an existing {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}/update", name="{{ route_name_prefix }}_update")
-     * @Method("POST")
+     * @Route("/{id}", name="{{ route_name_prefix }}_update")
+     * @Method("PUT")
      * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
 {% endif %}
      */
