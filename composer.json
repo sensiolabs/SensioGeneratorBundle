@@ -11,7 +11,8 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "2.1.*"
+        "symfony/framework-bundle": "2.1.*",
+        "symfony/console": "2.1.*"
     },
     "require-dev": {
         "symfony/doctrine-bridge": "2.1.*",
