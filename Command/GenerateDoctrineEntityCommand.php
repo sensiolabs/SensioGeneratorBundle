@@ -248,7 +248,7 @@ EOT
         while (true) {
             $output->writeln('');
             $self = $this;
-            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields, $self) {
+            $columnName = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields, $self) {
                 if (isset($fields[$name]) || 'id' == $name) {
                     throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
                 }
@@ -260,27 +260,33 @@ EOT
 
                 return $name;
             });
-            if (!$name) {
+            if (!$columnName) {
                 break;
             }
 
             $defaultType = 'string';
 
-            if (substr($name, -3) == '_at') {
+            if (substr($columnName, -3) == '_at') {
                 $defaultType = 'datetime';
-            } elseif (substr($name, -3) == '_id') {
+            } elseif (substr($columnName, -3) == '_id') {
                 $defaultType = 'integer';
+            }
+
+            if (strstr($columnName, '_')) {
+                $fieldName = preg_replace_callback( '/_(.)/', function ($m) { return ucfirst($m[1]); }, $columnName);
+            } else {
+                $fieldName = $columnName;
             }
 
             $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', $defaultType), $fieldValidator, false, $defaultType);
 
-            $data = array('fieldName' => $name, 'type' => $type);
+            $data = array('columnName' => $columnName, 'fieldName' => $fieldName, 'type' => $type);
 
             if ($type == 'string') {
                 $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);
             }
 
-            $fields[$name] = $data;
+            $fields[$columnName] = $data;
         }
 
         return $fields;
