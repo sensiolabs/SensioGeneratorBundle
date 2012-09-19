@@ -4,6 +4,7 @@
      *
 {% if 'annotation' == format %}
      * @Route("/new", name="{{ route_name_prefix }}_new")
+     * @Method("GET")
      * @Template()
 {% endif %}
      */

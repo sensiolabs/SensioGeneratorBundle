@@ -3,7 +3,8 @@
      * Finds and displays a {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}/show", name="{{ route_name_prefix }}_show")
+     * @Route("/{id}", name="{{ route_name_prefix }}_show")
+     * @Method("GET")
      * @Template()
 {% endif %}
      */

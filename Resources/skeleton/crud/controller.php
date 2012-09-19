@@ -32,13 +32,13 @@ class {{ entity_class }}Controller extends Controller
         {%- include 'actions/index.php' %}
     {%- endif %}
 
-    {%- if 'show' in actions %}
-        {%- include 'actions/show.php' %}
+    {%- if 'new' in actions %}
+        {%- include 'actions/create.php' %}
+        {%- include 'actions/new.php' %}
     {%- endif %}
 
-    {%- if 'new' in actions %}
-        {%- include 'actions/new.php' %}
-        {%- include 'actions/create.php' %}
+    {%- if 'show' in actions %}
+        {%- include 'actions/show.php' %}
     {%- endif %}
 
     {%- if 'edit' in actions %}
