@@ -11,11 +11,11 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "2.1.*",
-        "symfony/console": "2.1.*"
+        "symfony/framework-bundle": "2.2.*",
+        "symfony/console": "2.2.*"
     },
     "require-dev": {
-        "symfony/doctrine-bridge": "2.1.*",
+        "symfony/doctrine-bridge": "2.2.*",
         "doctrine/orm": ">=2.1,<2.4-dev",
         "twig/twig": ">=1.8,<2.0-dev"
     },
@@ -25,7 +25,7 @@
     "target-dir": "Sensio/Bundle/GeneratorBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1.x-dev"
+            "dev-master": "2.2.x-dev"
         }
     }
 }
