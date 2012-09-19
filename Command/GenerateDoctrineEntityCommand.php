@@ -16,6 +16,7 @@ use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -272,15 +273,9 @@ EOT
                 $defaultType = 'integer';
             }
 
-            if (strstr($columnName, '_')) {
-                $fieldName = preg_replace_callback( '/_(.)/', function ($m) { return ucfirst($m[1]); }, $columnName);
-            } else {
-                $fieldName = $columnName;
-            }
-
             $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', $defaultType), $fieldValidator, false, $defaultType);
 
-            $data = array('columnName' => $columnName, 'fieldName' => $fieldName, 'type' => $type);
+            $data = array('columnName' => $columnName, 'fieldName' => lcfirst(Container::camelize($columnName)), 'type' => $type);
 
             if ($type == 'string') {
                 $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);

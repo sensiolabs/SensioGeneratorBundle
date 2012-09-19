@@ -40,9 +40,9 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
             array(array(), "AcmeBlogBundle:Blog/Post\n", array('Blog\\Post', 'annotation', array())),
             array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), '', array('Blog\\Post', 'annotation', array())),
             array(array(), "AcmeBlogBundle:Blog/Post\nyml\n\n", array('Blog\\Post', 'yml', array())),
-            array(array(), "AcmeBlogBundle:Blog/Post\nyml\ntitle\n\n255\ndescription\ntext\n\n", array('Blog\\Post', 'yml', array(
-                array('fieldName' => 'title', 'type' => 'string', 'length' => 255),
-                array('fieldName' => 'description', 'type' => 'text'),
+            array(array(), "AcmeBlogBundle:Blog/Post\nyml\ncreated_by\n\n255\ndescription\ntext\n\n", array('Blog\\Post', 'yml', array(
+                array('fieldName' => 'createdBy', 'type' => 'string', 'length' => 255, 'columnName' => 'created_by'),
+                array('fieldName' => 'description', 'type' => 'text', 'columnName' => 'description'),
             ))),
         );
     }
@@ -74,8 +74,8 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
     {
         return array(
             array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), array('Blog\\Post', 'annotation', array())),
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post', '--format' => 'yml', '--fields' => 'title:string(255) description:text'), array('Blog\\Post', 'yml', array(
-                array('fieldName' => 'title', 'type' => 'string', 'length' => 255),
+            array(array('--entity' => 'AcmeBlogBundle:Blog/Post', '--format' => 'yml', '--fields' => 'created_by:string(255) description:text'), array('Blog\\Post', 'yml', array(
+                array('fieldName' => 'created_by', 'type' => 'string', 'length' => 255),
                 array('fieldName' => 'description', 'type' => 'text', 'length' => ''),
             ))),
         );
