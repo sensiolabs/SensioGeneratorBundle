@@ -27,6 +27,13 @@
         return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
     }
 
+    /**
+     * Creates a form to delete a {{ entity }} entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return Symfony\Component\Form\Form The form
+     */
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
