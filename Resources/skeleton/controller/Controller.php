@@ -27,7 +27,6 @@ class {{ controller }}Controller extends Controller
             ${{- action.placeholders|join(', $') -}}
         {%- endif -%})
     {
-        // ... foo
     }
 
 {% endfor -%}
