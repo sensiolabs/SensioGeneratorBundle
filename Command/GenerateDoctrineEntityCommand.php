@@ -267,10 +267,15 @@ EOT
 
             $defaultType = 'string';
 
+            // try to guess the type by the column name prefix/suffix
             if (substr($columnName, -3) == '_at') {
                 $defaultType = 'datetime';
             } elseif (substr($columnName, -3) == '_id') {
                 $defaultType = 'integer';
+            } elseif (substr($columnName, 0, 3) == 'is_') {
+                $defaultType = 'boolean';
+            } elseif (substr($columnName, 0, 4) == 'has_') {
+                $defaultType = 'boolean';
             }
 
             $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', $defaultType), $fieldValidator, false, $defaultType);
