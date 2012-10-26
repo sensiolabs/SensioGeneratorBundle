@@ -41,7 +41,7 @@ class GenerateBundleCommand extends ContainerAwareCommand
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
                 new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure'),
             ))
             ->setDescription('Generates a bundle')
@@ -134,59 +134,97 @@ EOT
         $dialog->writeSection($output, 'Welcome to the Symfony2 bundle generator');
 
         // namespace
-        $output->writeln(array(
-            '',
-            'Your application code must be written in <comment>bundles</comment>. This command helps',
-            'you generate them easily.',
-            '',
-            'Each bundle is hosted under a namespace (like <comment>Acme/Bundle/BlogBundle</comment>).',
-            'The namespace should begin with a "vendor" name like your company name, your',
-            'project name, or your client name, followed by one or more optional category',
-            'sub-namespaces, and it should end with the bundle name itself',
-            '(which must have <comment>Bundle</comment> as a suffix).',
-            '',
-            'See http://symfony.com/doc/current/cookbook/bundles/best_practices.html#index-1 for more',
-            'details on bundle naming conventions.',
-            '',
-            'Use <comment>/</comment> instead of <comment>\\ </comment> for the namespace delimiter to avoid any problem.',
-            '',
-        ));
+        $namespace = null;
+        try {
+            $namespace = $input->getOption('namespace') ? Validators::validateBundleNamespace($input->getOption('namespace')) : null;
+        } catch (\Exception $error) {
+            $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
+        }
 
-        $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleNamespace'), false, $input->getOption('namespace'));
-        $input->setOption('namespace', $namespace);
+        if (is_null($namespace)) {
+            $output->writeln(array(
+                '',
+                'Your application code must be written in <comment>bundles</comment>. This command helps',
+                'you generate them easily.',
+                '',
+                'Each bundle is hosted under a namespace (like <comment>Acme/Bundle/BlogBundle</comment>).',
+                'The namespace should begin with a "vendor" name like your company name, your',
+                'project name, or your client name, followed by one or more optional category',
+                'sub-namespaces, and it should end with the bundle name itself',
+                '(which must have <comment>Bundle</comment> as a suffix).',
+                '',
+                'See http://symfony.com/doc/current/cookbook/bundles/best_practices.html#index-1 for more',
+                'details on bundle naming conventions.',
+                '',
+                'Use <comment>/</comment> instead of <comment>\\ </comment> for the namespace delimiter to avoid any problem.',
+                '',
+            ));
+
+            $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleNamespace'), false, $input->getOption('namespace'));
+            $input->setOption('namespace', $namespace);
+        }
 
         // bundle name
-        $bundle = $input->getOption('bundle-name') ?: strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
-        $output->writeln(array(
-            '',
-            'In your code, a bundle is often referenced by its name. It can be the',
-            'concatenation of all namespace parts but it\'s really up to you to come',
-            'up with a unique name (a good practice is to start with the vendor name).',
-            'Based on the namespace, we suggest <comment>'.$bundle.'</comment>.',
-            '',
-        ));
-        $bundle = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle name', $bundle), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $bundle);
-        $input->setOption('bundle-name', $bundle);
+        $bundle = null;
+        try {
+            $bundle = $input->getOption('bundle-name') ? Validators::validateBundleName($input->getOption('bundle-name')) : null;
+        } catch (\Exception $error) {
+            $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
+        }
+
+        if (is_null($bundle)) {
+            $bundle = strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
+
+            $output->writeln(array(
+                '',
+                'In your code, a bundle is often referenced by its name. It can be the',
+                'concatenation of all namespace parts but it\'s really up to you to come',
+                'up with a unique name (a good practice is to start with the vendor name).',
+                'Based on the namespace, we suggest <comment>'.$bundle.'</comment>.',
+                '',
+            ));
+            $bundle = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle name', $bundle), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $bundle);
+            $input->setOption('bundle-name', $bundle);
+        }
 
         // target dir
-        $dir = $input->getOption('dir') ?: dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src';
-        $output->writeln(array(
-            '',
-            'The bundle can be generated anywhere. The suggested default directory uses',
-            'the standard conventions.',
-            '',
-        ));
-        $dir = $dialog->askAndValidate($output, $dialog->getQuestion('Target directory', $dir), function ($dir) use ($bundle, $namespace) { return Validators::validateTargetDir($dir, $bundle, $namespace); }, false, $dir);
-        $input->setOption('dir', $dir);
+        $dir = null;
+        try {
+            $dir = $input->getOption('dir') ? Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace) : null;
+        } catch (\Exception $error) {
+            $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
+        }
+
+        if (is_null($dir)) {
+            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src';
+
+            $output->writeln(array(
+                '',
+                'The bundle can be generated anywhere. The suggested default directory uses',
+                'the standard conventions.',
+                '',
+            ));
+            $dir = $dialog->askAndValidate($output, $dialog->getQuestion('Target directory', $dir), function ($dir) use ($bundle, $namespace) { return Validators::validateTargetDir($dir, $bundle, $namespace); }, false, $dir);
+            $input->setOption('dir', $dir);
+        }
 
         // format
-        $output->writeln(array(
-            '',
-            'Determine the format to use for the generated configuration.',
-            '',
-        ));
-        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $input->getOption('format')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $input->getOption('format'));
-        $input->setOption('format', $format);
+        $format = null;
+        try {
+            $format = $input->getOption('format') ? Validators::validateFormat($input->getOption('format')) : null;
+        } catch (\Exception $error) {
+            $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
+        }
+        
+        if (is_null($format)) {
+            $output->writeln(array(
+                '',
+                'Determine the format to use for the generated configuration.',
+                '',
+            ));
+            $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $input->getOption('format')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $input->getOption('format'));
+            $input->setOption('format', $format);
+        }
 
         // optional files to generate
         $output->writeln(array(
