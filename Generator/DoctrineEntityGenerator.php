@@ -20,7 +20,7 @@ use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
 
 /**
- * Generates a form class based on a Doctrine entity.
+ * Generates a Doctrine entity class based on its name, fields and format.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jonathan H. Wage <jonwage@gmail.com>
