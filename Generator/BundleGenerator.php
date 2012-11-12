@@ -46,21 +46,21 @@ class BundleGenerator extends Generator
             'extension_alias' => Container::underscore($basename),
         );
 
-        $this->renderFile($this->skeletonDir, 'Bundle.php', $dir.'/'.$bundle.'.php', $parameters);
-        $this->renderFile($this->skeletonDir, 'Extension.php', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
-        $this->renderFile($this->skeletonDir, 'Configuration.php', $dir.'/DependencyInjection/Configuration.php', $parameters);
-        $this->renderFile($this->skeletonDir, 'DefaultController.php', $dir.'/Controller/DefaultController.php', $parameters);
-        $this->renderFile($this->skeletonDir, 'DefaultControllerTest.php', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
-        $this->renderFile($this->skeletonDir, 'index.html.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
+        $this->renderFile($this->skeletonDir, 'Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
+        $this->renderFile($this->skeletonDir, 'index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
 
         if ('xml' === $format || 'annotation' === $format) {
-            $this->renderFile($this->skeletonDir, 'services.xml', $dir.'/Resources/config/services.xml', $parameters);
+            $this->renderFile($this->skeletonDir, 'services.xml.twig', $dir.'/Resources/config/services.xml', $parameters);
         } else {
-            $this->renderFile($this->skeletonDir, 'services.'.$format, $dir.'/Resources/config/services.'.$format, $parameters);
+            $this->renderFile($this->skeletonDir, 'services.'.$format.'.twig', $dir.'/Resources/config/services.'.$format, $parameters);
         }
 
         if ('annotation' != $format) {
-            $this->renderFile($this->skeletonDir, 'routing.'.$format, $dir.'/Resources/config/routing.'.$format, $parameters);
+            $this->renderFile($this->skeletonDir, 'routing.'.$format.'.twig', $dir.'/Resources/config/routing.'.$format, $parameters);
         }
 
         if ($structure) {
