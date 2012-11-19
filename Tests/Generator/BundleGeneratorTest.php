@@ -12,7 +12,6 @@
 namespace Sensio\Bundle\GeneratorBundle\Tests\Generator;
 
 use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
-use Symfony\Component\Filesystem\Filesystem;
 
 class BundleGeneratorTest extends GeneratorTest
 {
@@ -56,5 +55,67 @@ class BundleGeneratorTest extends GeneratorTest
 
         $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/DefaultController.php');
         $this->assertContains('@Route("/hello/{name}"', $content);
+    }
+
+    public function testDirIsFile()
+    {
+        $this->filesystem->mkdir($this->tmpDir.'/Foo');
+        $this->filesystem->touch($this->tmpDir.'/Foo/BarBundle');
+
+        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
+
+        try {
+            $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+        } catch (\RuntimeException $e) {
+            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', $this->tmpDir.'/Foo/BarBundle'), $e->getMessage());
+            return;
+        }
+
+        $this->fail('An exception was expected!');
+    }
+
+    public function testIsNotWritableDir()
+    {
+        $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
+        $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0444);
+
+        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
+
+        try {
+            $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+        } catch (\RuntimeException $e) {
+            $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
+            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not writable.', $this->tmpDir.'/Foo/BarBundle'), $e->getMessage());
+            return;
+        }
+
+        $this->fail('An exception was expected!');
+    }
+
+    public function testIsNotEmptyDir()
+    {
+        $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
+        $this->filesystem->touch($this->tmpDir.'/Foo/BarBundle/somefile');
+
+        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
+
+        try {
+            $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+        } catch (\RuntimeException $e) {
+            $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
+            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not empty.', $this->tmpDir.'/Foo/BarBundle'), $e->getMessage());
+            return;
+        }
+
+        $this->fail('An exception was expected!');
+    }
+
+    public function testExistingEmptyDirIsFine()
+    {
+        $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
+
+        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
+
+        $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
     }
 }
