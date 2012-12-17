@@ -23,8 +23,8 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 class DoctrineCrudGenerator extends Generator
 {
     protected $filesystem;
-    protected $skeletonDirList;
     protected $skeletonDir;
+    protected $customSkeletonDirs;
     protected $routePrefix;
     protected $routeNamePrefix;
     protected $bundle;
@@ -40,14 +40,11 @@ class DoctrineCrudGenerator extends Generator
      * @param string     $skeletonDir        The main skeleton directory
      * @param array      $customSkeletonDirs Additional, custom, skeleton dirs
      */
-    public function __construct(Filesystem $filesystem, $skeletonDir, $customSkeletonDirs = null)
+    public function __construct(Filesystem $filesystem, $skeletonDir, $customSkeletonDirs = array())
     {
         $this->filesystem  = $filesystem;
         $this->skeletonDir = $skeletonDir;
-
-        // list of all possible skeleton directories
-        $this->skeletonDirList = is_array($customSkeletonDirs) ? $customSkeletonDirs : array();
-        $this->skeletonDirList[] = $skeletonDir;
+        $this->customSkeletonDirs = is_array($customSkeletonDirs) ? $customSkeletonDirs : array();
     }
 
     /**
@@ -129,18 +126,19 @@ class DoctrineCrudGenerator extends Generator
 
     /**
      * Find the most specific skeleton dir where the template lies
-     * Assertion: $this->skeletonDirList must be sorted from the most specific
-     * to the most general directory
+     * Assertion: $this->customSkeletonDirs must be sorted from the most specific
+     * to the most general directory.
+	 * If no custom dir contains the template, the global dir is returned.
      */
     protected function findTemplateDir($template)
     {
-        foreach ($this->skeletonDirList as $dir) {
+        foreach ($this->customSkeletonDirs as $dir) {
             if (is_readable($dir . '/' . $template)) {
                 return $dir;
             }
         }
 
-        return null;
+        return $this->skeletonDir;
     }
 
     /**
