@@ -241,17 +241,19 @@ EOT
         if (null === $this->generator) {
 
             // list directories where to look for templates, in descending priority order
-            $dirList = array();
+            $customDirs = array();
 
-            if (isset($bundle)) {
-
-                $dirList[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud';
+            if (isset($bundle)
+            && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud')
+            ) {
+                $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud';
             }
 
-            $dirList[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/crud';
-            $dirList[] = __DIR__.'/../Resources/skeleton/crud';
+            if (is_dir($this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/crud')) {
+                $customDirs[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/crud';
+            }
 
-            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), $dirList);
+            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), realpath(__DIR__.'/../Resources/skeleton/crud'), $customDirs);
         }
 
         return $this->generator;
