@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 class DoctrineCrudGenerator extends Generator
 {
     protected $filesystem;
-    protected $skeletonDir;
+    protected $skeletonDirList;
     protected $routePrefix;
     protected $routeNamePrefix;
     protected $bundle;
@@ -35,13 +35,13 @@ class DoctrineCrudGenerator extends Generator
     /**
      * Constructor.
      *
-     * @param Filesystem $filesystem  A Filesystem instance
-     * @param string     $skeletonDir Path to the skeleton directory
+     * @param Filesystem $filesystem     A Filesystem instance
+     * @param string     $skeletonDirone path or an array of paths to the skeleton directory
      */
     public function __construct(Filesystem $filesystem, $skeletonDir)
     {
         $this->filesystem  = $filesystem;
-        $this->skeletonDir = $skeletonDir;
+        $this->skeletonDirList = is_array($skeletonDir) ? $skeletonDir : array($skeletonDir);
     }
 
     /**
@@ -122,6 +122,22 @@ class DoctrineCrudGenerator extends Generator
     }
 
     /**
+     * Find the most specific skeleton dir where the template lies
+     * Assertion: $this->skeletonDirList must be sorted from the most specific
+     * to the most general directory
+     */
+    protected function findTemplateDir($template)
+    {
+        foreach ($this->skeletonDirList as $dir) {
+            if (is_readable($dir . '/' . $template)) {
+                return $dir;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Generates the routing configuration.
      *
      */
@@ -138,7 +154,10 @@ class DoctrineCrudGenerator extends Generator
             $this->format
         );
 
-        $this->renderFile($this->skeletonDir, 'config/routing.'.$this->format.'.twig', $target, array(
+        $template = 'config/routing.'.$this->format;
+        $skeletonDir = $this->findTemplateDir($template);
+
+        $this->renderFile($skeletonDir, $template, $target, array(
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
@@ -170,11 +189,14 @@ class DoctrineCrudGenerator extends Generator
             throw new \RuntimeException('Unable to generate the controller as it already exists.');
         }
 
-        $this->renderFile($this->skeletonDir, 'controller.php.twig', $target, array(
+        $template = 'controller.php';
+        $skeletonDir = $this->findTemplateDir($template);
+
+        $this->renderFile($skeletonDir, $template, $target, array(
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
-            'dir'               => $this->skeletonDir,
+            'dir'               => $skeletonDir,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
             'entity_class'      => $entityClass,
@@ -197,7 +219,10 @@ class DoctrineCrudGenerator extends Generator
         $dir    = $this->bundle->getPath() .'/Tests/Controller';
         $target = $dir .'/'. str_replace('\\', '/', $entityNamespace).'/'. $entityClass .'ControllerTest.php';
 
-        $this->renderFile($this->skeletonDir, 'tests/test.php.twig', $target, array(
+        $template = 'tests/test.php';
+        $skeletonDir = $this->findTemplateDir($template);
+
+        $this->renderFile($skeletonDir, $template, $target, array(
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
@@ -206,7 +231,7 @@ class DoctrineCrudGenerator extends Generator
             'entity_namespace'  => $entityNamespace,
             'actions'           => $this->actions,
             'form_type_name'    => strtolower(str_replace('\\', '_', $this->bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$entityClass.'Type'),
-            'dir'               => $this->skeletonDir,
+            'dir'               => $skeletonDir,
         ));
     }
 
@@ -217,8 +242,11 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateIndexView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/index.html.twig.twig', $dir.'/index.html.twig', array(
-            'dir'               => $this->skeletonDir,
+        $template = 'views/index.html.twig';
+        $skeletonDir = $this->findTemplateDir($template);
+
+        $this->renderFile($skeletonDir, $template, $dir.'/index.html.twig', array(
+            'dir'               => $skeletonDir,
             'entity'            => $this->entity,
             'fields'            => $this->metadata->fieldMappings,
             'actions'           => $this->actions,
@@ -235,8 +263,11 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateShowView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/show.html.twig.twig', $dir.'/show.html.twig', array(
-            'dir'               => $this->skeletonDir,
+        $template = 'views/show.html.twig';
+        $skeletonDir = $this->findTemplateDir($template);
+
+        $this->renderFile($skeletonDir, $template, $dir.'/show.html.twig', array(
+            'dir'               => $skeletonDir,
             'entity'            => $this->entity,
             'fields'            => $this->metadata->fieldMappings,
             'actions'           => $this->actions,
@@ -252,8 +283,11 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateNewView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/new.html.twig.twig', $dir.'/new.html.twig', array(
-            'dir'               => $this->skeletonDir,
+        $template = 'views/new.html.twig';
+        $skeletonDir = $this->findTemplateDir($template);
+
+        $this->renderFile($skeletonDir, $template, $dir.'/new.html.twig', array(
+            'dir'               => $skeletonDir,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
@@ -268,8 +302,11 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function generateEditView($dir)
     {
-        $this->renderFile($this->skeletonDir, 'views/edit.html.twig.twig', $dir.'/edit.html.twig', array(
-            'dir'               => $this->skeletonDir,
+        $template = 'views/edit.html.twig';
+        $skeletonDir = $this->findTemplateDir($template);
+
+        $this->renderFile($skeletonDir, $template, $dir.'/edit.html.twig', array(
+            'dir'               => $skeletonDir,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,

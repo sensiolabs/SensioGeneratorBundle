@@ -91,7 +91,7 @@ EOT
         $metadata    = $this->getEntityMetadata($entityClass);
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
-        $generator = $this->getGenerator();
+        $generator = $this->getGenerator($bundle);
         $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
@@ -236,10 +236,22 @@ EOT
         return $prefix;
     }
 
-    protected function getGenerator()
+    protected function getGenerator($bundle = null)
     {
         if (null === $this->generator) {
-            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/crud');
+
+            // list directories where to look for templates, in descending priority order
+            $dirList = array();
+
+            if (isset($bundle)) {
+
+                $dirList[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud';
+            }
+
+            $dirList[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/crud';
+            $dirList[] = __DIR__.'/../Resources/skeleton/crud';
+
+            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), $dirList);
         }
 
         return $this->generator;
