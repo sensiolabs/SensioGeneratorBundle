@@ -56,7 +56,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
     {
         $this->routePrefix = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
@@ -75,7 +75,7 @@ class DoctrineCrudGenerator extends Generator
         $this->metadata = $metadata;
         $this->setFormat($format);
 
-        $this->generateControllerClass();
+        $this->generateControllerClass($forceOverwrite);
 
         $dir = sprintf('%s/Resources/views/%s', $this->bundle->getPath(), str_replace('\\', '/', $this->entity));
 
@@ -151,7 +151,7 @@ class DoctrineCrudGenerator extends Generator
      * Generates the controller class only.
      *
      */
-    private function generateControllerClass()
+    private function generateControllerClass($forceOverwrite)
     {
         $dir = $this->bundle->getPath();
 
@@ -166,7 +166,7 @@ class DoctrineCrudGenerator extends Generator
             $entityClass
         );
 
-        if (file_exists($target)) {
+        if (!$forceOverwrite && file_exists($target)) {
             throw new \RuntimeException('Unable to generate the controller as it already exists.');
         }
 
