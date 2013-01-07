@@ -125,7 +125,7 @@ class DoctrineCrudGenerator extends Generator
      * Generates the routing configuration.
      *
      */
-    private function generateConfiguration()
+    protected function generateConfiguration()
     {
         if (!in_array($this->format, array('yml', 'xml', 'php'))) {
             return;
@@ -151,7 +151,7 @@ class DoctrineCrudGenerator extends Generator
      * Generates the controller class only.
      *
      */
-    private function generateControllerClass()
+    protected function generateControllerClass()
     {
         $dir = $this->bundle->getPath();
 
@@ -188,7 +188,7 @@ class DoctrineCrudGenerator extends Generator
      * Generates the functional test class only.
      *
      */
-    private function generateTestClass()
+    protected function generateTestClass()
     {
         $parts = explode('\\', $this->entity);
         $entityClass = array_pop($parts);
@@ -215,7 +215,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
-    private function generateIndexView($dir)
+    protected function generateIndexView($dir)
     {
         $this->renderFile($this->skeletonDir, 'views/index.html.twig.twig', $dir.'/index.html.twig', array(
             'dir'               => $this->skeletonDir,
@@ -233,7 +233,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
-    private function generateShowView($dir)
+    protected function generateShowView($dir)
     {
         $this->renderFile($this->skeletonDir, 'views/show.html.twig.twig', $dir.'/show.html.twig', array(
             'dir'               => $this->skeletonDir,
@@ -250,7 +250,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
-    private function generateNewView($dir)
+    protected function generateNewView($dir)
     {
         $this->renderFile($this->skeletonDir, 'views/new.html.twig.twig', $dir.'/new.html.twig', array(
             'dir'               => $this->skeletonDir,
@@ -266,7 +266,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
-    private function generateEditView($dir)
+    protected function generateEditView($dir)
     {
         $this->renderFile($this->skeletonDir, 'views/edit.html.twig.twig', $dir.'/edit.html.twig', array(
             'dir'               => $this->skeletonDir,
@@ -282,7 +282,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @return array
      */
-    private function getRecordActions()
+    protected function getRecordActions()
     {
         return array_filter($this->actions, function($item) {
             return in_array($item, array('show', 'edit'));
