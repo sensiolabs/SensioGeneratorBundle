@@ -125,10 +125,13 @@ class DoctrineCrudGenerator extends Generator
     }
 
     /**
-     * Find the most specific skeleton dir where the template lies
+     * Finds the most specific skeleton dir where the template lies.
+     * 
      * Assertion: $this->customSkeletonDirs must be sorted from the most specific
      * to the most general directory.
-	 * If no custom dir contains the template, the global dir is returned.
+     * If no custom dir contains the template, the global dir is returned.
+     * 
+     * @param string $template The template filename we are looking for
      */
     protected function findTemplateDir($template)
     {

@@ -55,6 +55,11 @@ The default command only generates the list and show actions.
 Using the --with-write option allows to generate the new, edit and delete actions.
 
 <info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
+
+Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
+
+<info>__bundle_path__ /Resources/SensioGeneratorBundle/skeleton/crud
+__project_root__/app/Resources/SensioGeneratorBundle/skeleton/crud</info>
 EOT
             )
             ->setName('doctrine:generate:crud')
@@ -243,9 +248,7 @@ EOT
             // list directories where to look for templates, in descending priority order
             $customDirs = array();
 
-            if (isset($bundle)
-            && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud')
-            ) {
+            if (isset($bundle) && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud')) {
                 $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud';
             }
 
