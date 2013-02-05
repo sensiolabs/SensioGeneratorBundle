@@ -144,7 +144,7 @@ EOT
             $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }
 
-        if (is_null($namespace)) {
+        if (null === $namespace) {
             $output->writeln(array(
                 '',
                 'Your application code must be written in <comment>bundles</comment>. This command helps',
@@ -175,7 +175,7 @@ EOT
             $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }
 
-        if (is_null($bundle)) {
+        if (null === $bundle) {
             $bundle = strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
 
             $output->writeln(array(
@@ -198,7 +198,7 @@ EOT
             $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }
 
-        if (is_null($dir)) {
+        if (null === $dir) {
             $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src';
 
             $output->writeln(array(
@@ -219,7 +219,7 @@ EOT
             $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }
 
-        if (is_null($format)) {
+        if (null === $format) {
             $output->writeln(array(
                 '',
                 'Determine the format to use for the generated configuration.',
