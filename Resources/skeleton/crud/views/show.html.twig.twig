@@ -1,28 +1,32 @@
-<h1>{{ entity }}</h1>
+{{ "{% extends '::base.html.twig' %}" }}
 
-<table class="record_properties">
-    <tbody>
-    {%- for field, metadata in fields %}
+{{ "{% block body -%}" }}
+    <h1>{{ entity }}</h1>
 
-        <tr>
-            <th>{{ field|capitalize }}</th>
+    <table class="record_properties">
+        <tbody>
+        {%- for field, metadata in fields %}
 
-        {%- if metadata.type in ['date', 'datetime'] %}
+            <tr>
+                <th>{{ field|capitalize }}</th>
 
-            <td>{{ '{{ entity.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}' }}</td>
+            {%- if metadata.type in ['date', 'datetime'] %}
 
-        {%- else %}
+                <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}' }}</td>
 
-            <td>{{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}</td>
+            {%- else %}
 
-        {%- endif %}
+                <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
 
-        </tr>
+            {%- endif %}
 
-    {%- endfor %}
+            </tr>
 
-    </tbody>
-</table>
+        {%- endfor %}
 
-{% set hide_edit, hide_delete = false, false %}
-{% include 'views/others/record_actions.html.twig.twig' %}
+        </tbody>
+    </table>
+
+    {% set hide_edit, hide_delete = false, false %}
+    {% include 'views/others/record_actions.html.twig.twig' %}
+{{ "{% endblock %}" }}
