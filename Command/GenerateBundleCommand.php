@@ -99,6 +99,9 @@ EOT
         }
         $bundle = Validators::validateBundleName($bundle);
         $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
+        if (null === $input->getOption('format')) {
+            $input->setOption('format', 'annotation');
+        }
         $format = Validators::validateFormat($input->getOption('format'));
         $structure = $input->getOption('structure');
 
@@ -215,7 +218,7 @@ EOT
         } catch (\Exception $error) {
             $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }
-        
+
         if (is_null($format)) {
             $output->writeln(array(
                 '',
