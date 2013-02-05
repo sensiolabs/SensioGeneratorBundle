@@ -67,7 +67,7 @@ class BundleGeneratorTest extends GeneratorTest
         try {
             $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
         } catch (\RuntimeException $e) {
-            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', $this->tmpDir.'/Foo/BarBundle'), $e->getMessage());
+            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', realpath($this->tmpDir.'/Foo/BarBundle')), $e->getMessage());
             return;
         }
 
@@ -85,7 +85,7 @@ class BundleGeneratorTest extends GeneratorTest
             $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
         } catch (\RuntimeException $e) {
             $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
-            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not writable.', $this->tmpDir.'/Foo/BarBundle'), $e->getMessage());
+            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not writable.', realpath($this->tmpDir.'/Foo/BarBundle')), $e->getMessage());
             return;
         }
 
@@ -103,7 +103,7 @@ class BundleGeneratorTest extends GeneratorTest
             $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
         } catch (\RuntimeException $e) {
             $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
-            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not empty.', $this->tmpDir.'/Foo/BarBundle'), $e->getMessage());
+            $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not empty.', realpath($this->tmpDir.'/Foo/BarBundle')), $e->getMessage());
             return;
         }
 

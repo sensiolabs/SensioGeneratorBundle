@@ -55,6 +55,11 @@ abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
             ->method('getBundle')
             ->will($this->returnValue($this->getBundle()))
         ;
+        $kernel
+            ->expects($this->any())
+            ->method('getBundles')
+            ->will($this->returnValue(array($this->getBundle())))
+        ;
 
         $filesystem = $this->getMock('Symfony\Component\Filesystem\Filesystem');
         $filesystem
