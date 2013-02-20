@@ -34,7 +34,7 @@ located in ``Resources/skeleton/crud``. To use custom templates, simply put them
 in one of the following location, under the same directory structure found in
 the default location:
 
-``__bundle_path__ /Resources/SensioGeneratorBundle/skeleton/crud`` or
+``__bundle_path__/Resources/SensioGeneratorBundle/skeleton/crud`` or
 ``__app_path__/Resources/SensioGeneratorBundle/skeleton/crud``
 
 Available Options

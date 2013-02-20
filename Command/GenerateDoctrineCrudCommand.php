@@ -58,7 +58,7 @@ Using the --with-write option allows to generate the new, edit and delete action
 
 Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
 
-<info>__bundle_path__ /Resources/SensioGeneratorBundle/skeleton/crud
+<info>__bundle_path__/Resources/SensioGeneratorBundle/skeleton/crud
 __project_root__/app/Resources/SensioGeneratorBundle/skeleton/crud</info>
 EOT
             )
