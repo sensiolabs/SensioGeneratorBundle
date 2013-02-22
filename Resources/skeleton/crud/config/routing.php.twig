@@ -37,7 +37,7 @@ $collection->add('{{ route_name_prefix }}_edit', new Route('/{id}/edit', array(
 $collection->add('{{ route_name_prefix }}_update', new Route(
     '/{id}/update',
     array('_controller' => '{{ bundle }}:{{ entity }}:update'),
-    array('_method' => 'post')
+    array('_method' => 'post|put')
 ));
 {% endif %}
 
@@ -45,7 +45,7 @@ $collection->add('{{ route_name_prefix }}_update', new Route(
 $collection->add('{{ route_name_prefix }}_delete', new Route(
     '/{id}/delete',
     array('_controller' => '{{ bundle }}:{{ entity }}:delete'),
-    array('_method' => 'post')
+    array('_method' => 'post|delete')
 ));
 {% endif %}
 
