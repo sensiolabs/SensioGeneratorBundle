@@ -94,7 +94,7 @@ class ControllerGenerator extends Generator
             if ('twig' == $templateFormat) {
                 $this->renderFile($skeletonDir, 'Template.html.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             } else {
-                $this->renderFile($skeletonDirr, 'Template.html.php', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
+                $this->renderFile($skeletonDir, 'Template.html.php', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             }
 
             $this->generateRouting($bundle, $controller, $actions[$i], $routeFormat);
