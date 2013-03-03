@@ -83,6 +83,9 @@ be overriden by placing custom templates in one of the following locations, by o
 
 <info>__bundle_path__/Resources/SensioGeneratorBundle/skeleton/controller
 __project_root__/app/Resources/SensioGeneratorBundle/skeleton/controller</info>
+
+You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resources/skeleton
+in order to know the file structure of the skeleton
 EOT
             )
             ->setName('generate:controller')

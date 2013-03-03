@@ -60,6 +60,14 @@ Every generated file is based on a template. There are default templates but the
 
 <info>__bundle_path__/Resources/SensioGeneratorBundle/skeleton/crud
 __project_root__/app/Resources/SensioGeneratorBundle/skeleton/crud</info>
+
+And
+
+<info>__bundle_path__/Resources/SensioGeneratorBundle/skeleton/form
+__project_root__/app/Resources/SensioGeneratorBundle/skeleton/form</info>
+
+You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resources/skeleton
+in order to know the file structure of the skeleton
 EOT
             )
             ->setName('doctrine:generate:crud')
