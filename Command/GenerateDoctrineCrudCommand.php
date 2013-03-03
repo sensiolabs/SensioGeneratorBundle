@@ -193,7 +193,7 @@ EOT
     protected function generateForm($bundle, $entity, $metadata)
     {
         try {
-            $this->getFormGenerator()->generate($bundle, $entity, $metadata[0]);
+            $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0]);
         } catch (\RuntimeException $e ) {
             // form already exists
         }
@@ -267,10 +267,21 @@ EOT
         $this->generator = $generator;
     }
 
-    protected function getFormGenerator()
+    protected function getFormGenerator($bundle = null)
     {
         if (null === $this->formGenerator) {
-            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'),  __DIR__.'/../Resources/skeleton/form');
+
+            $customDirs = array();
+
+            if (isset($bundle) && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/form')) {
+                $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/form';
+            }
+
+            if (is_dir($this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/form')) {
+                $customDirs[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/form';
+            }
+
+            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'), realpath(__DIR__.'/../Resources/skeleton/form'), $customDirs);
         }
 
         return $this->formGenerator;
