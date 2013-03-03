@@ -40,6 +40,11 @@ class GenerateDoctrineFormCommand extends GenerateDoctrineCommand
 The <info>doctrine:generate:form</info> command generates a form class based on a Doctrine entity.
 
 <info>php app/console doctrine:generate:form AcmeBlogBundle:Post</info>
+
+Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
+
+<info>__bundle_path__/Resources/SensioGeneratorBundle/skeleton/form
+__project_root__/app/Resources/SensioGeneratorBundle/skeleton/form</info>
 EOT
             )
             ->setName('doctrine:generate:form')
@@ -59,7 +64,18 @@ EOT
         $metadata = $this->getEntityMetadata($entityClass);
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
-        $generator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'),  __DIR__.'/../Resources/skeleton/form');
+        // list directories where to look for templates, in descending priority order
+        $customDirs = array();
+
+        if (isset($bundle) && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/form')) {
+            $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/form';
+        }
+
+        if (is_dir($this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/form')) {
+            $customDirs[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/form';
+        }
+
+        $generator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'), realpath(__DIR__.'/../Resources/skeleton/form'), $customDirs);
         $generator->generate($bundle, $entity, $metadata[0]);
 
         $output->writeln(sprintf(
