@@ -77,6 +77,12 @@ If you want to disable any user interaction, use <comment>--no-interaction</comm
 but don't forget to pass all needed options:
 
 <info>php app/console generate:controller --controller=AcmeBlogBundle:Post --no-interaction</info>
+
+Every generated file is based on a template. There are default templates but they can
+be overriden by placing custom templates in one of the following locations, by order of priority:
+
+<info>__bundle_path__/Resources/SensioGeneratorBundle/skeleton/controller
+__project_root__/app/Resources/SensioGeneratorBundle/skeleton/controller</info>
 EOT
             )
             ->setName('generate:controller')
@@ -112,7 +118,7 @@ EOT
 
         $dialog->writeSection($output, 'Controller generation');
 
-        $generator = $this->getGenerator();
+        $generator = $this->getGenerator($bundle);
         $generator->generate($bundle, $controller, $input->getOption('route-format'), $input->getOption('template-format'), $this->parseActions($input->getOption('actions')));
 
         $output->writeln('Generating the bundle code: <info>OK</info>');
@@ -320,10 +326,21 @@ EOT
         return array(substr($entity, 0, $pos), substr($entity, $pos + 1));
     }
 
-    protected function getGenerator()
+    protected function getGenerator($bundle = null)
     {
         if (null === $this->generator) {
-            $this->generator = new ControllerGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/controller');
+
+            $customDirs = array();
+
+            if (isset($bundle) && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/controller')) {
+                $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/controller';
+            }
+
+            if (is_dir($this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/controller')) {
+                $customDirs[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/controller';
+            }
+
+            $this->generator = new ControllerGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/controller', $customDirs);
         }
 
         return $this->generator;

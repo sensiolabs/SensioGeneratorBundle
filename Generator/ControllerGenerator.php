@@ -23,11 +23,40 @@ class ControllerGenerator extends Generator
 {
     private $filesystem;
     private $skeletonDir;
+    private $customSkeletonDirs;
 
-    public function __construct(Filesystem $filesystem, $skeletonDir)
+    /**
+     * Constructor.
+     *
+     * @param Filesystem $filesystem         A Filesystem instance
+     * @param string     $skeletonDir        The main skeleton directory
+     * @param array      $customSkeletonDirs Additional, custom, skeleton dirs
+     */
+    public function __construct(Filesystem $filesystem, $skeletonDir, $customSkeletonDirs = array())
     {
-        $this->filesystem = $filesystem;
+        $this->filesystem  = $filesystem;
         $this->skeletonDir = $skeletonDir;
+        $this->customSkeletonDirs = is_array($customSkeletonDirs) ? $customSkeletonDirs : array();
+    }
+
+    /**
+     * Finds the most specific skeleton dir where the template lies.
+     *
+     * Assertion: $this->customSkeletonDirs must be sorted from the most specific
+     * to the most general directory.
+     * If no custom dir contains the template, the global dir is returned.
+     *
+     * @param string $template The template filename we are looking for
+     */
+    protected function findTemplateDir($template)
+    {
+        foreach ($this->customSkeletonDirs as $dir) {
+            if (is_readable($dir . '/' . $template)) {
+                return $dir;
+            }
+        }
+
+        return $this->skeletonDir;
     }
 
     public function generate(BundleInterface $bundle, $controller, $routeFormat, $templateFormat, array $actions = array())
@@ -60,10 +89,12 @@ class ControllerGenerator extends Generator
                 $template = $bundle->getName().':'.$controller.':'.substr($action['name'], 0, -6).'.html.'.$templateFormat;
             }
 
+            $skeletonDir = $this->findTemplateDir('Template.html.twig');
+
             if ('twig' == $templateFormat) {
-                $this->renderFile($this->skeletonDir, 'Template.html.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
+                $this->renderFile($skeletonDir, 'Template.html.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             } else {
-                $this->renderFile($this->skeletonDir, 'Template.html.php', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
+                $this->renderFile($skeletonDirr, 'Template.html.php', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             }
 
             $this->generateRouting($bundle, $controller, $actions[$i], $routeFormat);
@@ -71,8 +102,13 @@ class ControllerGenerator extends Generator
 
         $parameters['actions'] = $actions;
 
-        $this->renderFile($this->skeletonDir, 'Controller.php', $controllerFile, $parameters);
-        $this->renderFile($this->skeletonDir, 'ControllerTest.php', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
+        $template = 'Controller.php';
+        $skeletonDir = $this->findTemplateDir($template);
+        $this->renderFile($skeletonDir, $template, $controllerFile, $parameters);
+
+        $template = 'ControllerTest.php';
+        $skeletonDir = $this->findTemplateDir($template);
+        $this->renderFile($skeletonDir, $template, $dir.'/Tests/Controller/'.$controller.$template, $parameters);
     }
 
     public function generateRouting(BundleInterface $bundle, $controller, array $action, $format)
