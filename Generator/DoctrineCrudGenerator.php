@@ -126,11 +126,11 @@ class DoctrineCrudGenerator extends Generator
 
     /**
      * Finds the most specific skeleton dir where the template lies.
-     * 
+     *
      * Assertion: $this->customSkeletonDirs must be sorted from the most specific
      * to the most general directory.
      * If no custom dir contains the template, the global dir is returned.
-     * 
+     *
      * @param string $template The template filename we are looking for
      */
     protected function findTemplateDir($template)
@@ -233,6 +233,7 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
+            'bundle'            => $this->bundle->getName(),
             'entity_class'      => $entityClass,
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
@@ -254,6 +255,7 @@ class DoctrineCrudGenerator extends Generator
 
         $this->renderFile($skeletonDir, $template, $dir.'/index.html.twig', array(
             'dir'               => $skeletonDir,
+            'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
             'fields'            => $this->metadata->fieldMappings,
             'actions'           => $this->actions,
@@ -275,6 +277,7 @@ class DoctrineCrudGenerator extends Generator
 
         $this->renderFile($skeletonDir, $template, $dir.'/show.html.twig', array(
             'dir'               => $skeletonDir,
+            'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
             'fields'            => $this->metadata->fieldMappings,
             'actions'           => $this->actions,
@@ -295,9 +298,10 @@ class DoctrineCrudGenerator extends Generator
 
         $this->renderFile($skeletonDir, $template, $dir.'/new.html.twig', array(
             'dir'               => $skeletonDir,
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
-            'entity'            => $this->entity,
             'actions'           => $this->actions,
         ));
     }
@@ -317,6 +321,7 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
+            'bundle'            => $this->bundle->getName(),
             'actions'           => $this->actions,
         ));
     }
