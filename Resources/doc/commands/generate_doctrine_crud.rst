@@ -29,14 +29,6 @@ forget to pass all needed options:
 
     php app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post --format=annotation --with-write --no-interaction
 
-Each generated file is based on a template. The command uses default templates
-located in ``Resources/skeleton/crud``. To use custom templates, simply put them
-in one of the following location, under the same directory structure found in
-the default location:
-
-``BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/crud`` or
-``APP_PATH/Resources/SensioGeneratorBundle/skeleton/crud``
-
 Available Options
 -----------------
 
