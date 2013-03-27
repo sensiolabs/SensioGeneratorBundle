@@ -4,6 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
+{% block body %}
     <route id="{{ route_name_prefix }}" pattern="/">
         <default key="_controller">{{ bundle }}:{{ entity }}:index</default>
     </route>
@@ -40,5 +41,6 @@
         <requirement key="_method">post|delete</requirement>
     </route>
 {% endif %}
+{% endblock body %}
 
 </routes>

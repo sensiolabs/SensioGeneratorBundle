@@ -2,12 +2,17 @@
 
 namespace {{ namespace }}\Form{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
+{% block use_statements %}
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+{% endblock use_statements %}
 
+{% block class_definition %}
 class {{ form_class }} extends AbstractType
+{% endblock class_definition %}
 {
+{% block class_body %}
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -31,4 +36,5 @@ class {{ form_class }} extends AbstractType
     {
         return '{{ form_type_name }}';
     }
+{% endblock class_body %}
 }

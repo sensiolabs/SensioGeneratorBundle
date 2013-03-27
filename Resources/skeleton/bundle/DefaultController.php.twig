@@ -2,14 +2,19 @@
 
 namespace {{ namespace }}\Controller;
 
+{% block use_statements %}
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 {% endif %}
+{% endblock use_statements %}
 
+{% block class_definition %}
 class DefaultController extends Controller
+{% endblock class_definition %}
 {
+{% block class_body %}
     {% if 'annotation' == format -%}
     /**
      * @Route("/hello/{name}")
@@ -25,4 +30,5 @@ class DefaultController extends Controller
         {%- endif %}
 
     }
+{% endblock class_body %}
 }

@@ -1,5 +1,8 @@
+{% block extends %}
 {{ "{% extends '::base.html.twig' %}" }}
+{% endblock extends %}
 
+{% block body %}
 {{ "{% block body -%}" }}
     <h1>{{ entity }}</h1>
 
@@ -30,3 +33,4 @@
     {% set hide_edit, hide_delete = false, false %}
     {% include 'crud/views/others/record_actions.html.twig.twig' %}
 {{ "{% endblock %}" }}
+{% endblock body %}

@@ -1,5 +1,8 @@
+{% block extends %}
 {{ "{% extends '::base.html.twig' %}" }}
+{% endblock extends %}
 
+{% block body %}
 {{ "{% block body -%}" }}
     <h1>{{ entity }} list</h1>
 
@@ -58,3 +61,4 @@
     </ul>
     {% endif %}
 {{ "{% endblock %}" }}
+{% endblock body %}

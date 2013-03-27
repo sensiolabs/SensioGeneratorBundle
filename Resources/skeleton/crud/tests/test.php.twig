@@ -2,10 +2,15 @@
 
 namespace {{ namespace }}\Tests\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
+{% block use_statements %}
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+{% endblock use_statements %}
 
+{% block class_definition %}
 class {{ entity_class }}ControllerTest extends WebTestCase
+{% endblock class_definition %}
 {
+{% block class_body %}
     /*
 
 {%- if 'new' in actions %}
@@ -15,4 +20,5 @@ class {{ entity_class }}ControllerTest extends WebTestCase
 {%- endif %}
 
     */
+{% endblock class_body %}
 }

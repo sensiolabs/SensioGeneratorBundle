@@ -4,7 +4,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
+{% block body %}
     <route id="{{ extension_alias }}_homepage" pattern="/hello/{name}">
         <default key="_controller">{{ bundle }}:Default:index</default>
     </route>
+{% endblock body %}
 </routes>

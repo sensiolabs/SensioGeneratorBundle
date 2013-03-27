@@ -1,10 +1,15 @@
 <?php
 
+{% block use_statements %}
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
+{% endblock use_statements %}
 
+{% block definition %}
 $collection = new RouteCollection();
+{% endblock definition %}
 
+{% block body %}
 {% if 'index' in actions %}
 $collection->add('{{ route_name_prefix }}', new Route('/', array(
     '_controller' => '{{ bundle }}:{{ entity }}:index',
@@ -48,5 +53,8 @@ $collection->add('{{ route_name_prefix }}_delete', new Route(
     array('_method' => 'post|delete')
 ));
 {% endif %}
+{% block body %}
 
+{% block return %}
 return $collection;
+{% endblock return %}

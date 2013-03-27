@@ -2,10 +2,15 @@
 
 namespace {{ namespace }}\Tests\Controller;
 
+{% block use_statements %}
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+{% endblock use_statements %}
 
+{% block class_definition %}
 class DefaultControllerTest extends WebTestCase
+{% endblock class_definition %}
 {
+{% block class_body %}
     public function testIndex()
     {
         $client = static::createClient();
@@ -14,4 +19,5 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertTrue($crawler->filter('html:contains("Hello Fabien")')->count() > 0);
     }
+{% endblock class_body %}
 }

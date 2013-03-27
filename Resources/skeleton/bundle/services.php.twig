@@ -1,11 +1,14 @@
 <?php
 
+{% block use_statements %}
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Parameter;
+{% endblock use_statements %}
 
 /*
 
+{% block services %}
 $container->setDefinition(
     '{{ extension_alias }}.example',
     new Definition(
@@ -17,5 +20,6 @@ $container->setDefinition(
         )
     )
 );
+{% endblock services %}
 
 */
