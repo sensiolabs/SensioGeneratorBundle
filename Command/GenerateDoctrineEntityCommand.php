@@ -94,7 +94,7 @@ EOT
 
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
 
-        $generator = $this->getGenerator();
+        $generator = $this->getGenerator('');
         $generator->generate($bundle, $entity, $format, array_values($fields), $input->getOption('with-repository'));
 
         $output->writeln('Generating the entity code: <info>OK</info>');
@@ -125,7 +125,7 @@ EOT
             list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
             // check reserved words
-            if ($this->getGenerator()->isReservedKeyword($entity)){
+            if ($this->getGenerator('')->isReservedKeyword($entity)){
                 $output->writeln(sprintf('<bg=red> "%s" is a reserved word</>.', $entity));
                 continue;
             }
@@ -260,7 +260,7 @@ EOT
                 }
 
                 // check reserved words
-                if ($self->getGenerator()->isReservedKeyword($name)){
+                if ($self->getGenerator('')->isReservedKeyword($name)){
                     throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 
@@ -297,27 +297,8 @@ EOT
         return $fields;
     }
 
-    public function getGenerator()
+    protected function createGenerator()
     {
-        if (null === $this->generator) {
-            $this->generator = new DoctrineEntityGenerator($this->getContainer()->get('filesystem'), $this->getContainer()->get('doctrine'));
-        }
-
-        return $this->generator;
-    }
-
-    public function setGenerator(DoctrineEntityGenerator $generator)
-    {
-        $this->generator = $generator;
-    }
-
-    protected function getDialogHelper()
-    {
-        $dialog = $this->getHelperSet()->get('dialog');
-        if (!$dialog || get_class($dialog) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper') {
-            $this->getHelperSet()->set($dialog = new DialogHelper());
-        }
-
-        return $dialog;
+        return new DoctrineEntityGenerator($this->getContainer()->get('filesystem'), $this->getContainer()->get('doctrine'));
     }
 }

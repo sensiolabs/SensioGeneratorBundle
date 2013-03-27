@@ -18,7 +18,6 @@ use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Command\Command;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineFormGenerator;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
 
 /**
@@ -104,7 +103,7 @@ EOT
         $metadata    = $this->getEntityMetadata($entityClass);
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
-        $generator = $this->getGenerator($bundle);
+        $generator = $this->getGenerator('crud', $bundle);
         $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
@@ -249,51 +248,16 @@ EOT
         return $prefix;
     }
 
-    protected function getGenerator($bundle = null)
+    protected function createGenerator($bundle = null)
     {
-        if (null === $this->generator) {
-            // list directories where to look for templates, in descending priority order
-            $skeletonDirs = array();
-
-            if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/crud')) {
-                $skeletonDirs[] = $dir;
-            }
-
-            if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/crud')) {
-                $skeletonDirs[] = $dir;
-            }
-
-            $skeletonDirs[] = realpath(__DIR__.'/../Resources/skeleton/crud');
-
-            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'));
-            $this->generator->setSkeletonDirs($skeletonDirs);
-        }
-
-        return $this->generator;
-    }
-
-    public function setGenerator(DoctrineCrudGenerator $generator)
-    {
-        $this->generator = $generator;
+        return new DoctrineCrudGenerator($this->getContainer()->get('filesystem'));
     }
 
     protected function getFormGenerator($bundle = null)
     {
         if (null === $this->formGenerator) {
-            $skeletonDirs = array();
-
-            if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/form')) {
-                $skeletonDirs[] = $dir;
-            }
-
-            if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/form')) {
-                $skeletonDirs[] = $dir;
-            }
-
-            $skeletonDirs[] = realpath(__DIR__.'/../Resources/skeleton/form');
-
             $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
-            $this->formGenerator->setSkeletonDirs($skeletonDirs);
+            $this->formGenerator->setSkeletonDirs($this->getSkeletonDirs('form', $bundle));
         }
 
         return $this->formGenerator;
@@ -302,15 +266,5 @@ EOT
     public function setFormGenerator(DoctrineFormGenerator $formGenerator)
     {
         $this->formGenerator = $formGenerator;
-    }
-
-    protected function getDialogHelper()
-    {
-        $dialog = $this->getHelperSet()->get('dialog');
-        if (!$dialog || get_class($dialog) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper') {
-            $this->getHelperSet()->set($dialog = new DialogHelper());
-        }
-
-        return $dialog;
     }
 }

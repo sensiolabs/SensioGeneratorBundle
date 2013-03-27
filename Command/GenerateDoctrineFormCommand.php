@@ -67,21 +67,8 @@ EOT
         $metadata = $this->getEntityMetadata($entityClass);
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
-        // list directories where to look for templates, in descending priority order
-        $skeletonDirs = array();
-
-        if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/form')) {
-            $skeletonDirs[] = $dir;
-        }
-
-        if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/form')) {
-            $skeletonDirs[] = $dir;
-        }
-
-        $skeletonDirs[] = realpath(__DIR__.'/../Resources/skeleton/form');
-
         $generator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
-        $generator->setSkeletonDirs($skeletonDirs);
+        $generator->setSkeletonDirs($this->getSkeletonDirs('form', $bundle));
         $generator->generate($bundle, $entity, $metadata[0]);
 
         $output->writeln(sprintf(

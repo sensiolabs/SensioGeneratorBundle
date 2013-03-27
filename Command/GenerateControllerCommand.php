@@ -14,8 +14,6 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Sensio\Bundle\GeneratorBundle\Generator\ControllerGenerator;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 
 /**
@@ -23,7 +21,7 @@ use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class GenerateControllerCommand extends ContainerAwareCommand
+class GenerateControllerCommand extends GeneratorCommand
 {
     private $generator;
 
@@ -121,7 +119,7 @@ EOT
 
         $dialog->writeSection($output, 'Controller generation');
 
-        $generator = $this->getGenerator($bundle);
+        $generator = $this->getGenerator('controller', $bundle);
         $generator->generate($bundle, $controller, $input->getOption('route-format'), $input->getOption('template-format'), $this->parseActions($input->getOption('actions')));
 
         $output->writeln('Generating the bundle code: <info>OK</info>');
@@ -329,40 +327,8 @@ EOT
         return array(substr($entity, 0, $pos), substr($entity, $pos + 1));
     }
 
-    protected function getGenerator($bundle = null)
+    protected function createGenerator()
     {
-        if (null === $this->generator) {
-            $skeletonDirs = array();
-
-            if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/controller')) {
-                $skeletonDirs[] = $dir;
-            }
-
-            if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/controller')) {
-                $skeletonDirs[] = $dir;
-            }
-
-            $skeletonDirs[] = __DIR__.'/../Resources/skeleton/controller';
-
-            $this->generator = new ControllerGenerator($this->getContainer()->get('filesystem'));
-            $this->generator->setSkeletonDirs($skeletonDirs);
-        }
-
-        return $this->generator;
-    }
-
-    public function setGenerator(ControllerGenerator $generator)
-    {
-        $this->generator = $generator;
-    }
-
-    protected function getDialogHelper()
-    {
-        $dialog = $this->getHelperSet()->get('dialog');
-        if (!$dialog || get_class($dialog) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper') {
-            $this->getHelperSet()->set($dialog = new DialogHelper());
-        }
-
-        return $dialog;
+        return new ControllerGenerator($this->getContainer()->get('filesystem'));
     }
 }
