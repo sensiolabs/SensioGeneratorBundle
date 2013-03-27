@@ -24,23 +24,17 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 class DoctrineFormGenerator extends Generator
 {
     private $filesystem;
-    private $skeletonDir;
-    private $customSkeletonDirs;
     private $className;
     private $classPath;
 
     /**
      * Constructor.
      *
-     * @param Filesystem $filesystem         A Filesystem instance
-     * @param string     $skeletonDir        The main skeleton directory
-     * @param array      $customSkeletonDirs Additional, custom, skeleton dirs
+     * @param Filesystem $filesystem A Filesystem instance
      */
-    public function __construct(Filesystem $filesystem, $skeletonDir, $customSkeletonDirs = array())
+    public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->skeletonDir = $skeletonDir;
-        $this->customSkeletonDirs = is_array($customSkeletonDirs) ? $customSkeletonDirs : array();
     }
 
     public function getClassName()
@@ -51,26 +45,6 @@ class DoctrineFormGenerator extends Generator
     public function getClassPath()
     {
         return $this->classPath;
-    }
-
-    /**
-     * Finds the most specific skeleton dir where the template lies.
-     *
-     * Assertion: $this->customSkeletonDirs must be sorted from the most specific
-     * to the most general directory.
-     * If no custom dir contains the template, the global dir is returned.
-     *
-     * @param string $template The template filename we are looking for
-     */
-    protected function findTemplateDir($template)
-    {
-        foreach ($this->customSkeletonDirs as $dir) {
-            if (is_readable($dir . '/' . $template)) {
-                return $dir;
-            }
-        }
-
-        return $this->skeletonDir;
     }
 
     /**
@@ -100,11 +74,7 @@ class DoctrineFormGenerator extends Generator
         $parts = explode('\\', $entity);
         array_pop($parts);
 
-        $template = 'FormType.php.twig';
-        $skeletonDir = $this->findTemplateDir($template);
-
-        $this->renderFile($skeletonDir, $template, $this->classPath, array(
-            'dir'              => $skeletonDir,
+        $this->renderFile('FormType.php.twig', $this->classPath, array(
             'fields'           => $this->getFieldsFromMetadata($metadata),
             'namespace'        => $bundle->getNamespace(),
             'entity_namespace' => implode('\\', $parts),

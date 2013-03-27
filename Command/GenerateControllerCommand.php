@@ -332,18 +332,20 @@ EOT
     protected function getGenerator($bundle = null)
     {
         if (null === $this->generator) {
+            $skeletonDirs = array();
 
-            $customDirs = array();
-
-            if (isset($bundle) && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/controller')) {
-                $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/controller';
+            if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/controller')) {
+                $skeletonDirs[] = $dir;
             }
 
-            if (is_dir($this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/controller')) {
-                $customDirs[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/controller';
+            if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/controller')) {
+                $skeletonDirs[] = $dir;
             }
 
-            $this->generator = new ControllerGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/controller', $customDirs);
+            $skeletonDirs[] = __DIR__.'/../Resources/skeleton/controller';
+
+            $this->generator = new ControllerGenerator($this->getContainer()->get('filesystem'));
+            $this->generator->setSkeletonDirs($skeletonDirs);
         }
 
         return $this->generator;

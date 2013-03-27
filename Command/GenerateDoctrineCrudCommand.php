@@ -252,19 +252,21 @@ EOT
     protected function getGenerator($bundle = null)
     {
         if (null === $this->generator) {
-
             // list directories where to look for templates, in descending priority order
-            $customDirs = array();
+            $skeletonDirs = array();
 
-            if (isset($bundle) && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud')) {
-                $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/crud';
+            if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/crud')) {
+                $skeletonDirs[] = $dir;
             }
 
-            if (is_dir($this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/crud')) {
-                $customDirs[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/crud';
+            if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/crud')) {
+                $skeletonDirs[] = $dir;
             }
 
-            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'), realpath(__DIR__.'/../Resources/skeleton/crud'), $customDirs);
+            $skeletonDirs[] = realpath(__DIR__.'/../Resources/skeleton/crud');
+
+            $this->generator = new DoctrineCrudGenerator($this->getContainer()->get('filesystem'));
+            $this->generator->setSkeletonDirs($skeletonDirs);
         }
 
         return $this->generator;
@@ -278,18 +280,20 @@ EOT
     protected function getFormGenerator($bundle = null)
     {
         if (null === $this->formGenerator) {
+            $skeletonDirs = array();
 
-            $customDirs = array();
-
-            if (isset($bundle) && is_dir($bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/form')) {
-                $customDirs[] = $bundle->getPath() . '/Resources/SensioGeneratorBundle/skeleton/form';
+            if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/form')) {
+                $skeletonDirs[] = $dir;
             }
 
-            if (is_dir($this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/form')) {
-                $customDirs[] = $this->getContainer()->get('kernel')->getRootdir() . '/Resources/SensioGeneratorBundle/skeleton/form';
+            if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/form')) {
+                $skeletonDirs[] = $dir;
             }
 
-            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'), realpath(__DIR__.'/../Resources/skeleton/form'), $customDirs);
+            $skeletonDirs[] = realpath(__DIR__.'/../Resources/skeleton/form');
+
+            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
+            $this->formGenerator->setSkeletonDirs($skeletonDirs);
         }
 
         return $this->formGenerator;
