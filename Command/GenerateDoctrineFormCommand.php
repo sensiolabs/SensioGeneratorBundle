@@ -68,7 +68,7 @@ EOT
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
         $generator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
-        $generator->setSkeletonDirs($this->getSkeletonDirs('form', $bundle));
+        $generator->setSkeletonDirs($this->getSkeletonDirs($bundle));
         $generator->generate($bundle, $entity, $metadata[0]);
 
         $output->writeln(sprintf(

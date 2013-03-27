@@ -119,7 +119,7 @@ EOT
 
         $dialog->writeSection($output, 'Controller generation');
 
-        $generator = $this->getGenerator('controller', $bundle);
+        $generator = $this->getGenerator($bundle);
         $generator->generate($bundle, $controller, $input->getOption('route-format'), $input->getOption('template-format'), $this->parseActions($input->getOption('actions')));
 
         $output->writeln('Generating the bundle code: <info>OK</info>');

@@ -32,34 +32,30 @@ abstract class GeneratorCommand extends ContainerAwareCommand
 
     protected abstract function createGenerator();
 
-    protected function getGenerator($path, $bundle = null)
+    protected function getGenerator($bundle = null)
     {
         if (null === $this->generator) {
             $this->generator = $this->createGenerator();
-            $this->generator->setSkeletonDirs($this->getSkeletonDirs($path, $bundle));
+            $this->generator->setSkeletonDirs($this->getSkeletonDirs($bundle));
         }
 
         return $this->generator;
     }
 
-    protected function getSkeletonDirs($path, $bundle = null)
+    protected function getSkeletonDirs($bundle = null)
     {
-        if (!$path) {
-            return array();
-        }
-
         $skeletonDirs = array();
 
-        if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton/'.$path)) {
+        if (isset($bundle) && is_dir($dir = $bundle->getPath().'/Resources/SensioGeneratorBundle/skeleton')) {
             $skeletonDirs[] = $dir;
         }
 
-        if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton/'.$path)) {
+        if (is_dir($dir = $this->getContainer()->get('kernel')->getRootdir().'/Resources/SensioGeneratorBundle/skeleton')) {
             $skeletonDirs[] = $dir;
         }
 
-        $skeletonDirs[] = __DIR__.'/../Resources/skeleton/'.$path;
-
+        $skeletonDirs[] = __DIR__.'/../Resources/skeleton';
+        $skeletonDirs[] = __DIR__.'/../Resources';
 
         return $skeletonDirs;
     }

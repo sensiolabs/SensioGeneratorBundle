@@ -103,7 +103,7 @@ EOT
         $metadata    = $this->getEntityMetadata($entityClass);
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
-        $generator = $this->getGenerator('crud', $bundle);
+        $generator = $this->getGenerator($bundle);
         $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
@@ -257,7 +257,7 @@ EOT
     {
         if (null === $this->formGenerator) {
             $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
-            $this->formGenerator->setSkeletonDirs($this->getSkeletonDirs('form', $bundle));
+            $this->formGenerator->setSkeletonDirs($this->getSkeletonDirs($bundle));
         }
 
         return $this->formGenerator;

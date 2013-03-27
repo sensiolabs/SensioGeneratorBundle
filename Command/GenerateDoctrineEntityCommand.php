@@ -94,7 +94,7 @@ EOT
 
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
 
-        $generator = $this->getGenerator('');
+        $generator = $this->getGenerator();
         $generator->generate($bundle, $entity, $format, array_values($fields), $input->getOption('with-repository'));
 
         $output->writeln('Generating the entity code: <info>OK</info>');
@@ -125,7 +125,7 @@ EOT
             list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
             // check reserved words
-            if ($this->getGenerator('')->isReservedKeyword($entity)){
+            if ($this->getGenerator()->isReservedKeyword($entity)){
                 $output->writeln(sprintf('<bg=red> "%s" is a reserved word</>.', $entity));
                 continue;
             }
@@ -260,7 +260,7 @@ EOT
                 }
 
                 // check reserved words
-                if ($self->getGenerator('')->isReservedKeyword($name)){
+                if ($self->getGenerator()->isReservedKeyword($name)){
                     throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 

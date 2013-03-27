@@ -53,28 +53,28 @@ class BundleGenerator extends Generator
             'extension_alias' => Container::underscore($basename),
         );
 
-        $this->renderFile('Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
-        $this->renderFile('Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
-        $this->renderFile('Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
-        $this->renderFile('DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
-        $this->renderFile('DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
-        $this->renderFile('index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
+        $this->renderFile('bundle/Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
+        $this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
+        $this->renderFile('bundle/Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
+        $this->renderFile('bundle/DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
+        $this->renderFile('bundle/DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
+        $this->renderFile('bundle/index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
 
         if ('xml' === $format || 'annotation' === $format) {
-            $this->renderFile('services.xml.twig', $dir.'/Resources/config/services.xml', $parameters);
+            $this->renderFile('bundle/services.xml.twig', $dir.'/Resources/config/services.xml', $parameters);
         } else {
-            $this->renderFile('services.'.$format.'.twig', $dir.'/Resources/config/services.'.$format, $parameters);
+            $this->renderFile('bundle/services.'.$format.'.twig', $dir.'/Resources/config/services.'.$format, $parameters);
         }
 
         if ('annotation' != $format) {
-            $this->renderFile('routing.'.$format.'.twig', $dir.'/Resources/config/routing.'.$format, $parameters);
+            $this->renderFile('bundle/routing.'.$format.'.twig', $dir.'/Resources/config/routing.'.$format, $parameters);
         }
 
         if ($structure) {
             $this->filesystem->mkdir($dir.'/Resources/doc');
             $this->filesystem->touch($dir.'/Resources/doc/index.rst');
             $this->filesystem->mkdir($dir.'/Resources/translations');
-            $this->renderFile('messages.fr.xlf', $dir.'/Resources/translations/messages.fr.xlf');
+            $this->renderFile('bundle/messages.fr.xlf', $dir.'/Resources/translations/messages.fr.xlf');
             $this->filesystem->mkdir($dir.'/Resources/public/css');
             $this->filesystem->mkdir($dir.'/Resources/public/images');
             $this->filesystem->mkdir($dir.'/Resources/public/js');
