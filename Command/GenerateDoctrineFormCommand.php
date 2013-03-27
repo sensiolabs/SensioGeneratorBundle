@@ -43,8 +43,8 @@ The <info>doctrine:generate:form</info> command generates a form class based on 
 
 Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
 
-<info>__bundle_path__/Resources/SensioGeneratorBundle/skeleton/form
-__project_root__/app/Resources/SensioGeneratorBundle/skeleton/form</info>
+<info>BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/form
+APP_PATH/Resources/SensioGeneratorBundle/skeleton/form</info>
 
 You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resources/skeleton
 in order to know the file structure of the skeleton
