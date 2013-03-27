@@ -253,14 +253,14 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $self = $this;
-            $columnName = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields, $self) {
+            $generator = $this->getGenerator();
+            $columnName = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields, $generator) {
                 if (isset($fields[$name]) || 'id' == $name) {
                     throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
                 }
 
                 // check reserved words
-                if ($self->getGenerator()->isReservedKeyword($name)){
+                if ($generator->isReservedKeyword($name)){
                     throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 
