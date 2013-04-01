@@ -1,5 +1,5 @@
 SensioGeneratorBundle
-==========================
+=====================
 
 The ``SensioGeneratorBundle`` extends the default Symfony2 command line
 interface by providing new interactive and intuitive commands for generating
@@ -35,6 +35,7 @@ new commands are listed below:
    :maxdepth: 1
 
    commands/generate_bundle
+   commands/generate_controller
    commands/generate_doctrine_crud
    commands/generate_doctrine_entity
    commands/generate_doctrine_form
