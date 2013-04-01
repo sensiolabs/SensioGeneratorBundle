@@ -77,4 +77,9 @@ EOT
             $generator->getClassPath()
         ));
     }
+
+    protected function createGenerator()
+    {
+        return new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
+    }
 }
