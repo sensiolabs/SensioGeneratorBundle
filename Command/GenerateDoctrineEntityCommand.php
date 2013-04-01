@@ -253,14 +253,14 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $self = $this;
-            $columnName = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields, $self) {
+            $generator = $this->getGenerator();
+            $columnName = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields, $generator) {
                 if (isset($fields[$name]) || 'id' == $name) {
                     throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
                 }
 
                 // check reserved words
-                if ($self->getGenerator()->isReservedKeyword($name)){
+                if ($generator->isReservedKeyword($name)){
                     throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 
@@ -297,27 +297,8 @@ EOT
         return $fields;
     }
 
-    public function getGenerator()
+    protected function createGenerator()
     {
-        if (null === $this->generator) {
-            $this->generator = new DoctrineEntityGenerator($this->getContainer()->get('filesystem'), $this->getContainer()->get('doctrine'));
-        }
-
-        return $this->generator;
-    }
-
-    public function setGenerator(DoctrineEntityGenerator $generator)
-    {
-        $this->generator = $generator;
-    }
-
-    protected function getDialogHelper()
-    {
-        $dialog = $this->getHelperSet()->get('dialog');
-        if (!$dialog || get_class($dialog) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper') {
-            $this->getHelperSet()->set($dialog = new DialogHelper());
-        }
-
-        return $dialog;
+        return new DoctrineEntityGenerator($this->getContainer()->get('filesystem'), $this->getContainer()->get('doctrine'));
     }
 }

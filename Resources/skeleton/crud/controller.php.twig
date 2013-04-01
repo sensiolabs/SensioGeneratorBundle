@@ -2,6 +2,7 @@
 
 namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
+{% block use_statements %}
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation\Request;
 {%- endif %}
@@ -17,37 +18,44 @@ use {{ namespace }}\Entity\{{ entity }};
 {% if 'new' in actions or 'edit' in actions %}
 use {{ namespace }}\Form\{{ entity }}Type;
 {% endif %}
+{% endblock use_statements %}
 
 /**
+{% block phpdoc_class_header %}
  * {{ entity }} controller.
+{% endblock phpdoc_class_header %}
  *
+{% block phpdoc_class_annotations %}
 {% if 'annotation' == format %}
  * @Route("/{{ route_prefix }}")
 {% endif %}
+{% endblock phpdoc_class_annotations %}
  */
+{% block class_definition %}
 class {{ entity_class }}Controller extends Controller
+{% endblock class_definition %}
 {
-
+{% block class_body %}
     {%- if 'index' in actions %}
-        {%- include 'actions/index.php.twig' %}
+        {%- include 'crud/actions/index.php.twig' %}
     {%- endif %}
 
     {%- if 'new' in actions %}
-        {%- include 'actions/create.php.twig' %}
-        {%- include 'actions/new.php.twig' %}
+        {%- include 'crud/actions/create.php.twig' %}
+        {%- include 'crud/actions/new.php.twig' %}
     {%- endif %}
 
     {%- if 'show' in actions %}
-        {%- include 'actions/show.php.twig' %}
+        {%- include 'crud/actions/show.php.twig' %}
     {%- endif %}
 
     {%- if 'edit' in actions %}
-        {%- include 'actions/edit.php.twig' %}
-        {%- include 'actions/update.php.twig' %}
+        {%- include 'crud/actions/edit.php.twig' %}
+        {%- include 'crud/actions/update.php.twig' %}
     {%- endif %}
 
     {%- if 'delete' in actions %}
-        {%- include 'actions/delete.php.twig' %}
+        {%- include 'crud/actions/delete.php.twig' %}
     {%- endif %}
-
+{% endblock class_body %}
 }

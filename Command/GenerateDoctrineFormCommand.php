@@ -40,6 +40,14 @@ class GenerateDoctrineFormCommand extends GenerateDoctrineCommand
 The <info>doctrine:generate:form</info> command generates a form class based on a Doctrine entity.
 
 <info>php app/console doctrine:generate:form AcmeBlogBundle:Post</info>
+
+Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
+
+<info>BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/form
+APP_PATH/Resources/SensioGeneratorBundle/skeleton/form</info>
+
+You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resources/skeleton
+in order to know the file structure of the skeleton
 EOT
             )
             ->setName('doctrine:generate:form')
@@ -59,7 +67,8 @@ EOT
         $metadata = $this->getEntityMetadata($entityClass);
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
-        $generator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'),  __DIR__.'/../Resources/skeleton/form');
+        $generator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
+        $generator->setSkeletonDirs($this->getSkeletonDirs($bundle));
         $generator->generate($bundle, $entity, $metadata[0]);
 
         $output->writeln(sprintf(

@@ -22,12 +22,15 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 class ControllerGenerator extends Generator
 {
     private $filesystem;
-    private $skeletonDir;
 
-    public function __construct(Filesystem $filesystem, $skeletonDir)
+    /**
+     * Constructor.
+     *
+     * @param Filesystem $filesystem A Filesystem instance
+     */
+    public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->skeletonDir = $skeletonDir;
     }
 
     public function generate(BundleInterface $bundle, $controller, $routeFormat, $templateFormat, array $actions = array())
@@ -61,9 +64,9 @@ class ControllerGenerator extends Generator
             }
 
             if ('twig' == $templateFormat) {
-                $this->renderFile($this->skeletonDir, 'Template.html.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
+                $this->renderFile('controller/Template.html.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             } else {
-                $this->renderFile($this->skeletonDir, 'Template.html.php', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
+                $this->renderFile('controller/Template.html.php', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             }
 
             $this->generateRouting($bundle, $controller, $actions[$i], $routeFormat);
@@ -71,8 +74,8 @@ class ControllerGenerator extends Generator
 
         $parameters['actions'] = $actions;
 
-        $this->renderFile($this->skeletonDir, 'Controller.php', $controllerFile, $parameters);
-        $this->renderFile($this->skeletonDir, 'ControllerTest.php', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
+        $this->renderFile('controller/Controller.php', $controllerFile, $parameters);
+        $this->renderFile('controller/ControllerTest.php', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
     }
 
     public function generateRouting(BundleInterface $bundle, $controller, array $action, $format)

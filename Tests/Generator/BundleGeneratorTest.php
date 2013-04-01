@@ -17,8 +17,7 @@ class BundleGeneratorTest extends GeneratorTest
 {
     public function testGenerateYaml()
     {
-        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
-        $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
 
         $files = array(
             'FooBarBundle.php',
@@ -47,8 +46,7 @@ class BundleGeneratorTest extends GeneratorTest
 
     public function testGenerateAnnotation()
     {
-        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
-        $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'annotation', false);
+        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'annotation', false);
 
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.yml'));
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.xml'));
@@ -62,16 +60,12 @@ class BundleGeneratorTest extends GeneratorTest
         $this->filesystem->mkdir($this->tmpDir.'/Foo');
         $this->filesystem->touch($this->tmpDir.'/Foo/BarBundle');
 
-        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
-
         try {
-            $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->fail('An exception was expected!');
         } catch (\RuntimeException $e) {
             $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', realpath($this->tmpDir.'/Foo/BarBundle')), $e->getMessage());
-            return;
         }
-
-        $this->fail('An exception was expected!');
     }
 
     public function testIsNotWritableDir()
@@ -79,17 +73,13 @@ class BundleGeneratorTest extends GeneratorTest
         $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
         $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0444);
 
-        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
-
         try {
-            $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->fail('An exception was expected!');
         } catch (\RuntimeException $e) {
             $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
             $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not writable.', realpath($this->tmpDir.'/Foo/BarBundle')), $e->getMessage());
-            return;
         }
-
-        $this->fail('An exception was expected!');
     }
 
     public function testIsNotEmptyDir()
@@ -97,25 +87,27 @@ class BundleGeneratorTest extends GeneratorTest
         $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
         $this->filesystem->touch($this->tmpDir.'/Foo/BarBundle/somefile');
 
-        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
-
         try {
-            $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->fail('An exception was expected!');
         } catch (\RuntimeException $e) {
             $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
             $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" is not empty.', realpath($this->tmpDir.'/Foo/BarBundle')), $e->getMessage());
-            return;
         }
-
-        $this->fail('An exception was expected!');
     }
 
     public function testExistingEmptyDirIsFine()
     {
         $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
 
-        $generator = new BundleGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/bundle');
+        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+    }
 
-        $generator->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+    protected function getGenerator()
+    {
+        $generator = new BundleGenerator($this->filesystem);
+        $generator->setSkeletonDirs(__DIR__.'/../../Resources/skeleton');
+
+        return $generator;
     }
 }

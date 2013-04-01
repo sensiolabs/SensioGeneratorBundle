@@ -14,8 +14,6 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Sensio\Bundle\GeneratorBundle\Generator\ControllerGenerator;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 
 /**
@@ -23,7 +21,7 @@ use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
  *
  * @author Wouter J <wouter@wouterj.nl>
  */
-class GenerateControllerCommand extends ContainerAwareCommand
+class GenerateControllerCommand extends GeneratorCommand
 {
     private $generator;
 
@@ -77,6 +75,15 @@ If you want to disable any user interaction, use <comment>--no-interaction</comm
 but don't forget to pass all needed options:
 
 <info>php app/console generate:controller --controller=AcmeBlogBundle:Post --no-interaction</info>
+
+Every generated file is based on a template. There are default templates but they can
+be overriden by placing custom templates in one of the following locations, by order of priority:
+
+<info>BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/controller
+APP_PATH/Resources/SensioGeneratorBundle/skeleton/controller</info>
+
+You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resources/skeleton
+in order to know the file structure of the skeleton
 EOT
             )
             ->setName('generate:controller')
@@ -112,7 +119,7 @@ EOT
 
         $dialog->writeSection($output, 'Controller generation');
 
-        $generator = $this->getGenerator();
+        $generator = $this->getGenerator($bundle);
         $generator->generate($bundle, $controller, $input->getOption('route-format'), $input->getOption('template-format'), $this->parseActions($input->getOption('actions')));
 
         $output->writeln('Generating the bundle code: <info>OK</info>');
@@ -320,27 +327,8 @@ EOT
         return array(substr($entity, 0, $pos), substr($entity, $pos + 1));
     }
 
-    protected function getGenerator()
+    protected function createGenerator()
     {
-        if (null === $this->generator) {
-            $this->generator = new ControllerGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/controller');
-        }
-
-        return $this->generator;
-    }
-
-    public function setGenerator(ControllerGenerator $generator)
-    {
-        $this->generator = $generator;
-    }
-
-    protected function getDialogHelper()
-    {
-        $dialog = $this->getHelperSet()->get('dialog');
-        if (!$dialog || get_class($dialog) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper') {
-            $this->getHelperSet()->set($dialog = new DialogHelper());
-        }
-
-        return $dialog;
+        return new ControllerGenerator($this->getContainer()->get('filesystem'));
     }
 }

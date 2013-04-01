@@ -6,15 +6,19 @@
 
     <!--
     <parameters>
+{% block parameters %}
         <parameter key="{{ extension_alias }}.example.class">{{ namespace }}\Example</parameter>
+{% endblock parameters %}
     </parameters>
 
     <services>
+{% block services %}
         <service id="{{ extension_alias }}.example" class="%{{ extension_alias }}.example.class%">
             <argument type="service" id="service_id" />
             <argument>plain_value</argument>
             <argument>%parameter_name%</argument>
         </service>
+{% endblock services %}
     </services>
     -->
 </container>

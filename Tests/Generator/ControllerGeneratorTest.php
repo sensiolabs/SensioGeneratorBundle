@@ -116,7 +116,10 @@ class ControllerGeneratorTest extends GeneratorTest
 
     protected function getGenerator()
     {
-        return new ControllerGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/controller');
+        $generator = new ControllerGenerator($this->filesystem);
+        $generator->setSkeletonDirs(__DIR__.'/../../Resources/skeleton');
+
+        return $generator;
     }
 
     protected function getBundle()

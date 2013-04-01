@@ -1,5 +1,8 @@
+{% block extends %}
 {{ "{% extends '::base.html.twig' %}" }}
+{% endblock extends %}
 
+{% block body %}
 {{ "{% block body -%}" }}
     <h1>{{ entity }} list</h1>
 
@@ -37,7 +40,7 @@
             {%- if loop.last %}
 
                 <td>
-                    {%- include "views/others/actions.html.twig.twig" %}
+                    {%- include "crud/views/others/actions.html.twig.twig" %}
                 </td>
 
             {%- endif %}
@@ -58,3 +61,4 @@
     </ul>
     {% endif %}
 {{ "{% endblock %}" }}
+{% endblock body %}

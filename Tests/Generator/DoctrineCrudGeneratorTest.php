@@ -182,7 +182,10 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
 
     protected function getGenerator()
     {
-        return new DoctrineCrudGenerator($this->filesystem, __DIR__.'/../../Resources/skeleton/crud');
+        $generator = new DoctrineCrudGenerator($this->filesystem);
+        $generator->setSkeletonDirs(__DIR__.'/../../Resources/skeleton');
+
+        return $generator;
     }
 
     protected function getBundle()
