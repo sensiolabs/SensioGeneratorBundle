@@ -71,7 +71,7 @@ class BundleGenerator extends Generator
         }
 
         if ($structure) {
-            $this->renderFile('bundle/messages.fr.xlf', $dir.'/Resources/translations/messages.fr.xlf');
+            $this->renderFile('bundle/messages.fr.xlf', $dir.'/Resources/translations/messages.fr.xlf', $parameters);
 
             $this->filesystem->mkdir($dir.'/Resources/doc');
             $this->filesystem->touch($dir.'/Resources/doc/index.rst');
