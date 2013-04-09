@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
+use Sensio\Bundle\GeneratorBundle\Generator\ControllerGenerator;
 
 /**
  * Generates controllers.
