@@ -51,6 +51,10 @@ class Validators
 
     public static function validateBundleName($bundle)
     {
+        if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $bundle)) {
+            throw new \InvalidArgumentException('The bundle name contains invalid characters.');
+        }
+        
         if (!preg_match('/Bundle$/', $bundle)) {
             throw new \InvalidArgumentException('The bundle name must end with Bundle.');
         }
