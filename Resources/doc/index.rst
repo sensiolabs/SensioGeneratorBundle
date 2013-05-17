@@ -45,7 +45,7 @@ Overriding Skeleton Templates
 -----------------------------
 
 .. versionadded:: 2.3
-  The possibility to override the dkeleton templates was added in 2.3.
+  The possibility to override the skeleton templates was added in 2.3.
 
 All generators use a template skeleton to generate files. By default, the
 commands use templates provided by the bundle under its ``Resources/skeleton``
