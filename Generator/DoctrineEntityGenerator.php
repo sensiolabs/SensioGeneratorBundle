@@ -45,7 +45,7 @@ class DoctrineEntityGenerator extends Generator
             $config->getEntityNamespaces()
         ));
 
-        $entityClass = $this->registry->getEntityNamespace($bundle->getName()).'\\'.$entity;
+        $entityClass = $this->registry->getAliasNamespace($bundle->getName()).'\\'.$entity;
         $entityPath = $bundle->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php';
         if (file_exists($entityPath)) {
             throw new \RuntimeException(sprintf('Entity "%s" already exists.', $entityClass));
