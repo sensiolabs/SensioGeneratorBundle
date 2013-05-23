@@ -39,13 +39,13 @@ class DoctrineEntityGenerator extends Generator
     public function generate(BundleInterface $bundle, $entity, $format, array $fields, $withRepository)
     {
         // configure the bundle (needed if the bundle does not contain any Entities yet)
-        $config = $this->registry->getEntityManager(null)->getConfiguration();
+        $config = $this->registry->getManager(null)->getConfiguration();
         $config->setEntityNamespaces(array_merge(
             array($bundle->getName() => $bundle->getNamespace().'\\Entity'),
             $config->getEntityNamespaces()
         ));
 
-        $entityClass = $this->registry->getEntityNamespace($bundle->getName()).'\\'.$entity;
+        $entityClass = $this->registry->getAliasNamespace($bundle->getName()).'\\'.$entity;
         $entityPath = $bundle->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php';
         if (file_exists($entityPath)) {
             throw new \RuntimeException(sprintf('Entity "%s" already exists.', $entityClass));
