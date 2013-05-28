@@ -42,7 +42,7 @@ class DoctrineEntityGenerator extends Generator
         $config = $this->registry->getManager(null)->getConfiguration();
         $config->setEntityNamespaces(array_merge(
             array($bundle->getName() => $bundle->getNamespace().'\\Entity'),
-            $config->getEntityNamespaces()
+            $config->getAliasNamespaces()
         ));
 
         $entityClass = $this->registry->getAliasNamespace($bundle->getName()).'\\'.$entity;

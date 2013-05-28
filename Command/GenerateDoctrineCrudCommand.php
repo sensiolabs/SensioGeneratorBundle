@@ -99,7 +99,7 @@ EOT
 
         $dialog->writeSection($output, 'CRUD generation');
 
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
+        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
         $metadata    = $this->getEntityMetadata($entityClass);
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
@@ -148,7 +148,7 @@ EOT
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
         // Entity exists?
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
+        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
         $metadata = $this->getEntityMetadata($entityClass);
 
         // write?

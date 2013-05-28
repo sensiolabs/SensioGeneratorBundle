@@ -130,7 +130,7 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
         $registry = $this->getMock('Symfony\Bridge\Doctrine\RegistryInterface');
         $registry
             ->expects($this->any())
-            ->method('getEntityNamespace')
+            ->method('getAliasNamespace')
             ->will($this->returnValue('Foo\\FooBundle\\Entity'))
         ;
 

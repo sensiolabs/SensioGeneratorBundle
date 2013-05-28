@@ -63,7 +63,7 @@ EOT
         $entity = Validators::validateEntityName($input->getArgument('entity'));
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
+        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
         $metadata = $this->getEntityMetadata($entityClass);
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
