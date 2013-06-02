@@ -16,11 +16,11 @@ structure:
     php app/console generate:doctrine:entity
 
 The command can be run in a non interactive mode by using the
-``--non-interaction`` option without forgetting all needed options:
+``--no-interaction`` option without forgetting all needed options:
 
 .. code-block:: bash
 
-    php app/console generate:doctrine:entity --non-interaction --entity=AcmeBlogBundle:Post --fields="title:string(100) body:text" --format=xml
+    php app/console generate:doctrine:entity --no-interaction --entity=AcmeBlogBundle:Post --fields="title:string(100) body:text" --format=xml
 
 Available Options
 -----------------
