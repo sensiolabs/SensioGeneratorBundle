@@ -53,7 +53,7 @@ $collection->add('{{ route_name_prefix }}_delete', new Route(
     array('_method' => 'post|delete')
 ));
 {% endif %}
-{% block body %}
+{% endblock body %}
 
 {% block return %}
 return $collection;
