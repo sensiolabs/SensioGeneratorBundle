@@ -64,9 +64,9 @@ class ControllerGenerator extends Generator
             }
 
             if ('twig' == $templateFormat) {
-                $this->renderFile('controller/Template.html.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
+                $this->renderFile('controller/Template.html.twig.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             } else {
-                $this->renderFile('controller/Template.html.php', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
+                $this->renderFile('controller/Template.html.php.twig', $dir.'/Resources/views/'.$this->parseTemplatePath($template), $params);
             }
 
             $this->generateRouting($bundle, $controller, $actions[$i], $routeFormat);
@@ -74,8 +74,8 @@ class ControllerGenerator extends Generator
 
         $parameters['actions'] = $actions;
 
-        $this->renderFile('controller/Controller.php', $controllerFile, $parameters);
-        $this->renderFile('controller/ControllerTest.php', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
+        $this->renderFile('controller/Controller.php.twig', $controllerFile, $parameters);
+        $this->renderFile('controller/ControllerTest.php.twig', $dir.'/Tests/Controller/'.$controller.'ControllerTest.php', $parameters);
     }
 
     public function generateRouting(BundleInterface $bundle, $controller, array $action, $format)
