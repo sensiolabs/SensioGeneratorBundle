@@ -13,18 +13,22 @@ class {{ form_class }} extends AbstractType
 {% endblock class_definition %}
 {
 {% block class_body %}
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
         {%- for field in fields %}
 
             ->add('{{ field }}')
-
-        {%- endfor %}
-
-        ;
+        {%- endfor %};
     }
 
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
@@ -32,6 +36,9 @@ class {{ form_class }} extends AbstractType
         ));
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return '{{ form_type_name }}';
