@@ -150,7 +150,6 @@ EOT
 
         // Entity exists?
         $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
-        $metadata = $this->getEntityMetadata($entityClass);
 
         // write?
         $withWrite = $input->getOption('with-write') ?: false;
