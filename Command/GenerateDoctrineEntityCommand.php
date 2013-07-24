@@ -26,8 +26,6 @@ use Doctrine\DBAL\Types\Type;
  */
 class GenerateDoctrineEntityCommand extends GenerateDoctrineCommand
 {
-    private $generator;
-
     protected function configure()
     {
         $this

@@ -24,8 +24,6 @@ use Sensio\Bundle\GeneratorBundle\Generator\ControllerGenerator;
  */
 class GenerateControllerCommand extends GeneratorCommand
 {
-    private $generator;
-
     /**
      * @see Command
      */

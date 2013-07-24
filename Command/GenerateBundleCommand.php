@@ -27,8 +27,6 @@ use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
  */
 class GenerateBundleCommand extends GeneratorCommand
 {
-    private $generator;
-
     /**
      * @see Command
      */

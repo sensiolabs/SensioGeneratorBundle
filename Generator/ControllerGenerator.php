@@ -53,7 +53,7 @@ class ControllerGenerator extends Generator
 
         foreach ($actions as $i => $action) {
             // get the actioname without the sufix Action (for the template logical name)
-            $actions[$i]['basename'] = $basename = substr($action['name'], 0, -6);
+            $actions[$i]['basename'] = substr($action['name'], 0, -6);
             $params = $parameters;
             $params['action'] = $actions[$i];
 
