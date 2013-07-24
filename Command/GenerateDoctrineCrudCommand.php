@@ -148,9 +148,6 @@ EOT
         $input->setOption('entity', $entity);
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
-        // Entity exists?
-        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
-
         // write?
         $withWrite = $input->getOption('with-write') ?: false;
         $output->writeln(array(
