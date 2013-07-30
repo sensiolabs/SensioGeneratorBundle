@@ -3,7 +3,7 @@
 {% endblock extends %}
 
 {% block body %}
-{{ "{% block body -%}" }}
+{{ "{% block body %}" }}
     <h1>{{ entity }} creation</h1>
 
     <form action="{{ "{{ path('" ~ route_name_prefix ~ "_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
