@@ -16,7 +16,7 @@
     {
 {% block method_body %}
         $form = $this->createDeleteForm($id);
-        $form->submit($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -46,8 +46,10 @@
      */
     private function createDeleteForm($id)
     {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('{{ route_name_prefix }}_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
     }
