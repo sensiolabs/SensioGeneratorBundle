@@ -18,7 +18,7 @@
     {
 {% block method_body %}
         $entity = new {{ entity_class }}();
-        $form   = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $form   = $this->createCreateForm($entity);
 {% endblock method_body %}
 
 {% block method_return %}

@@ -26,8 +26,8 @@
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new {{ entity_class }}Type(), $entity);
-        $editForm->submit($request);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
