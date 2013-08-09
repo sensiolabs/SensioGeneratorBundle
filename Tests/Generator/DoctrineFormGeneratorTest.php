@@ -36,6 +36,6 @@ class DoctrineFormGeneratorTest extends GeneratorTest
         $this->assertContains('->add(\'title\')', $content);
         $this->assertContains('class PostType extends AbstractType', $content);
         $this->assertContains("'data_class' => 'Foo\BarBundle\Entity\Post'", $content);
-        $this->assertContains("'foo_barbundle_posttype'", $content);
+        $this->assertContains("'foo_barbundle_post'", $content);
     }
 }
