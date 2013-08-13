@@ -112,7 +112,7 @@ EOT
             try {
                 $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
             } catch (\Exception $e) {
-                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exists.</>', $bundle));
+                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exist.</>', $bundle));
             }
         }
 
@@ -155,7 +155,7 @@ EOT
 
                 $output->writeln(sprintf('<bg=red>Controller "%s:%s" already exists.</>', $bundle, $controller));
             } catch (\Exception $e) {
-                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exists.</>', $bundle));
+                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exist.</>', $bundle));
             }
         }
         $input->setOption('controller', $bundle.':'.$controller);
