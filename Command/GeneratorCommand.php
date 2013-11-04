@@ -55,9 +55,13 @@ abstract class GeneratorCommand extends ContainerAwareCommand
             $skeletonDirs[] = $dir;
         }
 
-        $bundleDir = dirname($this->getContainer()->get('kernel')->locateResource('@SensioGeneratorBundle/Command/GenerateDoctrineCrudCommand.php'));
-        $skeletonDirs[] = $bundleDir . '/../Resources/skeleton';
-        $skeletonDirs[] = $bundleDir . '/../Resources';
+        $bundleDirs = $this->getContainer()->get('kernel')
+                           ->locateResource('@SensioGeneratorBundle/Resources/skeleton', null, false);
+
+        foreach ($bundleDirs as $singleBundleDir) {
+            $skeletonDirs[] = $singleBundleDir;
+            $skeletonDirs[] = dirname($singleBundleDir);
+        }
 
         return $skeletonDirs;
     }
