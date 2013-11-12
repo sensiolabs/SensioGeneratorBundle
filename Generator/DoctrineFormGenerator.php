@@ -54,7 +54,7 @@ class DoctrineFormGenerator extends Generator
      * @param string            $entity   The entity relative class name
      * @param ClassMetadataInfo $metadata The entity metadata class
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata,$forceOverwrite)
     {
         $parts = explode('\\', $entity);
         $entityClass = array_pop($parts);
@@ -63,7 +63,7 @@ class DoctrineFormGenerator extends Generator
         $dirPath = $bundle->getPath().'/Form';
         $this->classPath = $dirPath.'/'.str_replace('\\', '/', $entity).'Type.php';
 
-        if (file_exists($this->classPath)) {
+        if (!$forceOverwrite && file_exists($this->classPath)) {
             throw new \RuntimeException(sprintf('Unable to generate the %s form class as it already exists under the %s file', $this->className, $this->classPath));
         }
 

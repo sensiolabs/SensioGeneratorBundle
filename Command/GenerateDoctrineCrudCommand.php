@@ -124,12 +124,8 @@ EOT
 
         // form
         if ($withWrite) {
-            $output->write('Generating the Form code: ');
-            if ($this->generateForm($bundle, $entity, $metadata)) {
-                $output->writeln('<info>OK</info>');
-            } else {
-                $output->writeln('<comment>Already exists, skipping</comment>');
-            }
+            $this->generateForm($bundle, $entity, $metadata, $forceOverwrite);
+            $output->writeln('Generating the Form code: <info>OK</info>');
         }
 
         // routing
@@ -220,15 +216,9 @@ EOT
     /**
      * Tries to generate forms if they don't exist yet and if we need write operations on entities.
      */
-    protected function generateForm($bundle, $entity, $metadata)
+    protected function generateForm($bundle, $entity, $metadata, $forceOverwrite)
     {
-        try {
-            $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0]);
-        } catch (\RuntimeException $e) {
-            return false;
-        }
-
-        return true;
+        $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0],$forceOverwrite);
     }
 
     protected function updateRouting(QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output, BundleInterface $bundle, $format, $entity, $prefix)
