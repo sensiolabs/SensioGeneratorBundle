@@ -34,7 +34,7 @@ class DoctrineFormGeneratorTest extends GeneratorTest
         );
         $metadata->associationMappings = $metadata->fieldMappings;
 
-        $generator->generate($bundle, 'Post', $metadata);
+        $generator->generate($bundle, 'Post', $metadata,true);
 
         $this->assertTrue(file_exists($this->tmpDir.'/Form/PostType.php'));
 
