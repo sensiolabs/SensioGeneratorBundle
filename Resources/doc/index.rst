@@ -9,7 +9,7 @@ Doctrine 2 schema.
 Installation
 ------------
 
-`Download`_ the bundle and put it under the ``Sensio\\Bundle\\`` namespace.
+`Download`_ the bundle and put it under the ``Sensio\Bundle`` namespace.
 Then, like for any other bundle, include it in your Kernel class::
 
     public function registerBundles()
