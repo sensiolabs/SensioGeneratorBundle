@@ -35,6 +35,7 @@ new commands are listed below:
    :maxdepth: 1
 
    commands/generate_bundle
+   commands/generate_controller
    commands/generate_doctrine_crud
    commands/generate_doctrine_entity
    commands/generate_doctrine_form
