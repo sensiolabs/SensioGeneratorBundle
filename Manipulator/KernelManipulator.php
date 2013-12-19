@@ -87,6 +87,17 @@ class KernelManipulator extends Manipulator
 
                 $this->next();
 
+                $leadingContent = implode('', array_slice($src, 0, $this->line));
+
+                // trim semicolon
+                $leadingContent = rtrim(rtrim($leadingContent), ';');
+                // remove last close parentheses
+                $leadingContent = rtrim(preg_replace('#\)$#', '', rtrim($leadingContent)));
+                if (substr($leadingContent, -1) !== '(') {
+                    // end of leading content is not open parentheses, then assume that array contains at least one el
+                    $leadingContent = rtrim($leadingContent, ',') . ',';
+                }
+
                 $lines = array_merge(
                     array_slice($src, 0, $this->line - 2),
                     // Appends a separator comma to the current last position of the array
