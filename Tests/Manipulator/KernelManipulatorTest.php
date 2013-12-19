@@ -11,33 +11,16 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Manipulator;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\ClassLoader\UniversalClassLoader;
 
+use Sensio\Bundle\GeneratorBundle\Tests\Generator\GeneratorTest;
 use Sensio\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 
-class KernelManipulatorTest extends \PHPUnit_Framework_TestCase
+class KernelManipulatorTest extends GeneratorTest
 {
     const STUB_BUNDLE_CLASS_NAME = 'Sensio\\Bundle\\GeneratorBundle\\Tests\\Manipulator\\Stubs\\StubBundle';
     const STUB_NAMESPACE         = 'KernelManipulatorTest\\Stubs';
-
-    /** @var Filesystem */
-    protected static $filesystem;
-    protected static $tmpDir;
-
-    public static function setUpBeforeClass()
-    {
-        self::$tmpDir     = sys_get_temp_dir() . '/sf2';
-        self::$filesystem = new Filesystem();
-        self::$filesystem->remove(self::$tmpDir);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        self::$filesystem->remove(self::$tmpDir);
-    }
 
     /**
      * @dataProvider kernelStubFilenamesProvider
@@ -48,12 +31,12 @@ class KernelManipulatorTest extends \PHPUnit_Framework_TestCase
     {
         $params = $this->prepareTestKernel($kernelOriginFilePath);
 
-        $this->registerClassLoader(self::$tmpDir);
-
         list($kernelClassName, $fullpath) = $params;
-        $kernelClassName = '\\' . self::STUB_NAMESPACE . '\\' . $kernelClassName;
-        $kernel          = new  $kernelClassName('test', true);
-        $manipulator     = new KernelManipulator($kernel);
+        $kernelClassName = self::STUB_NAMESPACE . '\\' . $kernelClassName;
+        $this->registerClassLoader($kernelClassName, $fullpath);
+
+        $kernel      = new  $kernelClassName('test', true);
+        $manipulator = new KernelManipulator($kernel);
         $manipulator->addBundle(self::STUB_BUNDLE_CLASS_NAME);
 
         $phpFinder     = new PhpExecutableFinder();
@@ -96,11 +79,11 @@ class KernelManipulatorTest extends \PHPUnit_Framework_TestCase
         $fileName  = $pathInfo['basename'];
         $className = $pathInfo['filename'];
 
-        $targetDir = self::$tmpDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, self::STUB_NAMESPACE);
-        self::$filesystem->mkdir($targetDir);
+        $targetDir = $this->tmpDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, self::STUB_NAMESPACE);
+        $this->filesystem->mkdir($targetDir);
 
         $targetPath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
-        self::$filesystem->copy($kernelOriginFilePath, $targetPath, true);
+        $this->filesystem->copy($kernelOriginFilePath, $targetPath, true);
 
         return array($className, $targetPath);
     }
@@ -108,12 +91,19 @@ class KernelManipulatorTest extends \PHPUnit_Framework_TestCase
     /**
      * Registers the stubs namespace in the autoloader.
      *
-     * @param string $cacheDir
+     * @param string $kernelClassName
+     * @param string $fullpath
      */
-    protected function registerClassLoader($cacheDir)
+    protected function registerClassLoader($kernelClassName, $fullpath)
     {
-        $loader = new UniversalClassLoader();
-        $loader->registerNamespace(self::STUB_NAMESPACE, $cacheDir);
-        $loader->register();
+        spl_autoload_register(
+            function ($class) use ($kernelClassName, $fullpath) {
+                if ($class === $kernelClassName) {
+                    require $fullpath;
+
+                    return true;
+                }
+            }
+        );
     }
 }
