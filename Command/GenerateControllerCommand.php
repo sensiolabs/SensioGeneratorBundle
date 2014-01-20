@@ -262,13 +262,21 @@ EOT
 
     public function parseActions($actions)
     {
-        if (is_array($actions)) {
+        if (empty($actions) || $actions !== array_values($actions)) {
             return $actions;
+        }
+
+        $actionList = array();
+
+        if (1 == count($actions)) {
+            $actionList = explode(' ', $actions[0]);
+        } else {
+            $actionList = $actions;
         }
 
         $newActions = array();
 
-        foreach (explode(' ', $actions) as $action) {
+        foreach ($actionList as $action) {
             $data = explode(':', $action);
 
             // name
