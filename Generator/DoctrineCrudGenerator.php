@@ -268,6 +268,7 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
+            'fields'            => $this->metadata->fieldMappings,
             'bundle'            => $this->bundle->getName(),
             'actions'           => $this->actions,
         ));
