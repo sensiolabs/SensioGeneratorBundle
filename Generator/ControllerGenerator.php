@@ -102,7 +102,7 @@ class ControllerGenerator extends Generator
             }
 
             $content .= sprintf(
-                "\n%s:\n    path: %s\n    defaults: { _controller: %s }\n",
+                "\n%s:\n    path:     %s\n    defaults: { _controller: %s }\n",
                 $name,
                 $action['route'],
                 $controller

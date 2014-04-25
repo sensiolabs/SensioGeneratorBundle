@@ -114,7 +114,7 @@ class ControllerGeneratorTest extends GeneratorTest
         $this->assertContains($this->getBundle()->getName().':Page:showPage', $content);
 
         $content = file_get_contents($this->tmpDir.'/Resources/config/routing.yml');
-        $this->assertContains("show_page:\n    path: /{slug}\n    defaults: { _controller: FooBarBundle:Page:showPage }", $content);
+        $this->assertContains("show_page:\n    path:     /{slug}\n    defaults: { _controller: FooBarBundle:Page:showPage }", $content);
     }
 
     protected function getGenerator()
