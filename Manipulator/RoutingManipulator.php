@@ -47,18 +47,18 @@ class RoutingManipulator extends Manipulator
     public function addResource($bundle, $format, $prefix = '/', $path = 'routing')
     {
         $current = '';
+        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
         if (file_exists($this->file)) {
             $current = file_get_contents($this->file);
 
             // Don't add same bundle twice
-            if (false !== strpos($current, $bundle)) {
+            if (false !== strpos($current, $code)) {
                 throw new \RuntimeException(sprintf('Bundle "%s" is already imported.', $bundle));
             }
         } elseif (!is_dir($dir = dirname($this->file))) {
             mkdir($dir, 0777, true);
         }
 
-        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
         if ('annotation' == $format) {
             $code .= sprintf("    resource: \"@%s/Controller/\"\n    type:     annotation\n", $bundle);
         } else {
