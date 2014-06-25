@@ -59,12 +59,8 @@ class DoctrineCrudGenerator extends Generator
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
         $this->actions = $needWriteActions ? array('index', 'show', 'new', 'edit', 'delete') : array('index', 'show');
 
-        if (count($metadata->identifier) > 1) {
-            throw new \RuntimeException('The CRUD generator does not support entity classes with multiple primary keys.');
-        }
-
-        if (!in_array('id', $metadata->identifier)) {
-            throw new \RuntimeException('The CRUD generator expects the entity object has a primary key field named "id" with a getId() method.');
+        if (count($metadata->identifier) != 1) {
+            throw new \RuntimeException('The CRUD generator does not support entity classes with multiple or no primary keys.');
         }
 
         $this->entity   = $entity;
@@ -216,6 +212,7 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile('crud/views/index.html.twig.twig', $dir.'/index.html.twig', array(
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'identifier'        => $this->metadata->identifier[0],
             'fields'            => $this->metadata->fieldMappings,
             'actions'           => $this->actions,
             'record_actions'    => $this->getRecordActions(),
@@ -234,6 +231,7 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile('crud/views/show.html.twig.twig', $dir.'/show.html.twig', array(
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'identifier'        => $this->metadata->identifier[0],
             'fields'            => $this->metadata->fieldMappings,
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
@@ -267,6 +265,7 @@ class DoctrineCrudGenerator extends Generator
         $this->renderFile('crud/views/edit.html.twig.twig', $dir.'/edit.html.twig', array(
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
+            'identifier'        => $this->metadata->identifier[0],
             'entity'            => $this->entity,
             'fields'            => $this->metadata->fieldMappings,
             'bundle'            => $this->bundle->getName(),
