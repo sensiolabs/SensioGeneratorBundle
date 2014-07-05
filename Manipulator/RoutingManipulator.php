@@ -86,17 +86,15 @@ class RoutingManipulator extends Manipulator
      */
     public function hasResourceInAnnotation($bundle)
     {
-        if (file_exists($this->file)) {
-            $current = file_get_contents($this->file);
-
-            $search = 'resource: "@%s/Controller/"';
-
-            if (false !== strpos($current, $search)) {
-                return true;
-            }
+        if (!file_exists($this->file)) {
+            return false;
         }
 
-        return false;
+        $current = file_get_contents($this->file);
+
+        $search = 'resource: "@%s/Controller/"';
+
+        return false !== strpos($current, $search);
     }
 
     /**
@@ -105,6 +103,8 @@ class RoutingManipulator extends Manipulator
      * @param string $bundle
      * @param string $controller
      * @param string $prefix
+     *
+     * @return boolean
      */
     public function addAnnotationController($bundle, $controller, $prefix)
     {
