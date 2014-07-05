@@ -77,11 +77,60 @@ class RoutingManipulator extends Manipulator
         return true;
     }
 
-    public function getImportedResourceYamlKey($bundle, $prefix)
+    /**
+     * Check if the routing file contain a line for the bundle
+     *
+     * @param string $bundle
+     *
+     * @return boolean
+     */
+    public function hasResourceInAnnotation($bundle)
     {
-        $snakeCasedBundleName = Container::underscore(substr($bundle, 0, -6));
-        $routePrefix = DoctrineCrudGenerator::getRouteNamePrefix($prefix);
+        if (file_exists($this->file)) {
+            $current = file_get_contents($this->file);
 
-        return sprintf('%s%s%s', $snakeCasedBundleName, '' !== $routePrefix ? '_' : '' , $routePrefix);
+            $search = 'resource: "@%s/Controller/"';
+
+            if (false !== strpos($current, $search)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Add an annotation controller resource
+     *
+     * @param string $bundle
+     * @param string $controller
+     * @param string $prefix
+     */
+    public function addAnnotationController($bundle, $controller, $prefix)
+    {
+        $current = '';
+
+        if (file_exists($this->file)) {
+            $current = file_get_contents($this->file);
+        } elseif (!is_dir($dir = dirname($this->file))) {
+            mkdir($dir, 0777, true);
+        }
+
+        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
+
+        $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"\n    type:     annotation\n", $bundle, $controller);
+
+        if ($prefix) {
+            $code .= sprintf("    prefix:   %s\n", $prefix);
+        }
+
+        $code .= "\n";
+        $code .= $current;
+
+        if (false === file_put_contents($this->file, $code)) {
+            return false;
+        }
+
+        return true;
     }
 }
