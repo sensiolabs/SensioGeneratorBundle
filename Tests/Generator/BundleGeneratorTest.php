@@ -42,6 +42,31 @@ class BundleGeneratorTest extends GeneratorTest
 
         $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Resources/views/Default/index.html.twig');
         $this->assertContains('Hello {{ name }}!', $content);
+
+        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Resources/config/services.yml');
+        $this->assertContains('class: Foo\BarBundle\Example', $content);
+    }
+
+    public function testGenerateXml()
+    {
+        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'xml', false);
+
+        $files = array(
+            'FooBarBundle.php',
+            'Controller/DefaultController.php',
+            'Resources/views/Default/index.html.twig',
+            'Resources/config/routing.xml',
+            'Tests/Controller/DefaultControllerTest.php',
+            'Resources/config/services.xml',
+            'DependencyInjection/Configuration.php',
+            'DependencyInjection/FooBarExtension.php',
+        );
+        foreach ($files as $file) {
+            $this->assertTrue(file_exists($this->tmpDir.'/Foo/BarBundle/'.$file), sprintf('%s has been generated', $file));
+        }
+
+        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Resources/config/services.xml');
+        $this->assertContains('<service id="foo_bar.example" class="Foo\BarBundle\Example">', $content);
     }
 
     public function testGenerateAnnotation()
