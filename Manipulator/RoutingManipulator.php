@@ -82,7 +82,7 @@ class RoutingManipulator extends Manipulator
      *
      * @param string $bundle
      *
-     * @return boolean
+     * @return bool
      */
     public function hasResourceInAnnotation($bundle)
     {
@@ -104,7 +104,7 @@ class RoutingManipulator extends Manipulator
      * @param string $controller
      * @param string $prefix
      *
-     * @return boolean
+     * @return bool
      */
     public function addAnnotationController($bundle, $controller, $prefix)
     {
