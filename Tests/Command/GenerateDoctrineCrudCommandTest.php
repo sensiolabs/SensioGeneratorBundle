@@ -71,7 +71,7 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
         );
     }
 
-    public function testCreateCrudWithAnnotationInNonAnnocationBundle()
+    public function testCreateCrudWithAnnotationInNonAnnotationBundle()
     {
         $rootDir = $this->getContainer()->getParameter('kernel.root_dir');
 
@@ -110,7 +110,7 @@ DATA;
         $this->assertContains($expected, file_get_contents($rootDir.'/config/routing.yml'));
     }
 
-    public function testCreateCrudWithAnnotationInAnnocationBundle()
+    public function testCreateCrudWithAnnotationInAnnotationBundle()
     {
         $rootDir = $this->getContainer()->getParameter('kernel.root_dir');
 
