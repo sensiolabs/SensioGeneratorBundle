@@ -16,17 +16,17 @@
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $entity = new {{ entity_class }}();
-        $form = $this->createCreateForm($entity);
+        ${{ entity_class|lower }} = new {{ entity_class }}();
+        $form = $this->createCreateForm(${{ entity_class|lower }});
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            $em->persist(${{ entity_class|lower }});
             $em->flush();
 
             {% if 'show' in actions -%}
-                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $entity->getId())));
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => ${{ entity_class|lower }}->getId())));
             {%- else -%}
                 return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
             {%- endif %}
@@ -37,12 +37,12 @@
 {% block method_return %}
 {% if 'annotation' == format %}
         return array(
-            'entity' => $entity,
+            '{{ entity_class|lower }}' => ${{ entity_class|lower }},
             'form'   => $form->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:new.html.twig', array(
-            'entity' => $entity,
+            '{{ entity_class|lower }}' => ${{ entity_class|lower }},
             'form'   => $form->createView(),
         ));
 {% endif %}
@@ -53,13 +53,13 @@
     /**
      * Creates a form to create a {{ entity }} entity.
      *
-     * @param {{ entity_class }} $entity The entity
+     * @param {{ entity_class }} ${{ entity_class|lower }} The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm({{ entity_class }} $entity)
+    private function createCreateForm({{ entity_class }} ${{ entity_class|lower }})
     {
-        $form = $this->createForm(new {{ entity_class }}Type(), $entity, array(
+        $form = $this->createForm(new {{ entity_class }}Type(), ${{ entity_class|lower }}, array(
             'action' => $this->generateUrl('{{ route_name_prefix }}_create'),
             'method' => 'POST',
         ));

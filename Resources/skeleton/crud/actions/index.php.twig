@@ -1,4 +1,3 @@
-
     /**
 {% block phpdoc_method_header %}
      * Lists all {{ entity }} entities.
@@ -19,17 +18,17 @@
 {% block method_body %}
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('{{ bundle }}:{{ entity }}')->findAll();
+        ${{ entity_pluralized }} = $em->getRepository('{{ bundle }}:{{ entity }}')->findAll();
 {% endblock method_body %}
 
 {% block method_return %}
 {% if 'annotation' == format %}
         return array(
-            'entities' => $entities,
+            '{{ entity_pluralized }}' => ${{ entity_pluralized }},
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
-            'entities' => $entities,
+            '{{ entity_pluralized }}' => ${{ entity_pluralized }},
         ));
 {% endif %}
 {% endblock method_return %}
