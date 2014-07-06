@@ -13,6 +13,7 @@ namespace Sensio\Bundle\GeneratorBundle\Manipulator;
 
 use Symfony\Component\DependencyInjection\Container;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Changes the PHP code of a YAML routing file.
@@ -90,11 +91,17 @@ class RoutingManipulator extends Manipulator
             return false;
         }
 
-        $current = file_get_contents($this->file);
+        $config = Yaml::parse($this->file);
 
-        $search = 'resource: "@%s/Controller/"';
+        $search = sprintf('@%s/Controller/', $bundle);
 
-        return false !== strpos($current, $search);
+        foreach ($config as $resource) {
+            if (array_key_exists('resource', $resource)) {
+                return $resource['resource'] == $search;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -106,7 +113,7 @@ class RoutingManipulator extends Manipulator
      *
      * @return bool
      */
-    public function addAnnotationController($bundle, $controller, $prefix)
+    public function addAnnotationController($bundle, $controller)
     {
         $current = '';
 
@@ -116,13 +123,9 @@ class RoutingManipulator extends Manipulator
             mkdir($dir, 0777, true);
         }
 
-        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
+        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).'_'.Container::underscore($controller));
 
         $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"\n    type:     annotation\n", $bundle, $controller);
-
-        if ($prefix) {
-            $code .= sprintf("    prefix:   %s\n", $prefix);
-        }
 
         $code .= "\n";
         $code .= $current;

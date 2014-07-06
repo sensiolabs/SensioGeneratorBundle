@@ -75,11 +75,6 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
     {
         $rootDir = $this->getContainer()->getParameter('kernel.root_dir');
 
-        $this->getBundle()
-            ->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('AcmeBlogBundle'));
-
         $routing = <<<DATA
 acme_blog:
     resource: "@AcmeBlogBundle/Resources/config/routing.xml"
@@ -105,7 +100,7 @@ DATA;
         $tester = new CommandTester($this->getCommand($generator, $input));
         $tester->execute($options);
 
-        $expected = 'Controller/PostController.php';
+        $expected = 'acme_blog_post:';
 
         $this->assertContains($expected, file_get_contents($rootDir.'/config/routing.yml'));
     }
@@ -191,6 +186,19 @@ DATA;
             ->setMethods(array('generate'))
             ->getMock()
         ;
+    }
+
+    protected function getBundle()
+    {
+        $bundle = parent::getBundle();
+
+        $bundle
+            ->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('AcmeBlogBundle'))
+        ;
+
+        return $bundle;
     }
 
     protected function getContainer()
