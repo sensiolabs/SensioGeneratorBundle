@@ -36,23 +36,23 @@ Available Options
   bundle name in which the entity is located and the name of the entity. For
   example: ``AcmeBlogBundle:Post``:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-        php app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post
+      php app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post
 
 * ``--route-prefix``: The prefix to use for each route that identifies an
   action:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-        php app/console generate:doctrine:crud --route-prefix=acme_post
+      php app/console generate:doctrine:crud --route-prefix=acme_post
 
 * ``--with-write``: (**no**) [values: yes|no] Whether or not to generate the
   `new`, `create`, `edit`, `update` and `delete` actions:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-        php app/console generate:doctrine:crud --with-write
+      php app/console generate:doctrine:crud --with-write
 
 * ``--format``: (**annotation**) [values: yml, xml, php or annotation]
   Determine the format to use for the generated configuration files like
@@ -60,6 +60,6 @@ Available Options
   the ``annotation`` format expects the ``SensioFrameworkExtraBundle`` is
   already installed:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-        php app/console generate:doctrine:crud --format=annotation
+      php app/console generate:doctrine:crud --format=annotation
