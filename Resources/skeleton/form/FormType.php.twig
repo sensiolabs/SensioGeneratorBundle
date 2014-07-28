@@ -13,7 +13,7 @@ class {{ form_class }} extends AbstractType
 {% endblock class_definition %}
 {
 {% block class_body %}
-    {% if fields|length > 0 %}
+    {%- if fields|length > 0 %}
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
