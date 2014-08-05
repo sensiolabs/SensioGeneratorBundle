@@ -66,6 +66,6 @@ Available Options
 
 * ``--overwrite``: (**no**) [values: yes|no] Whether or not to overwrite any existing files:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-        php app/console generate:doctrine:crud --overwrite
+       php app/console generate:doctrine:crud --overwrite
