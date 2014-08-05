@@ -63,3 +63,9 @@ Available Options
   .. code-block:: bash
 
       php app/console generate:doctrine:crud --format=annotation
+
+* ``--overwrite``: (**no**) [values: yes|no] Whether or not to overwrite any existing files:
+
+    .. code-block:: bash
+
+        php app/console generate:doctrine:crud --overwrite
