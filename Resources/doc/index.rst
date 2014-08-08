@@ -9,7 +9,12 @@ Doctrine 2 schema.
 Installation
 ------------
 
-`Download`_ the bundle and put it under the ``Sensio\Bundle`` namespace.
+Before using this bundle in your project, add it to your ``composer.json`` file:
+
+.. code-block:: bash
+
+    $ composer require sensio/generator-bundle
+
 Then, like for any other bundle, include it in your Kernel class::
 
     public function registerBundles()
@@ -39,8 +44,6 @@ new commands are listed below:
    commands/generate_doctrine_crud
    commands/generate_doctrine_entity
    commands/generate_doctrine_form
-
-.. _Download: http://github.com/sensio/SensioGeneratorBundle
 
 Overriding Skeleton Templates
 -----------------------------
