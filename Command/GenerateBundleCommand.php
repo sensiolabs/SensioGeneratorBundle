@@ -303,7 +303,7 @@ EOT
         $output->write('Importing the bundle routing resource: ');
         $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml');
         try {
-            $ret = $auto ? $routing->addResource($bundle, $format) : false;
+            $ret = $auto ? $routing->addResource($bundle, $format) : true;
             if (!$ret) {
                 if ('annotation' === $format) {
                     $help = sprintf("        <comment>resource: \"@%s/Controller/\"</comment>\n        <comment>type:     annotation</comment>\n", $bundle);
