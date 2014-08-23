@@ -105,17 +105,6 @@ class Validators
         return $entity;
     }
 
-    public static function validateShared($shared)
-    {
-        $shared = strtolower($shared);
-
-        if (!in_array($shared, array('yes', 'y', 'no', 'n'))) {
-            throw new \RuntimeException(sprintf('You should respond yes or no.', $shared));
-        }
-
-        return $shared;
-    }
-
     public static function getReservedWords()
     {
         return array(

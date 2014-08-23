@@ -36,12 +36,12 @@ class GenerateBundleCommand extends GeneratorCommand
     {
         $this
             ->setDefinition(array(
-                new InputOption('shared', '', InputOption::VALUE_REQUIRED, 'Are you planning on using/sharing this bundle across multiple applications?'),
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
                 new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure'),
+                new InputOption('shared', '', InputOption::VALUE_NONE, 'Are you planning on using/sharing this bundle across multiple applications?'),
             ))
             ->setDescription('Generates a bundle')
             ->setHelp(<<<EOT
@@ -113,7 +113,7 @@ EOT
         }
 
         $generator = $this->getGenerator();
-        $generator->generate($shared, $namespace, $bundle, $dir, $format, $structure);
+        $generator->generate($namespace, $bundle, $dir, $format, $structure, $shared);
 
         $output->writeln('Generating the bundle code: <info>OK</info>');
 
@@ -138,27 +138,13 @@ EOT
         $questionHelper->writeSection($output, 'Welcome to the Symfony2 bundle generator');
 
         // shared
-        $shared = null;
-        try {
-            $shared = $input->getOption('shared') ? Validators::validateShared($input->getOption('shared')) : null;
-        } catch (\Exception $error) {
-            $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
+        $shared = $input->getOption('shared');
+
+        if (!$shared && $dialog->askConfirmation($output, '<question>Are you planning on using/sharing this bundle across multiple applications [no]?</question>', false)) {
+            $shared = true;
         }
 
-        if (null === $shared) {
-            $output->writeln(array(
-                '',
-                'There are two modes for the bundle generation:',
-                '1) Creating a re-usable, 3rd party bundle.',
-                '2) Creating a bundle for your application.',
-                '',
-                'If you prefer the second option, you can omit the vendor\'s name in the next step.',
-                '',
-            ));
-
-            $shared = $dialog->askConfirmation($output, 'Are you planning on using/sharing this bundle across multiple applications [yes]?');
-            $input->setOption('shared', $shared);
-        }
+        $shared = $input->setOption('shared', $shared);
 
         // namespace
         $namespace = null;

@@ -27,7 +27,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         $generator
             ->expects($this->once())
             ->method('generate')
-            ->with($shared, $namespace, $bundle, $dir, $format, $structure)
+            ->with($namespace, $bundle, $dir, $format, $structure, $shared)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, $input));
@@ -41,7 +41,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         return array(
             array(array('--shared' => true, '--dir' => $tmp, '--format' => 'annotation'), "y\nFoo/BarBundle\n", array(true,'Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
             array(array(), "y\nFoo/BarBundle\nBarBundle\nfoo\nyml\nn", array(true, 'Foo\BarBundle', 'BarBundle', 'foo/', 'yml', false)),
-            array(array('--shared' => true, '--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), "y\nFoo/BarBundle\n", array(true,'Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
+            array(array('--shared' => true, '--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), "y\nFoo/BarBundle\n", array(true, 'Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
         );
     }
 
@@ -56,7 +56,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         $generator
             ->expects($this->once())
             ->method('generate')
-            ->with($shared, $namespace, $bundle, $dir, $format, $structure)
+            ->with($namespace, $bundle, $dir, $format, $structure, $shared)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, ''));
