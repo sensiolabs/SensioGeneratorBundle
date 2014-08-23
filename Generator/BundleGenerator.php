@@ -28,7 +28,7 @@ class BundleGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate($namespace, $bundle, $dir, $format, $structure, $shared)
+    public function generate($namespace, $bundle, $dir, $format, $structure, $shared = false)
     {
         $dir .= '/'.strtr($namespace, '\\', '/');
         if (file_exists($dir)) {
