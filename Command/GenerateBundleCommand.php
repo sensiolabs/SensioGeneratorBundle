@@ -145,7 +145,7 @@ EOT
             $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }
 
-        if(null === $shared) {
+        if (null === $shared) {
             $output->writeln(array(
                 '',
                 'There are two modes for the bundle generation:',
@@ -159,7 +159,6 @@ EOT
             $shared = $dialog->askConfirmation($output, 'Are you planning on using/sharing this bundle across multiple applications [yes]?');
             $input->setOption('shared', $shared);
         }
-
 
         // namespace
         $namespace = null;
