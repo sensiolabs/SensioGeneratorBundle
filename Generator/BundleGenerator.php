@@ -46,7 +46,6 @@ class BundleGenerator extends Generator
 
         $basename = substr($bundle, 0, -6);
         $parameters = array(
-            'shared'    => $shared,
             'namespace' => $namespace,
             'bundle'    => $bundle,
             'format'    => $format,
