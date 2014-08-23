@@ -21,13 +21,13 @@ class GenerateBundleCommandTest extends GenerateCommandTest
      */
     public function testInteractiveCommand($options, $input, $expected)
     {
-        list($namespace, $bundle, $dir, $format, $structure) = $expected;
+        list($shared, $namespace, $bundle, $dir, $format, $structure) = $expected;
 
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
             ->method('generate')
-            ->with($namespace, $bundle, $dir, $format, $structure)
+            ->with($shared, $namespace, $bundle, $dir, $format, $structure)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, $input));
@@ -50,13 +50,13 @@ class GenerateBundleCommandTest extends GenerateCommandTest
      */
     public function testNonInteractiveCommand($options, $expected)
     {
-        list($namespace, $bundle, $dir, $format, $structure) = $expected;
+        list($shared, $namespace, $bundle, $dir, $format, $structure) = $expected;
 
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
             ->method('generate')
-            ->with($namespace, $bundle, $dir, $format, $structure)
+            ->with($shared, $namespace, $bundle, $dir, $format, $structure)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, ''));

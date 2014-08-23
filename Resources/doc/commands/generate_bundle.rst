@@ -25,6 +25,9 @@ forget to pass all needed options:
 Available Options
 -----------------
 
+* ``--shared``: If present, create a DependencyInjection directory.
+  Not recommended if you no planning share the bundle.
+
 * ``--namespace``: The namespace of the bundle to create. The namespace should
   begin with a "vendor" name like your company name, your project name, or
   your client name, followed by one or more optional category sub-namespaces,
