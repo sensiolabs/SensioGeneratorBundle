@@ -39,9 +39,9 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         $tmp = sys_get_temp_dir();
 
         return array(
-            array(array('--dir' => $tmp, '--format' => 'annotation'), "Foo/BarBundle\n", array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
-            array(array(), "Foo/BarBundle\nBarBundle\nfoo\nyml\nn", array('Foo\BarBundle', 'BarBundle', 'foo/', 'yml', false)),
-            array(array('--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), "Foo/BarBundle\n", array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
+            array(array('--dir' => $tmp, '--format' => 'annotation'), "Foo/BarBundle\n", array(true, 'Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
+            array(array(), "Foo/BarBundle\nBarBundle\nfoo\nyml\nn", array(true, 'Foo\BarBundle', 'BarBundle', 'foo/', 'yml', false)),
+            array(array('--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), "Foo/BarBundle\n", array(true, 'Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
         );
     }
 
@@ -68,8 +68,8 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         $tmp = sys_get_temp_dir();
 
         return array(
-            array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle'), array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
-            array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle', '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
+            array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle'), array(true, 'Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
+            array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle', '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), array(true, 'Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
         );
     }
 
