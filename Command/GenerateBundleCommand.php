@@ -94,7 +94,7 @@ EOT
 
         $shared = $input->getOption('shared');
 
-        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'));
+        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $input->getOption('shared'));
         if (!$bundle = $input->getOption('bundle-name')) {
             $bundle = strtr($namespace, array('\\' => ''));
         }
@@ -149,8 +149,7 @@ EOT
         // namespace
         $namespace = null;
         try {
-            // validate the namespace option (if any) but don't require the vendor namespace
-            $namespace = $input->getOption('namespace') ? Validators::validateBundleNamespace($input->getOption('namespace'), false) : null;
+            $namespace = $input->getOption('namespace') ? Validators::validateBundleNamespace($input->getOption('namespace'), $input->getOption('shared')) : null;
         } catch (\Exception $error) {
             $output->writeln($questionHelper->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }

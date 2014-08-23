@@ -18,7 +18,7 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
  */
 class Validators
 {
-    public static function validateBundleNamespace($namespace, $requireVendorNamespace = true)
+    public static function validateBundleNamespace($namespace, $shared=false)
     {
         if (!preg_match('/Bundle$/', $namespace)) {
             throw new \InvalidArgumentException('The namespace must end with Bundle.');
@@ -38,8 +38,7 @@ class Validators
         }
 
         // validate that the namespace is at least one level deep
-        if ($requireVendorNamespace && false === strpos($namespace, '\\')) {
-            // language is (almost) duplicated in GenerateBundleCommand
+        if (false === strpos($namespace, '\\') && $shared) {
             $msg = array();
             $msg[] = sprintf('The namespace must contain a vendor namespace (e.g. "VendorName\%s" instead of simply "%s").', $namespace, $namespace);
             $msg[] = 'If you\'ve specified a vendor namespace, did you forget to surround it with quotes (init:bundle "Acme\BlogBundle")?';
