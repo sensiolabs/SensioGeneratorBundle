@@ -56,13 +56,13 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
             'Entity/Foo.php',
         );
 
-        $annotions = array(
+        $annotations = array(
             '@ORM\Column(name="bar"',
             '@ORM\Column(name="baz"',
         );
 
         $this->assertFilesExists($files);
-        $this->assertAttributesAndMethodsExists();
+        $this->assertAttributesAndMethodsExists($annotations);
     }
 
     protected function assertFilesExists(array $files)
