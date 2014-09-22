@@ -146,7 +146,7 @@ EOT;
                 $content = substr($content, 0, $pointer);
                 $content .= sprintf("%s->add('%s', new Route('%s', array(", $collection[1], $name, $action['route']);
                 $content .= sprintf("\n    '_controller' => '%s',", $controller);
-                $content .= "\n)));\n\nreturn ".$collection[1];
+                $content .= "\n)));\n\nreturn ".$collection[1].";";
             } else {
                 // new file
                 $content = <<<EOT
@@ -158,7 +158,7 @@ use Symfony\Component\Routing\Route;
 EOT;
                 $content .= sprintf("\n\$collection->add('%s', new Route('%s', array(", $name, $action['route']);
                 $content .= sprintf("\n    '_controller' => '%s',", $controller);
-                $content .= "\n)));\n\nreturn \$collection";
+                $content .= "\n)));\n\nreturn \$collection;";
             }
         }
 
