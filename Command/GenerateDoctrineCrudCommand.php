@@ -116,8 +116,12 @@ EOT
 
         // form
         if ($withWrite) {
-            $this->generateForm($bundle, $entity, $metadata);
-            $output->writeln('Generating the Form code: <info>OK</info>');
+            $output->write('Generating the Form code: ');
+            if ($this->generateForm($bundle, $entity, $metadata)) {
+                $output->writeln('<info>OK</info>');
+            } else {
+                $output->writeln('<warning>Already exists, skipping</warning>');
+            }
         }
 
         // routing
@@ -205,8 +209,10 @@ EOT
         try {
             $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0]);
         } catch (\RuntimeException $e ) {
-            // form already exists
+            return false;
         }
+
+	 return true;
     }
 
     protected function updateRouting(DialogHelper $dialog, InputInterface $input, OutputInterface $output, BundleInterface $bundle, $format, $entity, $prefix)
