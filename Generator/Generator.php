@@ -35,14 +35,23 @@ class Generator
 
     protected function render($template, $parameters)
     {
-        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->skeletonDirs), array(
+        $twig = $this->getTwigEnvironment();
+
+        return $twig->render($template, $parameters);
+    }
+
+    /**
+     * Get the twig environment that will render skeletons
+     * @return \Twig_Environment
+     */
+    protected function getTwigEnvironment()
+    {
+        return new \Twig_Environment(new \Twig_Loader_Filesystem($this->skeletonDirs), array(
             'debug'            => true,
             'cache'            => false,
             'strict_variables' => true,
             'autoescape'       => false,
         ));
-
-        return $twig->render($template, $parameters);
     }
 
     protected function renderFile($template, $target, $parameters)
