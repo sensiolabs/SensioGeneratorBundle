@@ -128,15 +128,53 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
     {
         $container = parent::getContainer();
 
+        $container->set('doctrine', $this->getDoctrine());
+
+        return $container;
+    }
+
+    protected function getDoctrine()
+    {
+        $cache = $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
+        $cache
+            ->expects($this->any())
+            ->method('getAllClassNames')
+            ->will($this->returnValue(array('Acme\Bundle\BlogBundle\Entity\Post')))
+        ;
+
+        $configuration = $this->getMock('Doctrine\ORM\Configuration');
+        $configuration
+            ->expects($this->any())
+            ->method('getMetadataDriverImpl')
+            ->will($this->returnValue($cache))
+        ;
+
+        $configuration
+            ->expects($this->any())
+            ->method('getEntityNamespaces')
+            ->will($this->returnValue(array('AcmeBlogBundle' => 'Acme\Bundle\BlogBundle\Entity')))
+        ;
+
+        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $manager
+            ->expects($this->any())
+            ->method('getConfiguration')
+            ->will($this->returnValue($configuration))
+        ;
+
         $registry = $this->getMock('Symfony\Bridge\Doctrine\RegistryInterface');
         $registry
             ->expects($this->any())
             ->method('getAliasNamespace')
-            ->will($this->returnValue('Foo\\FooBundle\\Entity'))
+            ->will($this->returnValue('Acme\Bundle\BlogBundle\Entity\Blog\Post'))
         ;
 
-        $container->set('doctrine', $registry);
+        $registry
+            ->expects($this->any())
+            ->method('getManager')
+            ->will($this->returnValue($manager))
+        ;
 
-        return $container;
+        return $registry;
     }
 }
