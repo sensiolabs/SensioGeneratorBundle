@@ -25,7 +25,10 @@ forget to pass all needed options:
 Available Options
 -----------------
 
-* ``--shared``: Not recommended if you don't plan to share the bundle with other projects.
+* ``--shared``: set this option if you are creating a bundle that will be shared
+  across several of your applications or if you are developing a third-party
+  bundle. Don't set this option if you are developing a bundle that will be
+  used solely in your application (e.g. ``AppBundle``).
 
 * ``--namespace``: The namespace of the bundle to create. The namespace should
   begin with a "vendor" name like your company name, your project name, or
