@@ -18,7 +18,7 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
  */
 class Validators
 {
-    public static function validateBundleNamespace($namespace, $shared=false)
+    public static function validateBundleNamespace($namespace, $shared = false)
     {
         if (!preg_match('/Bundle$/', $namespace)) {
             throw new \InvalidArgumentException('The namespace must end with Bundle.');
