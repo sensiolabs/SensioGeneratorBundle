@@ -18,7 +18,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
     const FORMAT_XML = 'xml';
     const FORMAT_YAML = 'yml';
     const FORMAT_ANNOTATION = 'annotation';
-    
+
     const WITH_REPOSITORY = true;
     const WITHOUT_REPOSITORY = false;
 
@@ -28,10 +28,10 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
         $files = array(
             'Entity/Foo.php',
-            'Resources/config/doctrine/Foo.orm.yml',        
+            'Resources/config/doctrine/Foo.orm.yml',
         );
 
-        $this->assertFilesExists($files);        
+        $this->assertFilesExists($files);
         $this->assertAttributesAndMethodsExists();
     }
 
@@ -41,7 +41,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
         $files = array(
             'Entity/Foo.php',
-            'Resources/config/doctrine/Foo.orm.xml',        
+            'Resources/config/doctrine/Foo.orm.xml',
         );
 
         $this->assertFilesExists($files);
@@ -51,7 +51,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
     public function testGenerateAnnotation()
     {
         $this->generate(self::FORMAT_ANNOTATION, self::WITHOUT_REPOSITORY);
-        
+
         $files = array(
             'Entity/Foo.php',
         );
@@ -96,9 +96,9 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
         }
     }
 
-    protected function generate($format, $with_repository = false) 
+    protected function generate($format, $with_repository = false)
     {
-        $this->getGenerator()->generate($this->getBundle(), 'Foo', $format , $this->getFields(), $with_repository);
+        $this->getGenerator()->generate($this->getBundle(), 'Foo', $format, $this->getFields(), $with_repository);
     }
 
     protected function getGenerator()
@@ -127,7 +127,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
         );
     }
 
-    public function getRegistry() 
+    public function getRegistry()
     {
         $registry = $this->getMock('Symfony\Bridge\Doctrine\RegistryInterface');
         $registry->expects($this->any())->method('getManager')->will($this->returnValue($this->getManager()));
@@ -153,5 +153,4 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
         return $config;
     }
-
 }

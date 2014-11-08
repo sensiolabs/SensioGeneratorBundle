@@ -112,7 +112,7 @@ EOT
             '',
             'First, you need to give the entity name you want to generate.',
             'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
-            ''
+            '',
         ));
 
         $bundleNames = array_keys($this->getContainer()->get('kernel')->getBundles());
@@ -123,7 +123,7 @@ EOT
             list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
             // check reserved words
-            if ($this->getGenerator()->isReservedKeyword($entity)){
+            if ($this->getGenerator()->isReservedKeyword($entity)) {
                 $output->writeln(sprintf('<bg=red> "%s" is a reserved word</>.', $entity));
                 continue;
             }
@@ -239,7 +239,7 @@ EOT
             }
 
             $result = filter_var($length, FILTER_VALIDATE_INT, array(
-                'options' => array('min_range' => 1)
+                'options' => array('min_range' => 1),
             ));
 
             if (false === $result) {
@@ -258,7 +258,7 @@ EOT
                 }
 
                 // check reserved words
-                if ($generator->isReservedKeyword($name)){
+                if ($generator->isReservedKeyword($name)) {
                     throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 

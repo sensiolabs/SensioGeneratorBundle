@@ -208,11 +208,11 @@ EOT
     {
         try {
             $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0]);
-        } catch (\RuntimeException $e ) {
+        } catch (\RuntimeException $e) {
             return false;
         }
 
-	 return true;
+        return true;
     }
 
     protected function updateRouting(DialogHelper $dialog, InputInterface $input, OutputInterface $output, BundleInterface $bundle, $format, $entity, $prefix)
