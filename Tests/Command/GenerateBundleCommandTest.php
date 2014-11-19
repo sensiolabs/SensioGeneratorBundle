@@ -43,25 +43,25 @@ class GenerateBundleCommandTest extends GenerateCommandTest
                 array('--shared' => true, '--dir' => $tmp, '--format' => 'annotation'),
                 // namespace
                 "Foo/BarBundle\n",
-                array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', true)
+                array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', true),
             ),
             array(
                 array(),
                 // shared, namespace, bundle name, directory, format
                 "y\nFoo/BarBundle\nBarBundle\nfoo\nyml",
-                array('Foo\BarBundle', 'BarBundle', 'foo/', 'yml', true)
+                array('Foo\BarBundle', 'BarBundle', 'foo/', 'yml', true),
             ),
             array(
                 array('--shared' => true, '--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle'),
                 // namespace
                 "Foo/BarBundle\n",
-                array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)
+                array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true),
             ),
             array(
                 array(),
                 // shared, bundle name, directory, format
                 "n\nBazBundle\nsrc\nannotation",
-                array('BazBundle', 'BazBundle', 'src/', 'annotation', false)
+                array('BazBundle', 'BazBundle', 'src/', 'annotation', false),
             ),
         );
     }
@@ -91,15 +91,15 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         return array(
             array(
                 array('--shared' => true, '--dir' => $tmp, '--namespace' => 'Foo/BarBundle'),
-                array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', true)
+                array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', true),
             ),
             array(
                 array('--shared' => true, '--dir' => $tmp, '--namespace' => 'Foo/BarBundle', '--format' => 'yml', '--bundle-name' => 'BarBundle'),
-                array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)
+                array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true),
             ),
             array(
                 array('--dir' => $tmp, '--namespace' => 'BazBundle', '--format' => 'yml', '--bundle-name' => 'BazBundle'),
-                array('BazBundle', 'BazBundle', $tmp.'/', 'yml', false)
+                array('BazBundle', 'BazBundle', $tmp.'/', 'yml', false),
             ),
         );
     }
