@@ -41,6 +41,9 @@ class ControllerGeneratorTest extends GeneratorTest
             'namespace Foo\\BarBundle\\Tests\\Controller',
             'class WelcomeControllerTest',
         );
+        foreach ($strings as $string) {
+            $this->assertContains($string, $content);
+        }
     }
 
     public function testGenerateActions()
