@@ -28,9 +28,9 @@ class BundleGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate($namespace, $bundle, $dir, $format, $structure, $shared = false)
+    public function generateBundle($namespace, $bundle, $dir, $format, $shared)
     {
-        $dir .= '/'.strtr($namespace, '\\', '/');
+        $dir = $this->getTargetBundleDirectory($dir, $namespace);
         if (file_exists($dir)) {
             if (!is_dir($dir)) {
                 throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', realpath($dir)));
@@ -62,8 +62,8 @@ class BundleGenerator extends Generator
         $this->renderFile('bundle/DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
         $this->renderFile('bundle/index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
 
-        if ('xml' === $format || 'annotation' === $format) {
-            $this->renderFile('bundle/services.xml.twig', $dir.'/Resources/config/services.xml', $parameters);
+        if ('yml' === $format || 'annotation' === $format) {
+            $this->renderFile('bundle/services.yml.twig', $dir.'/Resources/config/services.yml', $parameters);
         } else {
             $this->renderFile('bundle/services.'.$format.'.twig', $dir.'/Resources/config/services.'.$format, $parameters);
         }
@@ -71,8 +71,33 @@ class BundleGenerator extends Generator
         if ('annotation' != $format) {
             $this->renderFile('bundle/routing.'.$format.'.twig', $dir.'/Resources/config/routing.'.$format, $parameters);
         }
+    }
+
+    public function getTargetBundleDirectory($dir, $namespace)
+    {
+        return $dir . trim('/'.strtr($namespace, '\\', '/'), '/');
+    }
+
+    /**
+     * This method is unused, but kept only for backwards compatibility.
+     *
+     * @deprecated
+     */
+    public function generate($namespace, $bundle, $dir, $format, $structure)
+    {
+        $this->generateBundle($namespace, $bundle, $dir, $format, false);
 
         if ($structure) {
+            $basename = substr($bundle, 0, -6);
+
+            $parameters = array(
+                'namespace' => $namespace,
+                'bundle'    => $bundle,
+                'format'    => $format,
+                'bundle_basename' => $basename,
+                'extension_alias' => Container::underscore($basename),
+            );
+
             $this->renderFile('bundle/messages.fr.xlf', $dir.'/Resources/translations/messages.fr.xlf', $parameters);
 
             $this->filesystem->mkdir($dir.'/Resources/doc');

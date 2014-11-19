@@ -95,6 +95,10 @@ class Validators
 
     public static function validateFormat($format)
     {
+        if (!$format) {
+            throw new \RuntimeException('Please enter a configuration format.');
+        }
+
         $format = strtolower($format);
 
         if (!in_array($format, array('php', 'xml', 'yml', 'annotation'))) {
