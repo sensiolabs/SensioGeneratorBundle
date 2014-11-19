@@ -40,7 +40,7 @@ class GenerateBundleCommand extends GeneratorCommand
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
-                new InputOption('shared', '', InputOption::VALUE_NONE, 'Are you planning on using/sharing this bundle across multiple applications?'),
+                new InputOption('shared', '', InputOption::VALUE_NONE, 'Are you planning on sharing this bundle across multiple applications?'),
             ))
             ->setDescription('Generates a bundle')
             ->setHelp(<<<EOT
@@ -54,7 +54,7 @@ conventions):
 <info>php app/console generate:bundle --namespace=Acme/BlogBundle</info>
 
 Note that you can use <comment>/</comment> instead of <comment>\\ </comment>for the namespace delimiter to avoid any
-problem.
+problems.
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
 
@@ -130,14 +130,14 @@ EOT
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $dialog = $this->getDialogHelper();
-        $dialog->writeSection($output, 'Welcome to the Symfony2 bundle generator!');
+        $dialog->writeSection($output, 'Welcome to the Symfony bundle generator!');
 
         /*
          * shared option
          */
         $shared = $input->getOption('shared');
 
-        if (!$shared && $dialog->askConfirmation($output, $dialog->getQuestion('Are you planning on using/sharing this bundle across multiple applications?', 'no'), false)) {
+        if (!$shared && $dialog->askConfirmation($output, $dialog->getQuestion('Are you planning on sharing this bundle across multiple applications?', 'no'), false)) {
             $shared = true;
         }
 
@@ -186,7 +186,7 @@ EOT
             } else {
                 // a simple application bundle
                 $output->writeln(array(
-                    'Given your bundle a descriptive name, like <comment>BlogBundle</comment>.',
+                    'Give your bundle a descriptive name, like <comment>BlogBundle</comment>.',
                 ));
 
                 $namespace = $dialog->askAndValidate(
@@ -282,26 +282,6 @@ EOT
             );
             $input->setOption('format', $format);
         }
-
-        // summary
-        $output->writeln(array(
-            '',
-            $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
-            '',
-            sprintf(
-                "We're about to generate a <info>%s</info> bundle into the \"<info>%s</info>\"\ndirectory using the \"<info>%s</info>\" configuration format.",
-                $bundle,
-                $this->makePathRelative($dir),
-                $format
-            ),
-            '',
-        ));
-
-        if (!$dialog->askConfirmation($output, $dialog->getQuestion('Does this all sound ok to you', 'yes', '?'), true)) {
-            $output->writeln('<error>Command aborted</error>');
-
-            return 1;
-        }
     }
 
     protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
@@ -319,9 +299,9 @@ EOT
     protected function updateKernel(QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output, KernelInterface $kernel, $namespace, $bundle)
     {
         $output->write('> Enabling the bundle inside AppKernel: ');
-        $manip = new KernelManipulator($kernel);
+        $kernelManipulator = new KernelManipulator($kernel);
         try {
-            $ret = $manip->addBundle($namespace.'\\'.$bundle);
+            $ret = $kernelManipulator->addBundle($namespace.'\\'.$bundle);
 
             if (!$ret) {
                 $reflected = new \ReflectionObject($kernel);
@@ -346,7 +326,7 @@ EOT
     {
         $targetRoutingPath = $this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml';
         $output->write(sprintf(
-            '> Adding a line to <info>%s</info> to import the bundle\'s routes: ',
+            '> Importing the bundle\'s routes from the <info>%s</info> file: ',
             $this->makePathRelative($targetRoutingPath)
         ));
         $routing = new RoutingManipulator($targetRoutingPath);
