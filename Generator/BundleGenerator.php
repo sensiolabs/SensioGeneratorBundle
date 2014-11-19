@@ -75,7 +75,7 @@ class BundleGenerator extends Generator
 
     public function getTargetBundleDirectory($dir, $namespace)
     {
-        return $dir . trim('/'.strtr($namespace, '\\', '/'), '/');
+        return $dir.trim('/'.strtr($namespace, '\\', '/'), '/');
     }
 
     /**

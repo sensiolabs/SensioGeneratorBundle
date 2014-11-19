@@ -192,7 +192,7 @@ EOT
                 $namespace = $dialog->askAndValidate(
                     $output,
                     $dialog->getQuestion('Bundle name', null),
-                    function($inputNamespace) use ($shared) {
+                    function ($inputNamespace) use ($shared) {
                         return Validators::validateBundleNamespace($inputNamespace, $shared);
                     },
                     false
