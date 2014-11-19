@@ -137,7 +137,7 @@ EOT
          */
         $shared = $input->getOption('shared');
 
-        if (!$shared && $dialog->askConfirmation($output, $dialog->getQuestion('Are you planning on sharing this bundle across multiple applications?', 'no'), false)) {
+        if ($shared === null && $dialog->askConfirmation($output, $dialog->getQuestion('Are you planning on sharing this bundle across multiple applications?', 'no'), false)) {
             $shared = true;
         }
 
