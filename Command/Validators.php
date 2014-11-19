@@ -54,7 +54,7 @@ class Validators
         if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $bundle)) {
             throw new \InvalidArgumentException('The bundle name contains invalid characters.');
         }
-        
+
         if (!preg_match('/Bundle$/', $bundle)) {
             throw new \InvalidArgumentException('The bundle name must end with Bundle.');
         }
@@ -112,6 +112,7 @@ class Validators
             'array',
             'as',
             'break',
+            'callable',
             'case',
             'catch',
             'class',
@@ -131,6 +132,7 @@ class Validators
             'endwhile',
             'extends',
             'final',
+            'finally',
             'for',
             'foreach',
             'function',
@@ -140,6 +142,7 @@ class Validators
             'implements',
             'interface',
             'instanceof',
+            'insteadof',
             'namespace',
             'new',
             'or',
@@ -149,11 +152,13 @@ class Validators
             'static',
             'switch',
             'throw',
+            'trait',
             'try',
             'use',
             'var',
             'while',
             'xor',
+            'yield',
             '__CLASS__',
             '__DIR__',
             '__FILE__',
@@ -161,6 +166,8 @@ class Validators
             '__FUNCTION__',
             '__METHOD__',
             '__NAMESPACE__',
+            '__TRAIT__',
+            '__halt_compiler',
             'die',
             'echo',
             'empty',
