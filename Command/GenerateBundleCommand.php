@@ -94,7 +94,7 @@ EOT
 
         $shared = $input->getOption('shared');
 
-        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $input->getOption('shared'));
+        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $shared);
         if (!$bundle = $input->getOption('bundle-name')) {
             $bundle = strtr($namespace, array('\\' => ''));
         }
@@ -144,12 +144,12 @@ EOT
             $shared = true;
         }
 
-        $shared = $input->setOption('shared', $shared);
+        $input->setOption('shared', $shared);
 
         // namespace
         $namespace = null;
         try {
-            $namespace = $input->getOption('namespace') ? Validators::validateBundleNamespace($input->getOption('namespace'), $input->getOption('shared')) : null;
+            $namespace = $input->getOption('namespace') ? Validators::validateBundleNamespace($input->getOption('namespace'), $shared) : null;
         } catch (\Exception $error) {
             $output->writeln($questionHelper->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
         }

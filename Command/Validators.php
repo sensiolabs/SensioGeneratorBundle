@@ -18,6 +18,15 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
  */
 class Validators
 {
+    /**
+     * Validates that the given namespace (e.g. Acme\FooBundle) is a valid format
+     *
+     * If $shared is true, then we require you to have a vendor namespace (e.g. Acme).
+     *
+     * @param $namespace
+     * @param bool $shared
+     * @return string
+     */
     public static function validateBundleNamespace($namespace, $shared = false)
     {
         if (!preg_match('/Bundle$/', $namespace)) {
@@ -38,7 +47,7 @@ class Validators
         }
 
         // validate that the namespace is at least one level deep
-        if (false === strpos($namespace, '\\') && $shared) {
+        if ($shared && false === strpos($namespace, '\\')) {
             $msg = array();
             $msg[] = sprintf('The namespace must contain a vendor namespace (e.g. "VendorName\%s" instead of simply "%s").', $namespace, $namespace);
             $msg[] = 'If you\'ve specified a vendor namespace, did you forget to surround it with quotes (init:bundle "Acme\BlogBundle")?';
