@@ -11,6 +11,7 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Command;
 
+use Sensio\Bundle\GeneratorBundle\Manipulator\ConfigurationManipulator;
 use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -102,7 +103,12 @@ EOT
         // routing importing
         $runner($this->updateRouting($output, $bundle));
 
-        $questionHelper->writeGeneratorSummary($output, $errors);
+        if (!$bundle->shouldGenerateDependencyInjectionDirectory()) {
+            // we need to import their services.yml manually!
+            $runner($this->updateConfiguration($output, $bundle));
+        }
+
+        $dialog->writeGeneratorSummary($output, $errors);
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -329,6 +335,27 @@ EOT
         } catch (\RuntimeException $e) {
             return array(
                 sprintf('Bundle <comment>%s</comment> is already imported.', $bundle->getName()),
+                '',
+            );
+        }
+    }
+
+    protected function updateConfiguration(OutputInterface $output, Bundle $bundle)
+    {
+        $targetConfigurationPath = $this->getContainer()->getParameter('kernel.root_dir').'/config/config.yml';
+        $output->write(sprintf(
+            '> Importing the bundle\'s %s from the <info>%s</info> file: ',
+            $bundle->getServicesConfigurationFilename(),
+            $this->makePathRelative($targetConfigurationPath)
+        ));
+        $manipulator = new ConfigurationManipulator($targetConfigurationPath);
+        try {
+            $manipulator->addResource($bundle);
+        } catch (\RuntimeException $e) {
+            return array(
+                '- Import the bundle\'s %s resource in the app\'s main configuration file:',
+                '',
+                $manipulator->getImportCode($bundle),
                 '',
             );
         }
