@@ -77,35 +77,4 @@ class BundleGenerator extends Generator
     {
         return $dir.'/'.trim(strtr($namespace, '\\', '/'), '/');
     }
-
-    /**
-     * This method is unused, but kept only for backwards compatibility.
-     *
-     * @deprecated
-     */
-    public function generate($namespace, $bundle, $dir, $format, $structure)
-    {
-        $this->generateBundle($namespace, $bundle, $dir, $format, false);
-
-        if ($structure) {
-            $basename = substr($bundle, 0, -6);
-
-            $parameters = array(
-                'namespace' => $namespace,
-                'bundle'    => $bundle,
-                'format'    => $format,
-                'bundle_basename' => $basename,
-                'extension_alias' => Container::underscore($basename),
-            );
-
-            $this->renderFile('bundle/messages.fr.xlf', $dir.'/Resources/translations/messages.fr.xlf', $parameters);
-
-            $this->filesystem->mkdir($dir.'/Resources/doc');
-            $this->filesystem->touch($dir.'/Resources/doc/index.rst');
-            $this->filesystem->mkdir($dir.'/Resources/translations');
-            $this->filesystem->mkdir($dir.'/Resources/public/css');
-            $this->filesystem->mkdir($dir.'/Resources/public/images');
-            $this->filesystem->mkdir($dir.'/Resources/public/js');
-        }
-    }
 }
