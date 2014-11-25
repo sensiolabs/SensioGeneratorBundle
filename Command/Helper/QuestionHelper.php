@@ -25,7 +25,7 @@ class QuestionHelper extends BaseQuestionHelper
     public function writeGeneratorSummary(OutputInterface $output, $errors)
     {
         if (!$errors) {
-            $this->writeSection($output, 'Everything worked! Now get to work :).');
+            $this->writeSection($output, 'Everything is OK! Now get to work :).');
         } else {
             $this->writeSection($output, array(
                 'The command was not able to configure everything automatically.',
