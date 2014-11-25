@@ -84,7 +84,7 @@ class ConfigurationManipulator extends Manipulator
     public function getImportCode(Bundle $bundle)
     {
         return sprintf(<<<EOF
-            - { resource: "@%s/Resources/config/%s" }
+    - { resource: "@%s/Resources/config/%s" }
 EOF
         ,
             $bundle->getName(),
