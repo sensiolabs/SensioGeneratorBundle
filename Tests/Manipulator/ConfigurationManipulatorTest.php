@@ -16,7 +16,7 @@ use Sensio\Bundle\GeneratorBundle\Manipulator\ConfigurationManipulator;
 use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ConfigurationManipulatorTest extends GeneratorTest
+class ConfigurationManipulatorTest extends \PHPUnit_Framework_TestCase
 {
     protected $filesystem;
     protected $tmpDir;
