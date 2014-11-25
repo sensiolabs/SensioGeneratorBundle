@@ -11,6 +11,7 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Command;
 
+use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -75,54 +76,31 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $questionHelper = $this->getQuestionHelper();
+        $bundle = $this->createBundleObject($input);
 
-        foreach (array('namespace', 'dir') as $option) {
-            if (null === $input->getOption($option)) {
-                throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
-            }
-        }
-
-        $shared = $input->getOption('shared');
-
-        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $shared);
-        if (!$bundle = $input->getOption('bundle-name')) {
-            $bundle = strtr($namespace, array('\\' => ''));
-        }
-        $bundle = Validators::validateBundleName($bundle);
-        $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
-        if (null === $input->getOption('format')) {
-            $input->setOption('format', 'annotation');
-        }
-        $format = Validators::validateFormat($input->getOption('format'));
-
-        $questionHelper->writeSection($output, 'Bundle generation');
-
-        if (!$this->getContainer()->get('filesystem')->isAbsolutePath($dir)) {
-            $dir = getcwd().'/'.$dir;
-        }
+        $dialog = $this->getDialogHelper();
+        $dialog->writeSection($output, 'Bundle generation');
 
         /** @var BundleGenerator $generator */
         $generator = $this->getGenerator();
 
-        $targetDir = $generator->getTargetBundleDirectory($dir, $namespace);
         $output->writeln(sprintf(
             '> Generating a sample bundle skeleton into <info>%s</info> <comment>OK!</comment>',
-            $this->makePathRelative($targetDir)
+            $this->makePathRelative($bundle->getTargetDirectory())
         ));
-        $generator->generateBundle($namespace, $bundle, $dir, $format, $shared);
+        $generator->generateBundle($bundle);
 
         $errors = array();
         $runner = $questionHelper->getRunner($output, $errors);
 
         // check that the namespace is already autoloaded
-        $runner($this->checkAutoloader($output, $namespace, $bundle, $dir));
+        $runner($this->checkAutoloader($output, $bundle));
 
         // register the bundle in the Kernel class
-        $runner($this->updateKernel($questionHelper, $input, $output, $this->getContainer()->get('kernel'), $namespace, $bundle));
+        $runner($this->updateKernel($output, $this->getContainer()->get('kernel'), $bundle));
 
-        // routing
-        $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format));
+        // routing importing
+        $runner($this->updateRouting($output, $bundle));
 
         $questionHelper->writeGeneratorSummary($output, $errors);
     }
@@ -284,10 +262,10 @@ EOT
         }
     }
 
-    protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
+    protected function checkAutoloader(OutputInterface $output, Bundle $bundle)
     {
         $output->write('> Checking that the bundle is autoloaded: ');
-        if (!class_exists($namespace.'\\'.$bundle)) {
+        if (!class_exists($bundle->getBundleClassName())) {
             return array(
                 '- Edit the <comment>composer.json</comment> file and register the bundle',
                 '  namespace in the "autoload" section:',
@@ -296,12 +274,12 @@ EOT
         }
     }
 
-    protected function updateKernel(QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output, KernelInterface $kernel, $namespace, $bundle)
+    protected function updateKernel(OutputInterface $output, KernelInterface $kernel, Bundle $bundle)
     {
         $output->write('> Enabling the bundle inside AppKernel: ');
         $kernelManipulator = new KernelManipulator($kernel);
         try {
-            $ret = $kernelManipulator->addBundle($namespace.'\\'.$bundle);
+            $ret = $kernelManipulator->addBundle($bundle->getBundleClassName());
 
             if (!$ret) {
                 $reflected = new \ReflectionObject($kernel);
@@ -310,19 +288,19 @@ EOT
                     sprintf('- Edit <comment>%s</comment>', $reflected->getFilename()),
                     '  and add the following bundle in the <comment>AppKernel::registerBundles()</comment> method:',
                     '',
-                    sprintf('    <comment>new %s(),</comment>', $namespace.'\\'.$bundle),
+                    sprintf('    <comment>new %s(),</comment>', $bundle->getBundleClassName()),
                     '',
                 );
             }
         } catch (\RuntimeException $e) {
             return array(
-                sprintf('Bundle <comment>%s</comment> is already defined in <comment>AppKernel::registerBundles()</comment>.', $namespace.'\\'.$bundle),
+                sprintf('Bundle <comment>%s</comment> is already defined in <comment>AppKernel::registerBundles()</comment>.', $bundle->getBundleClassName()),
                 '',
             );
         }
     }
 
-    protected function updateRouting(QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output, $bundle, $format)
+    protected function updateRouting(OutputInterface $output, Bundle $bundle)
     {
         $targetRoutingPath = $this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml';
         $output->write(sprintf(
@@ -331,29 +309,69 @@ EOT
         ));
         $routing = new RoutingManipulator($targetRoutingPath);
         try {
-            $ret = $routing->addResource($bundle, $format);
+            $ret = $routing->addResource($bundle->getName(), $bundle->getConfigurationFormat());
             if (!$ret) {
-                if ('annotation' === $format) {
-                    $help = sprintf("        <comment>resource: \"@%s/Controller/\"</comment>\n        <comment>type:     annotation</comment>\n", $bundle);
+                if ('annotation' === $bundle->getConfigurationFormat()) {
+                    $help = sprintf("        <comment>resource: \"@%s/Controller/\"</comment>\n        <comment>type:     annotation</comment>\n", $bundle->getName());
                 } else {
-                    $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing.%s\"</comment>\n", $bundle, $format);
+                    $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing.%s\"</comment>\n", $bundle->getName(), $bundle->getConfigurationFormat());
                 }
                 $help .= "        <comment>prefix:   /</comment>\n";
 
                 return array(
-                    '- Import the bundle\'s routing resource in the app main routing file:',
+                    '- Import the bundle\'s routing resource in the app\'s main routing file:',
                     '',
-                    sprintf('    <comment>%s:</comment>', $bundle),
+                    sprintf('    <comment>%s:</comment>', $bundle->getName()),
                     $help,
                     '',
                 );
             }
         } catch (\RuntimeException $e) {
             return array(
-                sprintf('Bundle <comment>%s</comment> is already imported.', $bundle),
+                sprintf('Bundle <comment>%s</comment> is already imported.', $bundle->getName()),
                 '',
             );
         }
+    }
+
+    /**
+     * Creates the Bundle object based on the user's (non-interactive) input
+     *
+     * @param InputInterface $input
+     * @return Bundle
+     */
+    protected function createBundleObject(InputInterface $input)
+    {
+        foreach (array('namespace', 'dir') as $option) {
+            if (null === $input->getOption($option)) {
+                throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
+            }
+        }
+
+        $shared = $input->getOption('shared');
+
+        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $shared);
+        if (!$bundleName = $input->getOption('bundle-name')) {
+            $bundleName = strtr($namespace, array('\\' => ''));
+        }
+        $bundleName = Validators::validateBundleName($bundleName);
+        $dir = Validators::validateTargetDir($input->getOption('dir'), $bundleName, $namespace);
+        if (null === $input->getOption('format')) {
+            $input->setOption('format', 'annotation');
+        }
+        $format = Validators::validateFormat($input->getOption('format'));
+
+        if (!$this->getContainer()->get('filesystem')->isAbsolutePath($dir)) {
+            $dir = getcwd().'/'.$dir;
+        }
+
+        return new Bundle(
+            $namespace,
+            $bundleName,
+            $dir,
+            $format,
+            $shared
+        );
     }
 
     /**
