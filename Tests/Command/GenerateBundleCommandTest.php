@@ -11,6 +11,7 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
+use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Console\Tester\CommandTester;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateBundleCommand;
 
@@ -21,13 +22,14 @@ class GenerateBundleCommandTest extends GenerateCommandTest
      */
     public function testInteractiveCommand($options, $input, $expected)
     {
-        list($namespace, $bundle, $dir, $format, $shared) = $expected;
+        list($namespace, $bundleName, $dir, $format, $shared) = $expected;
+        $bundle = new Bundle($namespace, $bundleName, $dir, $format, $shared);
 
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
             ->method('generateBundle')
-            ->with($namespace, $bundle, $dir, $format, $shared)
+            ->with($bundle)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, $input));
@@ -71,13 +73,14 @@ class GenerateBundleCommandTest extends GenerateCommandTest
      */
     public function testNonInteractiveCommand($options, $expected)
     {
-        list($namespace, $bundle, $dir, $format, $shared) = $expected;
+        list($namespace, $bundleName, $dir, $format, $shared) = $expected;
+        $bundle = new Bundle($namespace, $bundleName, $dir, $format, $shared);
 
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
             ->method('generateBundle')
-            ->with($namespace, $bundle, $dir, $format, $shared)
+            ->with($bundle)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, ''));
