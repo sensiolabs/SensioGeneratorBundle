@@ -11,7 +11,6 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Manipulator;
 
-use Symfony\Component\DependencyInjection\Container;
 use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Yaml\Yaml;
 
@@ -74,7 +73,7 @@ class ConfigurationManipulator extends Manipulator
         // find the line break after the last import
         $targetLinebreakPosition = strpos($currentContents, "\n", $lastImportPosition);
 
-        $newContents = substr($currentContents, 0, $targetLinebreakPosition) . "\n" . $code . substr($currentContents, $targetLinebreakPosition);
+        $newContents = substr($currentContents, 0, $targetLinebreakPosition)."\n".$code.substr($currentContents, $targetLinebreakPosition);
 
         if (false === file_put_contents($this->file, $newContents)) {
             throw new \RuntimeException(sprintf('Could not write file %s ', $this->file));

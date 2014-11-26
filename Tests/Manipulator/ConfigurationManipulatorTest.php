@@ -11,7 +11,6 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Generator;
 
-use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\ConfigurationManipulator;
 use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,7 +22,7 @@ class ConfigurationManipulatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->tmpDir = sys_get_temp_dir() . '/sf2';
+        $this->tmpDir = sys_get_temp_dir().'/sf2';
         $this->filesystem = new Filesystem();
         $this->filesystem->remove($this->tmpDir);
         $this->filesystem->mkdir($this->tmpDir);
