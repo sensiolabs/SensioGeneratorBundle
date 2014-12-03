@@ -13,17 +13,17 @@ namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\FormatterHelper;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
+use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
 use Symfony\Component\DependencyInjection\Container;
 
 abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
 {
     protected function getHelperSet($input)
     {
-        $dialog = new DialogHelper();
-        $dialog->setInputStream($this->getInputStream($input));
+        $question = new QuestionHelper();
+        $question->setInputStream($this->getInputStream($input));
 
-        return new HelperSet(array(new FormatterHelper(), $dialog));
+        return new HelperSet(array(new FormatterHelper(), $question));
     }
 
     protected function getBundle()
