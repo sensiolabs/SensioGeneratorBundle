@@ -13,8 +13,8 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
 
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Sensio\Bundle\GeneratorBundle\Generator\Generator;
+use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
 
 /**
  * Base class for generator commands.
@@ -61,13 +61,13 @@ abstract class GeneratorCommand extends ContainerAwareCommand
         return $skeletonDirs;
     }
 
-    protected function getDialogHelper()
+    protected function getQuestionHelper()
     {
-        $dialog = $this->getHelperSet()->get('dialog');
-        if (!$dialog || get_class($dialog) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper') {
-            $this->getHelperSet()->set($dialog = new DialogHelper());
+        $question = $this->getHelperSet()->get('question');
+        if (!$question || get_class($question) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper') {
+            $this->getHelperSet()->set($question = new QuestionHelper());
         }
 
-        return $dialog;
+        return $question;
     }
 }
