@@ -18,9 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
+use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineFormGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
@@ -84,11 +82,10 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $questionHelper = $this->getQuestionHelper();
+        $dialog = $this->getDialogHelper();
 
         if ($input->isInteractive()) {
-            $question = new ConfirmationQuestion($questionHelper->getQuestion('Do you confirm generation', 'yes', '?'), true);
-            if (!$questionHelper->ask($input, $output, $question)) {
+            if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
                 $output->writeln('<error>Command aborted</error>');
 
                 return 1;
@@ -103,7 +100,7 @@ EOT
         $withWrite = $input->getOption('with-write');
         $forceOverwrite = $input->getOption('overwrite');
 
-        $questionHelper->writeSection($output, 'CRUD generation');
+        $dialog->writeSection($output, 'CRUD generation');
 
         $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
         $metadata    = $this->getEntityMetadata($entityClass);
@@ -115,7 +112,7 @@ EOT
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 
         $errors = array();
-        $runner = $questionHelper->getRunner($output, $errors);
+        $runner = $dialog->getRunner($output, $errors);
 
         // form
         if ($withWrite) {
@@ -129,16 +126,16 @@ EOT
 
         // routing
         if ('annotation' != $format) {
-            $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format, $entity, $prefix));
+            $runner($this->updateRouting($dialog, $input, $output, $bundle, $format, $entity, $prefix));
         }
 
-        $questionHelper->writeGeneratorSummary($output, $errors);
+        $dialog->writeGeneratorSummary($output, $errors);
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $questionHelper = $this->getQuestionHelper();
-        $questionHelper->writeSection($output, 'Welcome to the Doctrine2 CRUD generator');
+        $dialog = $this->getDialogHelper();
+        $dialog->writeSection($output, 'Welcome to the Doctrine2 CRUD generator');
 
         // namespace
         $output->writeln(array(
@@ -157,9 +154,7 @@ EOT
             $input->setOption('entity', $input->getArgument('entity'));
         }
 
-        $question = new Question($questionHelper->getQuestion('The Entity shortcut name', $input->getOption('entity')), $input->getOption('entity'));
-        $question->setValidator(array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'));
-        $entity = $questionHelper->ask($input, $output, $question);
+        $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
         $input->setOption('entity', $entity);
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
@@ -171,9 +166,7 @@ EOT
             'You can also ask it to generate "write" actions: new, update, and delete.',
             '',
         ));
-        $question = new ConfirmationQuestion($questionHelper->getQuestion('Do you want to generate the "write" actions', $withWrite ? 'yes' : 'no', '?', $withWrite), $withWrite);
-
-        $withWrite = $questionHelper->ask($input, $output, $question);
+        $withWrite = $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the "write" actions', $withWrite ? 'yes' : 'no', '?'), $withWrite);
         $input->setOption('with-write', $withWrite);
 
         // format
@@ -183,9 +176,7 @@ EOT
             'Determine the format to use for the generated CRUD.',
             '',
         ));
-        $question = new Question($questionHelper->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), $format);
-        $question->setValidator(array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'));
-        $format = $questionHelper->ask($input, $output, $question);
+        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $format);
         $input->setOption('format', $format);
 
         // route prefix
@@ -196,7 +187,7 @@ EOT
             'prefix: /prefix/, /prefix/new, ...).',
             '',
         ));
-        $prefix = $questionHelper->ask($input, $output, new Question($questionHelper->getQuestion('Routes prefix', '/'.$prefix), '/'.$prefix));
+        $prefix = $dialog->ask($output, $dialog->getQuestion('Routes prefix', '/'.$prefix), '/'.$prefix);
         $input->setOption('route-prefix', $prefix);
 
         // summary
@@ -224,12 +215,11 @@ EOT
         return true;
     }
 
-    protected function updateRouting(QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output, BundleInterface $bundle, $format, $entity, $prefix)
+    protected function updateRouting(DialogHelper $dialog, InputInterface $input, OutputInterface $output, BundleInterface $bundle, $format, $entity, $prefix)
     {
         $auto = true;
         if ($input->isInteractive()) {
-            $question = new ConfirmationQuestion($questionHelper->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
-            $auto = $questionHelper->ask($input, $output, $question);
+            $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
         }
 
         $output->write('Importing the CRUD routes: ');
