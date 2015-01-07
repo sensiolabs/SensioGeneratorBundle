@@ -60,7 +60,7 @@ Using the --with-write option allows to generate the new, edit and delete action
 
 <info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin --with-write</info>
 
-Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
+Every generated file is based on a template. There are default templates but they can be overridden by placing custom templates in one of the following locations, by order of priority:
 
 <info>BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/crud
 APP_PATH/Resources/SensioGeneratorBundle/skeleton/crud</info>
@@ -123,7 +123,7 @@ EOT
             if ($this->generateForm($bundle, $entity, $metadata)) {
                 $output->writeln('<info>OK</info>');
             } else {
-                $output->writeln('<warning>Already exists, skipping</warning>');
+                $output->writeln('<comment>Already exists, skipping</comment>');
             }
         }
 
