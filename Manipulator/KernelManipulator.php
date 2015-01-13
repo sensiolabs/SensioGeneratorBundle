@@ -39,7 +39,7 @@ class KernelManipulator extends Manipulator
      *
      * @param string $bundle The bundle class name
      *
-     * @return Boolean true if it worked, false otherwise
+     * @return bool true if it worked, false otherwise
      *
      * @throws \RuntimeException If bundle is already defined
      */
@@ -68,16 +68,16 @@ class KernelManipulator extends Manipulator
             // =
             $this->next();
 
-            // array
+            // array start with traditional or short syntax
             $token = $this->next();
-            if (T_ARRAY !== $token[0]) {
+            if (T_ARRAY !== $token[0] && '[' !== $this->value($token)) {
                 return false;
             }
 
             // add the bundle at the end of the array
             while ($token = $this->next()) {
-                // look for );
-                if (')' !== $this->value($token)) {
+                // look for ); or ];
+                if (')' !== $this->value($token) && ']' !== $this->value($token)) {
                     continue;
                 }
 
