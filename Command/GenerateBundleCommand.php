@@ -41,7 +41,7 @@ class GenerateBundleCommand extends GeneratorCommand
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle', 'src/'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
                 new InputOption('shared', '', InputOption::VALUE_NONE, 'Are you planning on sharing this bundle across multiple applications?'),
             ))
             ->setDescription('Generates a bundle')
@@ -235,8 +235,10 @@ EOT
         /*
          * format option
          */
-        // defaults to annotation in the options
-        $format = null;
+        $format = $input->getOption('format');
+        if (!$format) {
+            $format = $shared ? 'xml' : 'annotation';
+        }
         $output->writeln(array(
             '',
             'What format do you want to use for your generated configuration?',
