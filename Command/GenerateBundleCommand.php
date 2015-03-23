@@ -77,10 +77,10 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $bundle = $this->createBundleObject($input);
+        $questionHelper = $this->getQuestionHelper();
 
-        $dialog = $this->getDialogHelper();
-        $dialog->writeSection($output, 'Bundle generation');
+        $bundle = $this->createBundleObject($input);
+        $questionHelper->writeSection($output, 'Bundle generation');
 
         /** @var BundleGenerator $generator */
         $generator = $this->getGenerator();
@@ -108,21 +108,29 @@ EOT
             $runner($this->updateConfiguration($output, $bundle));
         }
 
-        $dialog->writeGeneratorSummary($output, $errors);
+        $questionHelper->writeGeneratorSummary($output, $errors);
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $dialog = $this->getDialogHelper();
-        $dialog->writeSection($output, 'Welcome to the Symfony bundle generator!');
+        $questionHelper = $this->getQuestionHelper();
+        $questionHelper->writeSection($output, 'Welcome to the Symfony bundle generator!');
 
         /*
          * shared option
          */
         $shared = $input->getOption('shared');
 
-        if (!$shared && $dialog->askConfirmation($output, $dialog->getQuestion('Are you planning on sharing this bundle across multiple applications?', 'no'), false)) {
-            $shared = true;
+
+        if (!$shared) {
+            $question = new ConfirmationQuestion($questionHelper->getQuestion(
+                'Are you planning on sharing this bundle across multiple applications?',
+                'no'
+            ), false);
+
+            if ($questionHelper->ask($input, $output, $question)) {
+                $shared = true;
+            }
         }
 
         $input->setOption('shared', $shared);
@@ -161,26 +169,22 @@ EOT
                     '',
                 ));
 
-                $namespace = $dialog->askAndValidate(
-                    $output,
-                    $dialog->getQuestion('Bundle namespace', null),
-                    array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleNamespace'),
-                    false
-                );
+                $question = new Question($questionHelper->getQuestion('Bundle namespace', $input->getOption('namespace')), $input->getOption('namespace'));
+                $question->setValidator(function ($answer) {
+                        return Validators::validateBundleNamespace($answer, false);
+                });
+                $namespace = $questionHelper->ask($input, $output, $question);
             } else {
                 // a simple application bundle
                 $output->writeln(array(
                     'Give your bundle a descriptive name, like <comment>BlogBundle</comment>.',
                 ));
 
-                $namespace = $dialog->askAndValidate(
-                    $output,
-                    $dialog->getQuestion('Bundle name', null),
-                    function ($inputNamespace) use ($shared) {
+                $question = new Question($questionHelper->getQuestion('Bundle name', null), null);
+                $question->setValidator(function ($inputNamespace) use ($shared) {
                         return Validators::validateBundleNamespace($inputNamespace, $shared);
-                    },
-                    false
-                );
+                });
+                $namespace = $questionHelper->ask($input, $output, $question);
 
                 if (strpos($namespace, '//') === false) {
                     // this is a bundle name (FooBundle) not a namespace (Acme\FooBundle)
@@ -198,7 +202,7 @@ EOT
             try {
                 $bundle = $input->getOption('bundle-name') ? Validators::validateBundleName($input->getOption('bundle-name')) : null;
             } catch (\Exception $error) {
-                $output->writeln($dialog->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
+                $output->writeln($questionHelper->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
             }
         }
 
@@ -238,7 +242,12 @@ EOT
                 'doing something custom, hit enter to keep this default!',
                 '',
             ));
-            $dir = $dialog->askAndValidate($output, $dialog->getQuestion('Target directory', 'src/'), function ($dir) use ($bundle, $namespace) { return Validators::validateTargetDir($dir, $bundle, $namespace); }, false, $dir);
+
+            $question = new Question($questionHelper->getQuestion('Target Directory', 'src/'), 'src/');
+            $question->setValidator(function ($dir) use ($bundle, $namespace) {
+                    return Validators::validateTargetDir($dir, $bundle, $namespace);
+            });
+            $dir = $questionHelper->ask($input, $output, $question);
             $input->setOption('dir', $dir);
         }
 
@@ -256,14 +265,13 @@ EOT
                 'What format do you want to use for your generated configuration?',
                 '',
             ));
-            $format = $dialog->askAndValidate(
-                $output,
-                $dialog->getQuestion('Configuration format (annotation, yml, xml, php)', null),
-                array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'),
-                false,
-                null,
-                array('annotation', 'yml', 'xml', 'php')
-            );
+
+            $question = new Question($questionHelper->getQuestion('Configuration format (annotation, yml, xml, php)', 'annotation'), 'annotation');
+            $question->setValidator(function ($format) {
+                    return Validators::validateFormat($format);
+            });
+            $question->setAutocompleterValues(array('annotation', 'yml', 'xml', 'php'));
+            $format = $questionHelper->ask($input, $output, $question);
             $input->setOption('format', $format);
         }
     }
