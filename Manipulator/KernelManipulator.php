@@ -45,11 +45,11 @@ class KernelManipulator extends Manipulator
      */
     public function addBundle($bundle)
     {
-        if (!$this->reflected->getFilename()) {
+        if (!$this->getFilename()) {
             return false;
         }
 
-        $src = file($this->reflected->getFilename());
+        $src = file($this->getFilename());
         $method = $this->reflected->getMethod('registerBundles');
         $lines = array_slice($src, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1);
 
@@ -96,10 +96,16 @@ class KernelManipulator extends Manipulator
                     array_slice($src, $this->line - 1)
                 );
 
-                file_put_contents($this->reflected->getFilename(), implode('', $lines));
+                file_put_contents($this->getFilename(), implode('', $lines));
 
                 return true;
             }
         }
     }
+
+    public function getFilename()
+    {
+        return $this->reflected->getFileName();
+    }
+
 }

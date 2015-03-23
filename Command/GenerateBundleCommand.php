@@ -275,8 +275,13 @@ EOT
 
     protected function updateKernel(OutputInterface $output, KernelInterface $kernel, Bundle $bundle)
     {
-        $output->write('> Enabling the bundle inside AppKernel: ');
         $kernelManipulator = new KernelManipulator($kernel);
+
+        $output->write(sprintf(
+            '> Enabling the bundle inside <info>%s</info>: ',
+            $this->makePathRelative($kernelManipulator->getFilename())
+        ));
+
         try {
             $ret = $kernelManipulator->addBundle($bundle->getBundleClassName());
 
