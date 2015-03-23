@@ -179,7 +179,7 @@ EOT
             });
             $namespace = $questionHelper->ask($input, $output, $question);
 
-            if (strpos($namespace, '//') === false) {
+            if (strpos($namespace, '\\') === false) {
                 // this is a bundle name (FooBundle) not a namespace (Acme\FooBundle)
                 // so this is the bundle name (and it is also the namespace)
                 $input->setOption('bundle-name', $namespace);
