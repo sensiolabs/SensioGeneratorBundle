@@ -374,10 +374,8 @@ EOT
         }
 
         $shared = $input->getOption('shared');
-        // require the vendor namespace ONLY of it's not shared
-        $requireVendorNamespace = !$shared;
 
-        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $requireVendorNamespace);
+        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $shared);
         if (!$bundleName = $input->getOption('bundle-name')) {
             $bundleName = strtr($namespace, array('\\' => ''));
         }
