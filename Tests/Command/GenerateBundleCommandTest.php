@@ -43,8 +43,8 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         return array(
             array(
                 array('--shared' => true, '--dir' => $tmp, '--format' => 'annotation'),
-                // namespace
-                "Foo/BarBundle\n",
+                // shared, namespace, bundle name, directory, format
+                "\nFoo/BarBundle\n\n\n\n",
                 array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', true),
             ),
             array(
@@ -55,14 +55,14 @@ class GenerateBundleCommandTest extends GenerateCommandTest
             ),
             array(
                 array('--shared' => true, '--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle'),
-                // namespace
-                "Foo/BarBundle\n",
+                // shared, namespace, bundle name, directory, format
+                "\nFoo/BarBundle\n\n\n\n",
                 array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true),
             ),
             array(
                 array(),
-                // shared, bundle name, directory, format
-                "n\nBazBundle\nsrc\nannotation",
+                // shared, namespace, bundle name, directory, format
+                "n\nBazBundle\n\nsrc\nannotation",
                 array('BazBundle', 'BazBundle', 'src/', 'annotation', false),
             ),
         );
