@@ -11,6 +11,7 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
+use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Console\Tester\CommandTester;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateBundleCommand;
 
@@ -21,13 +22,14 @@ class GenerateBundleCommandTest extends GenerateCommandTest
      */
     public function testInteractiveCommand($options, $input, $expected)
     {
-        list($namespace, $bundle, $dir, $format, $structure) = $expected;
+        list($namespace, $bundleName, $dir, $format, $shared) = $expected;
+        $bundle = new Bundle($namespace, $bundleName, $dir, $format, $shared);
 
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
-            ->method('generate')
-            ->with($namespace, $bundle, $dir, $format, $structure)
+            ->method('generateBundle')
+            ->with($bundle)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, $input));
@@ -39,9 +41,30 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         $tmp = sys_get_temp_dir();
 
         return array(
-            array(array('--dir' => $tmp, '--format' => 'annotation'), "Foo/BarBundle\n", array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
-            array(array(), "Foo/BarBundle\nBarBundle\nfoo\nyml\nn", array('Foo\BarBundle', 'BarBundle', 'foo/', 'yml', false)),
-            array(array('--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), "Foo/BarBundle\n", array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
+            array(
+                array('--shared' => true, '--dir' => $tmp, '--format' => 'annotation'),
+                // shared, namespace, bundle name, directory, format
+                "\nFoo/BarBundle\n\n\n\n",
+                array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', true),
+            ),
+            array(
+                array(),
+                // shared, namespace, bundle name, directory, format
+                "y\nFoo/BarBundle\nBarBundle\nfoo\nyml",
+                array('Foo\BarBundle', 'BarBundle', 'foo/', 'yml', true),
+            ),
+            array(
+                array('--shared' => true, '--dir' => $tmp, '--format' => 'yml', '--bundle-name' => 'BarBundle'),
+                // shared, namespace, bundle name, directory, format
+                "\nFoo/BarBundle\n\n\n\n",
+                array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true),
+            ),
+            array(
+                array(),
+                // shared, namespace, bundle name, directory, format
+                "n\nBazBundle\n\nsrc\nannotation",
+                array('BazBundle', 'BazBundle', 'src/', 'annotation', false),
+            ),
         );
     }
 
@@ -50,13 +73,14 @@ class GenerateBundleCommandTest extends GenerateCommandTest
      */
     public function testNonInteractiveCommand($options, $expected)
     {
-        list($namespace, $bundle, $dir, $format, $structure) = $expected;
+        list($namespace, $bundleName, $dir, $format, $shared) = $expected;
+        $bundle = new Bundle($namespace, $bundleName, $dir, $format, $shared);
 
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
-            ->method('generate')
-            ->with($namespace, $bundle, $dir, $format, $structure)
+            ->method('generateBundle')
+            ->with($bundle)
         ;
 
         $tester = new CommandTester($this->getCommand($generator, ''));
@@ -68,8 +92,18 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         $tmp = sys_get_temp_dir();
 
         return array(
-            array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle'), array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', false)),
-            array(array('--dir' => $tmp, '--namespace' => 'Foo/BarBundle', '--format' => 'yml', '--bundle-name' => 'BarBundle', '--structure' => true), array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true)),
+            array(
+                array('--shared' => true, '--dir' => $tmp, '--namespace' => 'Foo/BarBundle'),
+                array('Foo\BarBundle', 'FooBarBundle', $tmp.'/', 'annotation', true),
+            ),
+            array(
+                array('--shared' => true, '--dir' => $tmp, '--namespace' => 'Foo/BarBundle', '--format' => 'yml', '--bundle-name' => 'BarBundle'),
+                array('Foo\BarBundle', 'BarBundle', $tmp.'/', 'yml', true),
+            ),
+            array(
+                array('--dir' => $tmp, '--namespace' => 'BazBundle', '--format' => 'yml', '--bundle-name' => 'BazBundle'),
+                array('BazBundle', 'BazBundle', $tmp.'/', 'yml', false),
+            ),
         );
     }
 
@@ -94,7 +128,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         return $this
             ->getMockBuilder('Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator')
             ->disableOriginalConstructor()
-            ->setMethods(array('generate'))
+            ->setMethods(array('generateBundle'))
             ->getMock()
         ;
     }

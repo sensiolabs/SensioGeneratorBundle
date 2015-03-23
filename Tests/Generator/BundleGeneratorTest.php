@@ -12,12 +12,14 @@
 namespace Sensio\Bundle\GeneratorBundle\Tests\Generator;
 
 use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
+use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 
 class BundleGeneratorTest extends GeneratorTest
 {
     public function testGenerateYaml()
     {
-        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+        $bundle = new Bundle('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', true);
+        $this->getGenerator()->generateBundle($bundle);
 
         $files = array(
             'FooBarBundle.php',
@@ -49,7 +51,8 @@ class BundleGeneratorTest extends GeneratorTest
 
     public function testGenerateXml()
     {
-        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'xml', false);
+        $bundle = new Bundle('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'xml', true);
+        $this->getGenerator()->generateBundle($bundle);
 
         $files = array(
             'FooBarBundle.php',
@@ -71,7 +74,8 @@ class BundleGeneratorTest extends GeneratorTest
 
     public function testGenerateAnnotation()
     {
-        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'annotation', false);
+        $bundle = new Bundle('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'annotation', false);
+        $this->getGenerator()->generateBundle($bundle);
 
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.yml'));
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.xml'));
@@ -85,8 +89,9 @@ class BundleGeneratorTest extends GeneratorTest
         $this->filesystem->mkdir($this->tmpDir.'/Foo');
         $this->filesystem->touch($this->tmpDir.'/Foo/BarBundle');
 
+        $bundle = new Bundle('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
         try {
-            $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->getGenerator()->generateBundle($bundle);
             $this->fail('An exception was expected!');
         } catch (\RuntimeException $e) {
             $this->assertEquals(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', realpath($this->tmpDir.'/Foo/BarBundle')), $e->getMessage());
@@ -98,8 +103,9 @@ class BundleGeneratorTest extends GeneratorTest
         $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
         $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0444);
 
+        $bundle = new Bundle('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
         try {
-            $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->getGenerator()->generateBundle($bundle);
             $this->fail('An exception was expected!');
         } catch (\RuntimeException $e) {
             $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
@@ -112,8 +118,9 @@ class BundleGeneratorTest extends GeneratorTest
         $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
         $this->filesystem->touch($this->tmpDir.'/Foo/BarBundle/somefile');
 
+        $bundle = new Bundle('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
         try {
-            $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+            $this->getGenerator()->generateBundle($bundle);
             $this->fail('An exception was expected!');
         } catch (\RuntimeException $e) {
             $this->filesystem->chmod($this->tmpDir.'/Foo/BarBundle', 0777);
@@ -125,7 +132,8 @@ class BundleGeneratorTest extends GeneratorTest
     {
         $this->filesystem->mkdir($this->tmpDir.'/Foo/BarBundle');
 
-        $this->getGenerator()->generate('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', false);
+        $bundle = new Bundle('Foo\BarBundle', 'FooBarBundle', $this->tmpDir, 'yml', true);
+        $this->getGenerator()->generateBundle($bundle);
     }
 
     protected function getGenerator()

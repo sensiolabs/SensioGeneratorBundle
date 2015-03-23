@@ -25,11 +25,11 @@ class QuestionHelper extends BaseQuestionHelper
     public function writeGeneratorSummary(OutputInterface $output, $errors)
     {
         if (!$errors) {
-            $this->writeSection($output, 'You can now start using the generated code!');
+            $this->writeSection($output, 'Everything is OK! Now get to work :).');
         } else {
             $this->writeSection($output, array(
                 'The command was not able to configure everything automatically.',
-                'You must do the following changes manually.',
+                'You\'ll need to make the following changes manually.',
             ), 'error');
 
             $output->writeln($errors);
@@ -43,7 +43,7 @@ class QuestionHelper extends BaseQuestionHelper
                 $output->writeln('<fg=red>FAILED</>');
                 $errors = array_merge($errors, $err);
             } else {
-                $output->writeln('<info>OK</info>');
+                $output->writeln('<comment>OK!</comment>');
             }
         };
 

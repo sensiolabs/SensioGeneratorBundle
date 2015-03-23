@@ -18,6 +18,16 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
  */
 class Validators
 {
+    /**
+     * Validates that the given namespace (e.g. Acme\FooBundle) is a valid format
+     *
+     * If $requireVendorNamespace is true, then we require you to have a vendor
+     * namespace (e.g. Acme).
+     *
+     * @param $namespace
+     * @param bool $requireVendorNamespace
+     * @return string
+     */
     public static function validateBundleNamespace($namespace, $requireVendorNamespace = true)
     {
         if (!preg_match('/Bundle$/', $namespace)) {
@@ -39,7 +49,6 @@ class Validators
 
         // validate that the namespace is at least one level deep
         if ($requireVendorNamespace && false === strpos($namespace, '\\')) {
-            // language is (almost) duplicated in GenerateBundleCommand
             $msg = array();
             $msg[] = sprintf('The namespace must contain a vendor namespace (e.g. "VendorName\%s" instead of simply "%s").', $namespace, $namespace);
             $msg[] = 'If you\'ve specified a vendor namespace, did you forget to surround it with quotes (init:bundle "Acme\BlogBundle")?';
@@ -53,7 +62,7 @@ class Validators
     public static function validateBundleName($bundle)
     {
         if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $bundle)) {
-            throw new \InvalidArgumentException('The bundle name contains invalid characters.');
+            throw new \InvalidArgumentException(sprintf('The bundle name %s contains invalid characters.', $bundle));
         }
 
         if (!preg_match('/Bundle$/', $bundle)) {
@@ -79,15 +88,18 @@ class Validators
         return $controller;
     }
 
-    public static function validateTargetDir($dir, $bundle, $namespace)
-    {
-        // add trailing / if necessary
-        return '/' === substr($dir, -1, 1) ? $dir : $dir.'/';
-    }
-
     public static function validateFormat($format)
     {
+        if (!$format) {
+            throw new \RuntimeException('Please enter a configuration format.');
+        }
+
         $format = strtolower($format);
+
+        // in case they typed "yaml", but ok with that
+        if ($format == 'yaml') {
+            $format = 'yml';
+        }
 
         if (!in_array($format, array('php', 'xml', 'yml', 'annotation'))) {
             throw new \RuntimeException(sprintf('Format "%s" is not supported.', $format));

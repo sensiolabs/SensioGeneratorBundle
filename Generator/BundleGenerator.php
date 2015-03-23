@@ -11,8 +11,8 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Generator;
 
+use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Generates a bundle.
@@ -28,9 +28,10 @@ class BundleGenerator extends Generator
         $this->filesystem = $filesystem;
     }
 
-    public function generate($namespace, $bundle, $dir, $format, $structure)
+    public function generateBundle(Bundle $bundle)
     {
-        $dir .= '/'.strtr($namespace, '\\', '/');
+        $dir = $bundle->getTargetDirectory();
+
         if (file_exists($dir)) {
             if (!is_dir($dir)) {
                 throw new \RuntimeException(sprintf('Unable to generate the bundle as the target directory "%s" exists but is a file.', realpath($dir)));
@@ -44,41 +45,35 @@ class BundleGenerator extends Generator
             }
         }
 
-        $basename = substr($bundle, 0, -6);
         $parameters = array(
-            'namespace' => $namespace,
-            'bundle'    => $bundle,
-            'format'    => $format,
-            'bundle_basename' => $basename,
-            'extension_alias' => Container::underscore($basename),
+            'namespace' => $bundle->getNamespace(),
+            'bundle'    => $bundle->getName(),
+            'format'    => $bundle->getConfigurationFormat(),
+            'bundle_basename' => $bundle->getBasename(),
+            'extension_alias' => $bundle->getExtensionAlias(),
         );
 
-        $this->renderFile('bundle/Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
-        $this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
-        $this->renderFile('bundle/Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
+        $this->renderFile('bundle/Bundle.php.twig', $dir.'/'.$bundle->getName().'.php', $parameters);
+        if ($bundle->shouldGenerateDependencyInjectionDirectory()) {
+            $this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$bundle->getBasename().'Extension.php', $parameters);
+            $this->renderFile('bundle/Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
+        }
         $this->renderFile('bundle/DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
         $this->renderFile('bundle/DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
         $this->renderFile('bundle/index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
 
-        if ('xml' === $format || 'annotation' === $format) {
-            $this->renderFile('bundle/services.xml.twig', $dir.'/Resources/config/services.xml', $parameters);
-        } else {
-            $this->renderFile('bundle/services.'.$format.'.twig', $dir.'/Resources/config/services.'.$format, $parameters);
-        }
+        // render the services.yml/xml file
+        $servicesFilename = $bundle->getServicesConfigurationFilename();
+        $this->renderFile(
+            sprintf('bundle/%s.twig', $servicesFilename),
+            $dir.'/Resources/config/'.$servicesFilename, $parameters
+        );
 
-        if ('annotation' != $format) {
-            $this->renderFile('bundle/routing.'.$format.'.twig', $dir.'/Resources/config/routing.'.$format, $parameters);
-        }
-
-        if ($structure) {
-            $this->renderFile('bundle/messages.fr.xlf', $dir.'/Resources/translations/messages.fr.xlf', $parameters);
-
-            $this->filesystem->mkdir($dir.'/Resources/doc');
-            $this->filesystem->touch($dir.'/Resources/doc/index.rst');
-            $this->filesystem->mkdir($dir.'/Resources/translations');
-            $this->filesystem->mkdir($dir.'/Resources/public/css');
-            $this->filesystem->mkdir($dir.'/Resources/public/images');
-            $this->filesystem->mkdir($dir.'/Resources/public/js');
+        if ($routingFilename = $bundle->getRoutingConfigurationFilename()) {
+            $this->renderFile(
+                sprintf('bundle/%s.twig', $routingFilename),
+                $dir.'/Resources/config/'.$routingFilename, $parameters
+            );
         }
     }
 }
