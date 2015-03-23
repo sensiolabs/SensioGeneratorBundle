@@ -55,7 +55,7 @@ class Bundle
      */
     public function getTargetDirectory()
     {
-        return $this->targetDirectory.'/'.trim(strtr($this->namespace, '\\', '/'), '/');
+        return rtrim($this->targetDirectory, '/').'/'.trim(strtr($this->namespace, '\\', '/'), '/');
     }
 
     /**
