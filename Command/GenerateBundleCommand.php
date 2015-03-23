@@ -139,10 +139,11 @@ EOT
             '',
         ));
 
+        $askForBundleName = true;
         if ($shared) {
             // a shared bundle, so it should probably have a vendor namespace
             $output->writeln(array(
-                'Each bundle is hosted under a namespace (like <comment>Acme/Bundle/BlogBundle</comment>).',
+                'Each bundle is hosted under a namespace (like <comment>Acme/BlogBundle</comment>).',
                 'The namespace should begin with a "vendor" name like your company name, your',
                 'project name, or your client name, followed by one or more optional category',
                 'sub-namespaces, and it should end with the bundle name itself',
@@ -182,6 +183,7 @@ EOT
                 // this is a bundle name (FooBundle) not a namespace (Acme\FooBundle)
                 // so this is the bundle name (and it is also the namespace)
                 $input->setOption('bundle-name', $namespace);
+                $askForBundleName = false;
             }
         }
         $input->setOption('namespace', $namespace);
@@ -189,29 +191,31 @@ EOT
         /*
          * bundle-name option
          */
-        $bundle = $input->getOption('bundle-name');
-        // no bundle yet? Get a default from the namespace
-        if (!$bundle) {
-            $bundle = strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
-        }
+        if ($askForBundleName) {
+            $bundle = $input->getOption('bundle-name');
+            // no bundle yet? Get a default from the namespace
+            if (!$bundle) {
+                $bundle = strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
+            }
 
-        $output->writeln(array(
-            '',
-            'In your code, a bundle is often referenced by its name. It can be the',
-            'concatenation of all namespace parts but it\'s really up to you to come',
-            'up with a unique name (a good practice is to start with the vendor name).',
-            'Based on the namespace, we suggest <comment>'.$bundle.'</comment>.',
-            '',
-        ));
-        $question = new Question($questionHelper->getQuestion(
-            'Bundle name',
-            $bundle
-        ), $bundle);
-        $question->setValidator(
-             array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName')
-        );
-        $bundle = $questionHelper->ask($input, $output, $question);
-        $input->setOption('bundle-name', $bundle);
+            $output->writeln(array(
+                '',
+                'In your code, a bundle is often referenced by its name. It can be the',
+                'concatenation of all namespace parts but it\'s really up to you to come',
+                'up with a unique name (a good practice is to start with the vendor name).',
+                'Based on the namespace, we suggest <comment>' . $bundle . '</comment>.',
+                '',
+            ));
+            $question = new Question($questionHelper->getQuestion(
+                'Bundle name',
+                $bundle
+            ), $bundle);
+            $question->setValidator(
+                array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName')
+            );
+            $bundle = $questionHelper->ask($input, $output, $question);
+            $input->setOption('bundle-name', $bundle);
+        }
 
         /*
          * dir option
