@@ -107,5 +107,4 @@ class KernelManipulator extends Manipulator
     {
         return $this->reflected->getFileName();
     }
-
 }

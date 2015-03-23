@@ -203,7 +203,7 @@ EOT
                 'In your code, a bundle is often referenced by its name. It can be the',
                 'concatenation of all namespace parts but it\'s really up to you to come',
                 'up with a unique name (a good practice is to start with the vendor name).',
-                'Based on the namespace, we suggest <comment>' . $bundle . '</comment>.',
+                'Based on the namespace, we suggest <comment>'.$bundle.'</comment>.',
                 '',
             ));
             $question = new Question($questionHelper->getQuestion(
