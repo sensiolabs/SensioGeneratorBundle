@@ -39,9 +39,9 @@ class GenerateBundleCommand extends GeneratorCommand
         $this
             ->setDefinition(array(
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
-                new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
+                new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle', 'src/'),
                 new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('shared', '', InputOption::VALUE_NONE, 'Are you planning on sharing this bundle across multiple applications?'),
             ))
             ->setDescription('Generates a bundle')
@@ -120,160 +120,139 @@ EOT
          * shared option
          */
         $shared = $input->getOption('shared');
-
-
-        if (!$shared) {
-            $question = new ConfirmationQuestion($questionHelper->getQuestion(
-                'Are you planning on sharing this bundle across multiple applications?',
-                'no'
-            ), false);
-
-            if ($questionHelper->ask($input, $output, $question)) {
-                $shared = true;
-            }
-        }
-
+        // ask, but use $shared as the default
+        $question = new ConfirmationQuestion($questionHelper->getQuestion(
+            'Are you planning on sharing this bundle across multiple applications?',
+            $shared ? 'yes' : 'no'
+        ), $shared);
+        $shared = $questionHelper->ask($input, $output, $question);
         $input->setOption('shared', $shared);
 
         /*
          * namespace option
          */
-        $namespace = null;
-        try {
-            $namespace = $input->getOption('namespace') ? Validators::validateBundleNamespace($input->getOption('namespace'), $shared) : null;
-        } catch (\Exception $error) {
-            $output->writeln($questionHelper->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
-        }
+        $namespace = $input->getOption('namespace');
+        $output->writeln(array(
+            '',
+            'Your application code must be written in <comment>bundles</comment>. This command helps',
+            'you generate them easily.',
+            '',
+        ));
 
-        if (null === $namespace) {
+        if ($shared) {
+            // a shared bundle, so it should probably have a vendor namespace
             $output->writeln(array(
+                'Each bundle is hosted under a namespace (like <comment>Acme/Bundle/BlogBundle</comment>).',
+                'The namespace should begin with a "vendor" name like your company name, your',
+                'project name, or your client name, followed by one or more optional category',
+                'sub-namespaces, and it should end with the bundle name itself',
+                '(which must have <comment>Bundle</comment> as a suffix).',
                 '',
-                'Your application code must be written in <comment>bundles</comment>. This command helps',
-                'you generate them easily.',
+                'See http://symfony.com/doc/current/cookbook/bundles/best_practices.html#bundle-name for more',
+                'details on bundle naming conventions.',
+                '',
+                'Use <comment>/</comment> instead of <comment>\\ </comment> for the namespace delimiter to avoid any problem.',
                 '',
             ));
 
-            if ($shared) {
-                // a shared bundle, so it should probably have a vendor namespace
-                $output->writeln(array(
-                    'Each bundle is hosted under a namespace (like <comment>Acme/Bundle/BlogBundle</comment>).',
-                    'The namespace should begin with a "vendor" name like your company name, your',
-                    'project name, or your client name, followed by one or more optional category',
-                    'sub-namespaces, and it should end with the bundle name itself',
-                    '(which must have <comment>Bundle</comment> as a suffix).',
-                    '',
-                    'See http://symfony.com/doc/current/cookbook/bundles/best_practices.html#bundle-name for more',
-                    'details on bundle naming conventions.',
-                    '',
-                    'Use <comment>/</comment> instead of <comment>\\ </comment> for the namespace delimiter to avoid any problem.',
-                    '',
-                ));
+            $question = new Question($questionHelper->getQuestion(
+                'Bundle namespace',
+                $namespace
+            ), $namespace);
+            $question->setValidator(function ($answer) {
+                return Validators::validateBundleNamespace($answer, true);
+            });
+            $namespace = $questionHelper->ask($input, $output, $question);
+        } else {
+            // a simple application bundle
+            $output->writeln(array(
+                'Give your bundle a descriptive name, like <comment>BlogBundle</comment>.',
+            ));
 
-                $question = new Question($questionHelper->getQuestion('Bundle namespace', $input->getOption('namespace')), $input->getOption('namespace'));
-                $question->setValidator(function ($answer) {
-                        return Validators::validateBundleNamespace($answer, false);
-                });
-                $namespace = $questionHelper->ask($input, $output, $question);
-            } else {
-                // a simple application bundle
-                $output->writeln(array(
-                    'Give your bundle a descriptive name, like <comment>BlogBundle</comment>.',
-                ));
+            $question = new Question($questionHelper->getQuestion(
+                'Bundle name',
+                $namespace
+            ), $namespace);
+            $question->setValidator(function ($inputNamespace) {
+                return Validators::validateBundleNamespace($inputNamespace, false);
+            });
+            $namespace = $questionHelper->ask($input, $output, $question);
 
-                $question = new Question($questionHelper->getQuestion('Bundle name', null), null);
-                $question->setValidator(function ($inputNamespace) use ($shared) {
-                        return Validators::validateBundleNamespace($inputNamespace, $shared);
-                });
-                $namespace = $questionHelper->ask($input, $output, $question);
-
-                if (strpos($namespace, '//') === false) {
-                    // this is a bundle name (FooBundle) not a namespace (Acme\FooBundle)
-                    // so this is the bundle name (and it is also the namespace)
-                    $input->setOption('bundle-name', $namespace);
-                }
+            if (strpos($namespace, '//') === false) {
+                // this is a bundle name (FooBundle) not a namespace (Acme\FooBundle)
+                // so this is the bundle name (and it is also the namespace)
+                $input->setOption('bundle-name', $namespace);
             }
-
-            $input->setOption('namespace', $namespace);
         }
+        $input->setOption('namespace', $namespace);
 
-        // bundle name
+        /*
+         * bundle-name option
+         */
         $bundle = $input->getOption('bundle-name');
-        if ($bundle) {
-            try {
-                $bundle = $input->getOption('bundle-name') ? Validators::validateBundleName($input->getOption('bundle-name')) : null;
-            } catch (\Exception $error) {
-                $output->writeln($questionHelper->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
-            }
-        }
-
-        if (null === $bundle) {
+        // no bundle yet? Get a default from the namespace
+        if (!$bundle) {
             $bundle = strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
-
-            $output->writeln(array(
-                '',
-                'In your code, a bundle is often referenced by its name. It can be the',
-                'concatenation of all namespace parts but it\'s really up to you to come',
-                'up with a unique name (a good practice is to start with the vendor name).',
-                'Based on the namespace, we suggest <comment>'.$bundle.'</comment>.',
-                '',
-            ));
-            $question = new Question($questionHelper->getQuestion('Bundle name', $bundle), $bundle);
-            $question->setValidator(
-                 array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName')
-            );
-            $bundle = $questionHelper->ask($input, $output, $question);
-            $input->setOption('bundle-name', $bundle);
         }
 
-        // target dir
-        $dir = null;
-        try {
-            $dir = $input->getOption('dir') ? Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace) : null;
-        } catch (\Exception $error) {
-            $output->writeln($questionHelper->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
-        }
+        $output->writeln(array(
+            '',
+            'In your code, a bundle is often referenced by its name. It can be the',
+            'concatenation of all namespace parts but it\'s really up to you to come',
+            'up with a unique name (a good practice is to start with the vendor name).',
+            'Based on the namespace, we suggest <comment>'.$bundle.'</comment>.',
+            '',
+        ));
+        $question = new Question($questionHelper->getQuestion(
+            'Bundle name',
+            $bundle
+        ), $bundle);
+        $question->setValidator(
+             array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName')
+        );
+        $bundle = $questionHelper->ask($input, $output, $question);
+        $input->setOption('bundle-name', $bundle);
 
-        if (null === $dir) {
-            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src';
+        /*
+         * dir option
+         */
+        // defaults to src/ in the option
+        $dir = $input->getOption('dir');
+        $output->writeln(array(
+            '',
+            'Bundles are usually generated into the <info>src/</info> directory. Unless you\'re',
+            'doing something custom, hit enter to keep this default!',
+            '',
+        ));
 
-            $output->writeln(array(
-                '',
-                'Bundles are usually generated into the <info>src/</info> directory. Unless you\'re',
-                'doing something custom, hit enter to keep this default!',
-                '',
-            ));
+        $question = new Question($questionHelper->getQuestion(
+            'Target Directory',
+            $dir
+        ), $dir);
+        $dir = $questionHelper->ask($input, $output, $question);
+        $input->setOption('dir', $dir);
 
-            $question = new Question($questionHelper->getQuestion('Target Directory', 'src/'), 'src/');
-            $question->setValidator(function ($dir) use ($bundle, $namespace) {
-                    return Validators::validateTargetDir($dir, $bundle, $namespace);
-            });
-            $dir = $questionHelper->ask($input, $output, $question);
-            $input->setOption('dir', $dir);
-        }
-
-        // format
+        /*
+         * format option
+         */
+        // defaults to annotation in the options
         $format = null;
-        try {
-            $format = $input->getOption('format') ? Validators::validateFormat($input->getOption('format')) : null;
-        } catch (\Exception $error) {
-            $output->writeln($questionHelper->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error'));
-        }
+        $output->writeln(array(
+            '',
+            'What format do you want to use for your generated configuration?',
+            '',
+        ));
 
-        if (null === $format) {
-            $output->writeln(array(
-                '',
-                'What format do you want to use for your generated configuration?',
-                '',
-            ));
-
-            $question = new Question($questionHelper->getQuestion('Configuration format (annotation, yml, xml, php)', 'annotation'), 'annotation');
-            $question->setValidator(function ($format) {
-                    return Validators::validateFormat($format);
-            });
-            $question->setAutocompleterValues(array('annotation', 'yml', 'xml', 'php'));
-            $format = $questionHelper->ask($input, $output, $question);
-            $input->setOption('format', $format);
-        }
+        $question = new Question($questionHelper->getQuestion(
+            'Configuration format (annotation, yml, xml, php)',
+            $format
+        ), $format);
+        $question->setValidator(function ($format) {
+            return Validators::validateFormat($format);
+        });
+        $question->setAutocompleterValues(array('annotation', 'yml', 'xml', 'php'));
+        $format = $questionHelper->ask($input, $output, $question);
+        $input->setOption('format', $format);
     }
 
     protected function checkAutoloader(OutputInterface $output, Bundle $bundle)
@@ -384,13 +363,15 @@ EOT
         }
 
         $shared = $input->getOption('shared');
+        // require the vendor namespace ONLY of it's not shared
+        $requireVendorNamespace = !$shared;
 
-        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $shared);
+        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'), $requireVendorNamespace);
         if (!$bundleName = $input->getOption('bundle-name')) {
             $bundleName = strtr($namespace, array('\\' => ''));
         }
         $bundleName = Validators::validateBundleName($bundleName);
-        $dir = Validators::validateTargetDir($input->getOption('dir'), $bundleName, $namespace);
+        $dir = $input->getOption('dir');
         if (null === $input->getOption('format')) {
             $input->setOption('format', 'annotation');
         }
@@ -399,6 +380,8 @@ EOT
         if (!$this->getContainer()->get('filesystem')->isAbsolutePath($dir)) {
             $dir = getcwd().'/'.$dir;
         }
+        // add trailing / if necessary
+        $dir = '/' === substr($dir, -1, 1) ? $dir : $dir.'/';
 
         return new Bundle(
             $namespace,

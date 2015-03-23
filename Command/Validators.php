@@ -21,13 +21,14 @@ class Validators
     /**
      * Validates that the given namespace (e.g. Acme\FooBundle) is a valid format
      *
-     * If $shared is true, then we require you to have a vendor namespace (e.g. Acme).
+     * If $requireVendorNamespace is true, then we require you to have a vendor
+     * namespace (e.g. Acme).
      *
      * @param $namespace
-     * @param bool $shared
+     * @param bool $requireVendorNamespace
      * @return string
      */
-    public static function validateBundleNamespace($namespace, $shared = false)
+    public static function validateBundleNamespace($namespace, $requireVendorNamespace = true)
     {
         if (!preg_match('/Bundle$/', $namespace)) {
             throw new \InvalidArgumentException('The namespace must end with Bundle.');
@@ -47,7 +48,7 @@ class Validators
         }
 
         // validate that the namespace is at least one level deep
-        if ($shared && false === strpos($namespace, '\\')) {
+        if ($requireVendorNamespace && false === strpos($namespace, '\\')) {
             $msg = array();
             $msg[] = sprintf('The namespace must contain a vendor namespace (e.g. "VendorName\%s" instead of simply "%s").', $namespace, $namespace);
             $msg[] = 'If you\'ve specified a vendor namespace, did you forget to surround it with quotes (init:bundle "Acme\BlogBundle")?';
@@ -85,12 +86,6 @@ class Validators
         }
 
         return $controller;
-    }
-
-    public static function validateTargetDir($dir, $bundle, $namespace)
-    {
-        // add trailing / if necessary
-        return '/' === substr($dir, -1, 1) ? $dir : $dir.'/';
     }
 
     public static function validateFormat($format)
