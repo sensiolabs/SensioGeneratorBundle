@@ -64,10 +64,3 @@ Available Options
 
         php app/console generate:bundle --format=annotation
 
-* ``--structure``: If present, generates a
-  complete default directory structure including empty public folders for
-  documentation, web assets and translations dictionaries:
-
-    .. code-block:: bash
-
-        php app/console generate:bundle --structure
