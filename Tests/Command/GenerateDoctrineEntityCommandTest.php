@@ -11,6 +11,7 @@
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
+use Sensio\Bundle\GeneratorBundle\Model\EntityGeneratorResult;
 use Symfony\Component\Console\Tester\CommandTester;
 use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineEntityCommand;
 
@@ -28,6 +29,7 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
             ->expects($this->once())
             ->method('generate')
             ->with($this->getBundle(), $entity, $format, $fields)
+            ->willReturn(new EntityGeneratorResult('', '', ''))
         ;
 
         $tester = new CommandTester($this->getCommand($generator, $input));
@@ -59,6 +61,7 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
             ->expects($this->once())
             ->method('generate')
             ->with($this->getBundle(), $entity, $format, $fields)
+            ->willReturn(new EntityGeneratorResult('', '', ''))
         ;
         $generator
             ->expects($this->any())

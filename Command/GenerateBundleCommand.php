@@ -22,7 +22,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
-use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
 
 /**
  * Generates bundles.
@@ -360,9 +359,10 @@ EOT
     }
 
     /**
-     * Creates the Bundle object based on the user's (non-interactive) input
+     * Creates the Bundle object based on the user's (non-interactive) input.
      *
      * @param InputInterface $input
+     *
      * @return Bundle
      */
     protected function createBundleObject(InputInterface $input)
@@ -399,19 +399,6 @@ EOT
             $format,
             $shared
         );
-    }
-
-    /**
-     * Tries to make a path relative to the project, which prints nicer
-     *
-     * @param string $absolutePath
-     * @return string
-     */
-    protected function makePathRelative($absolutePath)
-    {
-        $projectRootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
-
-        return str_replace($projectRootDir.'/', '', $absolutePath);
     }
 
     protected function createGenerator()

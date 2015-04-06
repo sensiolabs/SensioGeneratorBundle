@@ -70,4 +70,18 @@ abstract class GeneratorCommand extends ContainerAwareCommand
 
         return $question;
     }
+
+    /**
+     * Tries to make a path relative to the project, which prints nicer.
+     *
+     * @param string $absolutePath
+     *
+     * @return string
+     */
+    protected function makePathRelative($absolutePath)
+    {
+        $projectRootDir = dirname($this->getContainer()->getParameter('kernel.root_dir'));
+
+        return str_replace($projectRootDir.'/', '', realpath($absolutePath) ?: $absolutePath);
+    }
 }

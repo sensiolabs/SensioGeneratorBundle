@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -37,7 +36,6 @@ class GenerateDoctrineEntityCommand extends GenerateDoctrineCommand
             ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)')
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'The fields to create with the new entity')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation')
-            ->addOption('with-repository', null, InputOption::VALUE_NONE, 'Whether to generate the entity repository or not')
             ->setHelp(<<<EOT
 The <info>doctrine:generate:entity</info> task generates a new Doctrine
 entity inside a bundle:
@@ -51,11 +49,6 @@ You can also optionally specify the fields you want to generate in the new
 entity:
 
 <info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"</info>
-
-The command can also generate the corresponding entity repository class with the
-<comment>--with-repository</comment> option:
-
-<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --with-repository</info>
 
 By default, the command uses annotations for the mapping information; change it
 with <comment>--format</comment>:
@@ -77,15 +70,6 @@ EOT
     {
         $questionHelper = $this->getQuestionHelper();
 
-        if ($input->isInteractive()) {
-            $question = new ConfirmationQuestion($questionHelper->getQuestion('Do you confirm generation', 'yes', '?'), true);
-            if (!$questionHelper->ask($input, $output, $question)) {
-                $output->writeln('<error>Command aborted</error>');
-
-                return 1;
-            }
-        }
-
         $entity = Validators::validateEntityName($input->getOption('entity'));
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
         $format = Validators::validateFormat($input->getOption('format'));
@@ -95,10 +79,24 @@ EOT
 
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
 
+        /** @var DoctrineEntityGenerator $generator */
         $generator = $this->getGenerator();
-        $generator->generate($bundle, $entity, $format, array_values($fields), $input->getOption('with-repository'));
+        $generatorResult = $generator->generate($bundle, $entity, $format, array_values($fields));
 
-        $output->writeln('Generating the entity code: <info>OK</info>');
+        $output->writeln(sprintf(
+            '> Generating entity class <info>%s</info>: <comment>OK!</comment>',
+            $this->makePathRelative($generatorResult->getEntityPath())
+        ));
+        $output->writeln(sprintf(
+            '> Generating repository class <info>%s</info>: <comment>OK!</comment>',
+            $this->makePathRelative($generatorResult->getRepositoryPath())
+        ));
+        if ($generatorResult->getMappingPath()) {
+            $output->writeln(sprintf(
+                '> Generating mapping file <info>%s</info>: <comment>OK!</comment>',
+                $this->makePathRelative($generatorResult->getMappingPath())
+            ));
+        }
 
         $questionHelper->writeGeneratorSummary($output, array());
     }
@@ -165,22 +163,6 @@ EOT
 
         // fields
         $input->setOption('fields', $this->addFields($input, $output, $questionHelper));
-
-        // repository?
-        $output->writeln('');
-        $question = new ConfirmationQuestion($questionHelper->getQuestion('Do you want to generate an empty repository class', $input->getOption('with-repository') ? 'yes' : 'no', '?'), $input->getOption('with-repository'));
-        $withRepository = $questionHelper->ask($input, $output, $question);
-        $input->setOption('with-repository', $withRepository);
-
-        // summary
-        $output->writeln(array(
-            '',
-            $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
-            '',
-            sprintf("You are going to generate a \"<info>%s:%s</info>\" Doctrine2 entity", $bundle, $entity),
-            sprintf("using the \"<info>%s</info>\" format.", $format),
-            '',
-        ));
     }
 
     private function parseFields($input)
