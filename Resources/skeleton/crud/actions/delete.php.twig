@@ -20,13 +20,13 @@
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+            ${{ entity_singularized }} = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-            if (!$entity) {
+            if (!${{ entity_singularized }}) {
                 throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
             }
 
-            $em->remove($entity);
+            $em->remove(${{ entity_singularized }});
             $em->flush();
         }
 {% endblock method_body %}

@@ -18,14 +18,14 @@
 {% block method_body %}
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        ${{ entity_singularized }} = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
-        if (!$entity) {
+        if (!${{ entity_singularized }}) {
             throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm(${{ entity_singularized }});
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
@@ -38,13 +38,13 @@
 {% block method_return %}
 {% if 'annotation' == format %}
         return array(
-            'entity'      => $entity,
+            '{{ entity_singularized }}'      => ${{ entity_singularized }},
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
-            'entity'      => $entity,
+            '{{ entity_singularized }}'      => ${{ entity_singularized }},
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
