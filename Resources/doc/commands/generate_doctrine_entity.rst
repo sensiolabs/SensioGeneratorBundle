@@ -41,7 +41,7 @@ Available Options
 
 * ``--format``: (**annotation**) [values: yml, xml, php or annotation] This
   option determines the format to use for the generated configuration files
-  like routing. By default, the command uses the ``annotation`` format:
+  for doctrine entity mapping. By default, the command uses the ``annotation`` format:
 
     .. code-block:: bash
 
