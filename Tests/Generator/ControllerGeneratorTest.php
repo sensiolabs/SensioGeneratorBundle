@@ -78,9 +78,8 @@ class ControllerGeneratorTest extends GeneratorTest
         $strings = array(
             'public function showPageAction($id, $slug)',
             'public function getListOfPagesAction($max_count)',
-            '@Template()',
-            '@Template("FooBarBundle:Page:pages_list.html.twig")',
-            'return array(',
+            'return $this->render(\'FooBarBundle:Page:showPage.html.twig\', array(',
+            'return $this->render(\'FooBarBundle:Page:pages_list.html.twig\', array(',
         );
         foreach ($strings as $string) {
             $this->assertContains($string, $content);
