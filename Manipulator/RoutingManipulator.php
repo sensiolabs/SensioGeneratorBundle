@@ -40,7 +40,7 @@ class RoutingManipulator extends Manipulator
      * @param string $prefix
      * @param string $path
      *
-     * @return bool    true if it worked, false otherwise
+     * @return bool true if it worked, false otherwise
      *
      * @throws \RuntimeException If bundle is already imported
      */
