@@ -24,7 +24,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
     public function testGenerateYaml()
     {
-        $this->generate(self::FORMAT_YAML, self::WITHOUT_REPOSITORY);
+        $this->generate(self::FORMAT_YAML);
 
         $files = array(
             'Entity/Foo.php',
@@ -37,7 +37,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
     public function testGenerateXml()
     {
-        $this->generate(self::FORMAT_XML, self::WITHOUT_REPOSITORY);
+        $this->generate(self::FORMAT_XML);
 
         $files = array(
             'Entity/Foo.php',
@@ -50,7 +50,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
     public function testGenerateAnnotation()
     {
-        $this->generate(self::FORMAT_ANNOTATION, self::WITHOUT_REPOSITORY);
+        $this->generate(self::FORMAT_ANNOTATION);
 
         $files = array(
             'Entity/Foo.php',
@@ -96,9 +96,9 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
         }
     }
 
-    protected function generate($format, $with_repository = false)
+    protected function generate($format)
     {
-        $this->getGenerator()->generate($this->getBundle(), 'Foo', $format, $this->getFields(), $with_repository);
+        $this->getGenerator()->generate($this->getBundle(), 'Foo', $format, $this->getFields());
     }
 
     protected function getGenerator()

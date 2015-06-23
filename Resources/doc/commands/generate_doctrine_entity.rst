@@ -46,10 +46,3 @@ Available Options
     .. code-block:: bash
 
         php app/console generate:doctrine:entity --format=annotation
-
-* ``--with-repository``: This option tells whether or not to generate the
-  related Doctrine `EntityRepository` class:
-
-    .. code-block:: bash
-
-        php app/console generate:doctrine:entity --with-repository
