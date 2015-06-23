@@ -13,7 +13,12 @@ class EntityGeneratorResult
     /** @var string */
     private $mappingPath;
 
-    function __construct($entityPath, $repositoryPath, $mappingPath)
+    /**
+     * @param string $entityPath
+     * @param string $repositoryPath
+     * @param string $mappingPath
+     */
+    public function __construct($entityPath, $repositoryPath, $mappingPath)
     {
         $this->entityPath = $entityPath;
         $this->repositoryPath = $repositoryPath;
