@@ -8,7 +8,6 @@
 {% if 'annotation' == format %}
      * @Route("/{id}", name="{{ route_name_prefix }}_show")
      * @Method("GET")
-     * @Template()
 {% endif %}
 {% endblock phpdoc_method_annotations %}
      */
@@ -31,20 +30,11 @@
 {% endblock method_body %}
 
 {% block method_return %}
-{% if 'annotation' == format %}
-        return array(
-            '{{ entity_singularized }}'      => ${{ entity_singularized }},
-{% if 'delete' in actions %}
-            'delete_form' => $deleteForm->createView(),
-{% endif %}
-        );
-{% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            '{{ entity_singularized }}'      => ${{ entity_singularized }},
+            '{{ entity_singularized }}' => ${{ entity_singularized }},
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
 {% endif %}
         ));
-{% endif %}
 {% endblock method_return %}
     }

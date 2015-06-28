@@ -6,7 +6,6 @@ namespace {{ namespace }}\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 {% if 'annotation' == format.routing -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 {% endif %}
 {% endblock use_statements %}
 
@@ -19,11 +18,6 @@ class {{ controller }}Controller extends Controller
     {% if 'annotation' == format.routing -%}
     /**
      * @Route("{{ action.route }}")
-     {% if 'default' == action.template -%}
-     * @Template()
-     {% else -%}
-     * @Template("{{ action.template }}")
-     {% endif -%}
      */
     {% endif -%}
     public function {{ action.name }}(
@@ -31,21 +25,16 @@ class {{ controller }}Controller extends Controller
             ${{- action.placeholders|join(', $') -}}
         {%- endif -%})
     {
-        {% if 'annotation' != format.routing -%}
-            {% if 'default' == action.template -%}
-            return $this->render('{{ bundle }}:{{ controller }}:{{ action.name|slice(0, -6) }}.html.{{ format.templating }}', array(
-                // ...
-            ));
-            {%- else -%}
-            return $this->render('{{ action.template }}', array(
-                // ...
-            ));
-            {%- endif %}
+        {% if 'default' == action.template -%}
+        return $this->render('{{ bundle }}:{{ controller }}:{{ action.name|slice(0, -6) }}.html.{{ format.templating }}', array(
+            // ...
+        ));
         {%- else -%}
-            return array(
-                // ...
-            );
+        return $this->render('{{ action.template }}', array(
+            // ...
+        ));
         {%- endif %}
+
     }
 
 {% endfor -%}

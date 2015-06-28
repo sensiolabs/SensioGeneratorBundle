@@ -7,7 +7,6 @@
 {% if 'annotation' == format %}
      * @Route("/", name="{{ route_name_prefix }}")
      * @Method("GET")
-     * @Template()
 {% endif %}
 {% endblock phpdoc_method_annotations %}
      */
@@ -22,14 +21,8 @@
 {% endblock method_body %}
 
 {% block method_return %}
-{% if 'annotation' == format %}
-        return array(
-            '{{ entity_pluralized }}' => ${{ entity_pluralized }},
-        );
-{% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
             '{{ entity_pluralized }}' => ${{ entity_pluralized }},
         ));
-{% endif %}
 {% endblock method_return %}
     }

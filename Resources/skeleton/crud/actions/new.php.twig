@@ -8,7 +8,6 @@
 {% if 'annotation' == format %}
      * @Route("/new", name="{{ route_name_prefix }}_new")
      * @Method("GET")
-     * @Template()
 {% endif %}
 {% endblock phpdoc_method_annotations %}
      */
@@ -22,16 +21,9 @@
 {% endblock method_body %}
 
 {% block method_return %}
-{% if 'annotation' == format %}
-        return array(
-            '{{ entity_singularized }}' => ${{ entity_singularized }},
-            'form'   => $form->createView(),
-        );
-{% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:new.html.twig', array(
             '{{ entity_singularized }}' => ${{ entity_singularized }},
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
-{% endif %}
 {% endblock method_return %}
     }
