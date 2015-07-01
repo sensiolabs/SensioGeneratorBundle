@@ -37,7 +37,7 @@ Available Options
 
     .. code-block:: bash
 
-        php app/console generate:doctrine:entity --fields="title:string(100) body:text"
+        php app/console generate:doctrine:entity --fields="title:string(length=100 nullable=true unique=false) body:text ranking:decimal(precision:10 scale:0)"
 
 * ``--format``: (**annotation**) [values: yml, xml, php or annotation] This
   option determines the format to use for the generated configuration files

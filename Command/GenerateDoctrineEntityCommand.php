@@ -59,6 +59,10 @@ To deactivate the interaction mode, simply use the `--no-interaction` option
 without forgetting to pass all needed options:
 
 <info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(255) body:text" --no-interaction</info>
+
+This also has support for passing field specific attributes:
+
+<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(length=255 nullable=true unique=true) body:text ranking:decimal(precision:10 scale:0)" --no-interaction</info>
 EOT
         );
     }
@@ -172,16 +176,41 @@ EOT
         }
 
         $fields = array();
-        foreach (explode(' ', $input) as $value) {
+        foreach (preg_split('{(?:\([^\(]*\))(*SKIP)(*F)|\s+}', $input) as $value) {
             $elements = explode(':', $value);
             $name = $elements[0];
+            $fieldAttributes = array();
             if (strlen($name)) {
+                $fieldAttributes['fieldName'] = $name;
                 $type = isset($elements[1]) ? $elements[1] : 'string';
-                preg_match_all('/(.*)\((.*)\)/', $type, $matches);
-                $type = isset($matches[1][0]) ? $matches[1][0] : $type;
-                $length = isset($matches[2][0]) ? $matches[2][0] : null;
+                preg_match_all('{(.*)\((.*)\)}', $type, $matches);
+                $fieldAttributes['type'] = isset($matches[1][0]) ? $matches[1][0] : $type;
+                $length = null;
+                if ('string' === $fieldAttributes['type']) {
+                    $fieldAttributes['length'] = $length;
+                }
+                if (isset($matches[2][0]) && $length = $matches[2][0]) {
+                    $attributesFound = array();
+                    if (false !== strpos($length, '=')) {
+                        $attributesFound = preg_match_all('{([^,= ]+)=([^,= ]+)}', $length, $result);
+                        $attributesFound = array_combine($result[1], $result[2]);
+                    } else {
+                        $fieldAttributes['length'] = $length;
+                    }
+                    $fieldAttributes = array_merge($fieldAttributes, $attributesFound);
+                    foreach (array('length', 'presicion', 'scale') as $intAttribute) {
+                        if (isset($fieldAttributes[$intAttribute])) {
+                            $fieldAttributes[$intAttribute] = (int) $fieldAttributes[$intAttribute];
+                        }
+                    }
+                    foreach (array('nullable', 'unique') as $boolAttribute) {
+                        if (isset($fieldAttributes[$boolAttribute])) {
+                            $fieldAttributes[$boolAttribute] = (bool) $fieldAttributes[$boolAttribute];
+                        }
+                    }
+                }
 
-                $fields[$name] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
+                $fields[$name] = $fieldAttributes;
             }
         }
 
@@ -241,6 +270,46 @@ EOT
             return $length;
         };
 
+        $boolValidator = function ($value) {
+            if (null === $valueAsBool = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                throw new \InvalidArgumentException(sprintf('Invalid bool value "%s".', $value));
+            }
+
+            return $valueAsBool;
+        };
+
+        $precisionValidator = function ($precision) {
+            if (!$precision) {
+                return $precision;
+            }
+
+            $result = filter_var($precision, FILTER_VALIDATE_INT, array(
+                'options' => array('min_range' => 1, 'max_range' => 65),
+            ));
+
+            if (false === $result) {
+                throw new \InvalidArgumentException(sprintf('Invalid precision "%s".', $precision));
+            }
+
+            return $precision;
+        };
+
+        $scaleValidator = function ($scale) {
+            if (!$scale) {
+                return $scale;
+            }
+
+            $result = filter_var($scale, FILTER_VALIDATE_INT, array(
+                'options' => array('min_range' => 0, 'max_range' => 30),
+            ));
+
+            if (false === $result) {
+                throw new \InvalidArgumentException(sprintf('Invalid scale "%s".', $scale));
+            }
+
+            return $scale;
+        };
+
         while (true) {
             $output->writeln('');
             $generator = $this->getGenerator();
@@ -287,6 +356,28 @@ EOT
                 $question = new Question($questionHelper->getQuestion('Field length', 255), 255);
                 $question->setValidator($lengthValidator);
                 $data['length'] = $questionHelper->ask($input, $output, $question);
+            } elseif ('decimal' === $type) {
+                // 10 is the default value given in \Doctrine\DBAL\Schema\Column::$_precision
+                $question = new Question($questionHelper->getQuestion('Precision', 10), 10);
+                $question->setValidator($precisionValidator);
+                $data['precision'] = $questionHelper->ask($input, $output, $question);
+
+                // 0 is the default value given in \Doctrine\DBAL\Schema\Column::$_scale
+                $question = new Question($questionHelper->getQuestion('Scale', 0), 0);
+                $question->setValidator($scaleValidator);
+                $data['scale'] = $questionHelper->ask($input, $output, $question);
+            }
+
+            $question = new Question($questionHelper->getQuestion('Is nullable', 'false'), false);
+            $question->setValidator($boolValidator);
+            if ($nullable = $questionHelper->ask($input, $output, $question)) {
+                $data['nullable'] = $nullable;
+            }
+
+            $question = new Question($questionHelper->getQuestion('Unique', 'false'), false);
+            $question->setValidator($boolValidator);
+            if ($unique = $questionHelper->ask($input, $output, $question)) {
+                $data['unique'] = $unique;
             }
 
             $fields[$columnName] = $data;
