@@ -39,6 +39,12 @@ Available Options
 
         php app/console generate:doctrine:entity --fields="title:string(length=100 nullable=true unique=false) body:text ranking:decimal(precision:10 scale:0)"
 
+.. versionadded:: 3.0
+    Ability to pass named options to fields was added in version 3.0. Previously,
+    only ``string`` type was allowed to receive the length value as argument.
+    Available options are ``length``, ``nullable``, ``unique``, ``precision`` and
+    ``scale``.
+
 * ``--format``: (**annotation**) [values: yml, xml, php or annotation] This
   option determines the format to use for the generated configuration files
   for doctrine entity mapping. By default, the command uses the ``annotation`` format:
