@@ -108,10 +108,19 @@ class Validators
         return $format;
     }
 
+    /**
+     * Performs basic checks in entity name.
+     *
+     * @param string $entity
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
     public static function validateEntityName($entity)
     {
-        if (false === strpos($entity, ':')) {
-            throw new \InvalidArgumentException(sprintf('The entity name must contain a : ("%s" given, expecting something like AcmeBlogBundle:Blog/Post)', $entity));
+        if (!preg_match('{^[a-zA-Z_\x7f-\xff]+:[a-zA-Z0-9_\x7f-\xff\\\/]+$}', $entity)) {
+            throw new \InvalidArgumentException(sprintf('The entity name isn\'t valid ("%s" given, expecting something like AcmeBlogBundle:Blog/Post)', $entity));
         }
 
         return $entity;
