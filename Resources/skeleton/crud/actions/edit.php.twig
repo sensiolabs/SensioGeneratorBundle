@@ -7,53 +7,33 @@
 {% block phpdoc_method_annotations %}
 {% if 'annotation' == format %}
      * @Route("/{id}/edit", name="{{ route_name_prefix }}_edit")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
 {% endif %}
 {% endblock phpdoc_method_annotations %}
      */
 {% block method_definition %}
-    public function editAction($id)
+    public function editAction(Request $request, {{ entity_class }} ${{ entity_singularized }})
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $em = $this->getDoctrine()->getManager();
+        $deleteForm = $this->createDeleteForm(${{ entity_singularized }});
+        $editForm = $this->createForm(new {{ entity_class }}Type(), ${{ entity_singularized }});
+        $editForm->handleRequest($request);
 
-        ${{ entity_singularized }} = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist(${{ entity_singularized }});
+            $em->flush();
 
-        if (!${{ entity_singularized }}) {
-            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+            return $this->redirectToRoute('{{ route_name_prefix }}_edit', array('id' => ${{ entity_singularized }}->getId()));
         }
-
-        $editForm = $this->createEditForm(${{ entity_singularized }});
-        $deleteForm = $this->createDeleteForm($id);
 {% endblock method_body %}
 
 {% block method_return %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
+        return $this->render('{{ entity|lower|replace({'\\': '/'}) }}/edit.html.twig', array(
             '{{ entity_singularized }}' => ${{ entity_singularized }},
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
 {% endblock method_return %}
     }
-
-{% block form %}
-    /**
-    * Creates a form to edit a {{ entity }} entity.
-    *
-    * @param {{ entity_class }} ${{ entity_singularized }} The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm({{ entity_class }} ${{ entity_singularized }})
-    {
-        $form = $this->createForm(new {{ entity_class }}Type(), ${{ entity_singularized }}, array(
-            'action' => $this->generateUrl('{{ route_name_prefix }}_update', array('id' => ${{ entity_singularized }}->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
-{% endblock form %}

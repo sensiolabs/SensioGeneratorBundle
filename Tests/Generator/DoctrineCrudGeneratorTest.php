@@ -23,10 +23,10 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
             'Controller/PostController.php',
             'Tests/Controller/PostControllerTest.php',
             'Resources/config/routing/post.yml',
-            'Resources/views/Post/index.html.twig',
-            'Resources/views/Post/show.html.twig',
-            'Resources/views/Post/new.html.twig',
-            'Resources/views/Post/edit.html.twig',
+            'Resources/views/post/index.html.twig',
+            'Resources/views/post/show.html.twig',
+            'Resources/views/post/new.html.twig',
+            'Resources/views/post/edit.html.twig',
         );
         foreach ($files as $file) {
             $this->assertTrue(file_exists($this->tmpDir.'/'.$file), sprintf('%s has been generated', $file));
@@ -60,8 +60,8 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
             'Controller/PostController.php',
             'Tests/Controller/PostControllerTest.php',
             'Resources/config/routing/post.xml',
-            'Resources/views/Post/index.html.twig',
-            'Resources/views/Post/show.html.twig',
+            'Resources/views/post/index.html.twig',
+            'Resources/views/post/show.html.twig',
         );
         foreach ($files as $file) {
             $this->assertTrue(file_exists($this->tmpDir.'/'.$file), sprintf('%s has been generated', $file));
@@ -69,8 +69,8 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
 
         $files = array(
             'Resources/config/routing/post.yml',
-            'Resources/views/Post/new.html.twig',
-            'Resources/views/Post/edit.html.twig',
+            'Resources/views/post/new.html.twig',
+            'Resources/views/post/edit.html.twig',
         );
         foreach ($files as $file) {
             $this->assertFalse(file_exists($this->tmpDir.'/'.$file), sprintf('%s has not been generated', $file));
@@ -104,10 +104,10 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
         $files = array(
             'Controller/PostController.php',
             'Tests/Controller/PostControllerTest.php',
-            'Resources/views/Post/index.html.twig',
-            'Resources/views/Post/show.html.twig',
-            'Resources/views/Post/new.html.twig',
-            'Resources/views/Post/edit.html.twig',
+            'Resources/views/post/index.html.twig',
+            'Resources/views/post/show.html.twig',
+            'Resources/views/post/new.html.twig',
+            'Resources/views/post/edit.html.twig',
         );
         foreach ($files as $file) {
             $this->assertTrue(file_exists($this->tmpDir.'/'.$file), sprintf('%s has been generated', $file));
@@ -142,8 +142,8 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
         $files = array(
             'Controller/PostController.php',
             'Tests/Controller/PostControllerTest.php',
-            'Resources/views/Post/index.html.twig',
-            'Resources/views/Post/show.html.twig',
+            'Resources/views/post/index.html.twig',
+            'Resources/views/post/show.html.twig',
         );
         foreach ($files as $file) {
             $this->assertTrue(file_exists($this->tmpDir.'/'.$file), sprintf('%s has been generated', $file));
@@ -152,8 +152,8 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
         $files = array(
             'Resources/config/routing/post.yml',
             'Resources/config/routing/post.xml',
-            'Resources/views/Post/new.html.twig',
-            'Resources/views/Post/edit.html.twig',
+            'Resources/views/post/new.html.twig',
+            'Resources/views/post/edit.html.twig',
         );
         foreach ($files as $file) {
             $this->assertFalse(file_exists($this->tmpDir.'/'.$file), sprintf('%s has not been generated', $file));
@@ -216,7 +216,7 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
 
     protected function getGenerator()
     {
-        $generator = new DoctrineCrudGenerator($this->filesystem);
+        $generator = new DoctrineCrudGenerator($this->filesystem, $this->tmpDir);
         $generator->setSkeletonDirs(__DIR__.'/../../Resources/skeleton');
 
         return $generator;

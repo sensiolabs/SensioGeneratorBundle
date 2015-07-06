@@ -24,6 +24,7 @@ use Doctrine\Common\Inflector\Inflector;
 class DoctrineCrudGenerator extends Generator
 {
     protected $filesystem;
+    protected $rootDir;
     protected $routePrefix;
     protected $routeNamePrefix;
     protected $bundle;
@@ -38,10 +39,12 @@ class DoctrineCrudGenerator extends Generator
      * Constructor.
      *
      * @param Filesystem $filesystem A Filesystem instance
+     * @param string     $rootDir    The root dir
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, $rootDir)
     {
         $this->filesystem = $filesystem;
+        $this->rootDir = $rootDir;
     }
 
     /**
@@ -75,7 +78,7 @@ class DoctrineCrudGenerator extends Generator
 
         $this->generateControllerClass($forceOverwrite);
 
-        $dir = sprintf('%s/Resources/views/%s', $this->bundle->getPath(), str_replace('\\', '/', $this->entity));
+        $dir = sprintf('%s/Resources/views/%s', $this->rootDir, str_replace('\\', '/', strtolower($this->entity)));
 
         if (!file_exists($dir)) {
             $this->filesystem->mkdir($dir, 0777);
