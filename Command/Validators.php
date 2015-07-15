@@ -19,13 +19,14 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
 class Validators
 {
     /**
-     * Validates that the given namespace (e.g. Acme\FooBundle) is a valid format
+     * Validates that the given namespace (e.g. Acme\FooBundle) is a valid format.
      *
      * If $requireVendorNamespace is true, then we require you to have a vendor
      * namespace (e.g. Acme).
      *
      * @param $namespace
      * @param bool $requireVendorNamespace
+     *
      * @return string
      */
     public static function validateBundleNamespace($namespace, $requireVendorNamespace = true)
