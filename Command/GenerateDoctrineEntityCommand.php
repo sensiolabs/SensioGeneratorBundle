@@ -370,12 +370,14 @@ EOT
 
             $question = new Question($questionHelper->getQuestion('Is nullable', 'false'), false);
             $question->setValidator($boolValidator);
+            $question->setAutocompleterValues(array('true', 'false'));
             if ($nullable = $questionHelper->ask($input, $output, $question)) {
                 $data['nullable'] = $nullable;
             }
 
             $question = new Question($questionHelper->getQuestion('Unique', 'false'), false);
             $question->setValidator($boolValidator);
+            $question->setAutocompleterValues(array('true', 'false'));
             if ($unique = $questionHelper->ask($input, $output, $question)) {
                 $data['unique'] = $unique;
             }
