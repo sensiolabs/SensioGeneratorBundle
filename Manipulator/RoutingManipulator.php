@@ -52,7 +52,7 @@ class RoutingManipulator extends Manipulator
             $current = file_get_contents($this->file);
 
             // Don't add same bundle twice
-            if (false !== strpos($current, $code)) {
+            if (false !== strpos($current, '@'.$bundle)) {
                 throw new \RuntimeException(sprintf('Bundle "%s" is already imported.', $bundle));
             }
         } elseif (!is_dir($dir = dirname($this->file))) {
