@@ -249,10 +249,10 @@ EOT
 
             // adding action
             $actions[$actionName] = array(
-                'name'         => $actionName,
-                'route'        => $route,
+                'name' => $actionName,
+                'route' => $route,
                 'placeholders' => $placeholders,
-                'template'     => $template,
+                'template' => $template,
             );
         }
 
@@ -294,10 +294,10 @@ EOT
             $template = (0 < count($data) && '' != $data[0]) ? implode(':', $data) : 'default';
 
             $parsedActions[$name] = array(
-                'name'         => $name,
-                'route'        => $route,
+                'name' => $name,
+                'route' => $route,
                 'placeholders' => $placeholders,
-                'template'     => $template,
+                'template' => $template,
             );
         }
 
