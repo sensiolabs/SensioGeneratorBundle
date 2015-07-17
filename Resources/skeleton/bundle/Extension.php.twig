@@ -29,10 +29,10 @@ class {{ bundle_basename }}Extension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        {% if format == 'yml' -%}
+        {% if format == 'yml' or format == 'annotation' -%}
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        {%- elseif format == 'xml' or format == 'annotation' -%}
+        {%- elseif format == 'xml' -%}
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
         {%- elseif format == 'php' -%}
