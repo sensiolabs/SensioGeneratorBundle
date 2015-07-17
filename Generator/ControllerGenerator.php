@@ -42,10 +42,10 @@ class ControllerGenerator extends Generator
         }
 
         $parameters = array(
-            'namespace'  => $bundle->getNamespace(),
-            'bundle'     => $bundle->getName(),
-            'format'     => array(
-                'routing'    => $routeFormat,
+            'namespace' => $bundle->getNamespace(),
+            'bundle' => $bundle->getName(),
+            'format' => array(
+                'routing' => $routeFormat,
                 'templating' => $templateFormat,
             ),
             'controller' => $controller,
@@ -146,7 +146,7 @@ EOT;
                 $content = substr($content, 0, $pointer);
                 $content .= sprintf("%s->add('%s', new Route('%s', array(", $collection[1], $name, $action['route']);
                 $content .= sprintf("\n    '_controller' => '%s',", $controller);
-                $content .= "\n)));\n\nreturn ".$collection[1].";";
+                $content .= "\n)));\n\nreturn ".$collection[1].';';
             } else {
                 // new file
                 $content = <<<EOT
@@ -185,6 +185,10 @@ EOT;
 
     protected function parseLogicalTemplateName($logicalname, $part = '')
     {
+        if (2 !== substr_count($logicalname, ':')) {
+            throw new \RuntimeException(sprintf('The given template name ("%s") is not correct (it must contain two colons).', $logicalname));
+        }
+
         $data = array();
 
         list($data['bundle'], $data['controller'], $data['template']) = explode(':', $logicalname);

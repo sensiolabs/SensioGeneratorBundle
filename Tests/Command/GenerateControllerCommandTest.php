@@ -64,7 +64,7 @@ class GenerateControllerCommandTest extends GenerateCommandTest
                 ),
             ))),
 
-            array(array('--route-format' => 'xml', '--template-format' => 'php', '--actions' => 'showAction:/{slug}:AcmeBlogBundle:article.html.php'), 'AcmeBlogBundle:Post', array('Post', 'xml', 'php', array(
+            array(array('--route-format' => 'xml', '--template-format' => 'php', '--actions' => array('showAction:/{slug}:AcmeBlogBundle:article.html.php')), 'AcmeBlogBundle:Post', array('Post', 'xml', 'php', array(
                 'showAction' => array(
                     'name' => 'showAction',
                     'route' => '/{slug}',
@@ -100,7 +100,7 @@ class GenerateControllerCommandTest extends GenerateCommandTest
         return array(
             array(array('--controller' => 'AcmeBlogBundle:Post'), array('Post', 'annotation', 'twig', array())),
             array(array('--controller' => 'AcmeBlogBundle:Post', '--route-format' => 'yml', '--template-format' => 'php'), array('Post', 'yml', 'php', array())),
-            array(array('--controller' => 'AcmeBlogBundle:Post', '--actions' => 'showAction getListAction:/_getlist/{max}:AcmeBlogBundle:List:post.html.twig createAction:/admin/create'), array('Post', 'annotation', 'twig', array(
+            array(array('--controller' => 'AcmeBlogBundle:Post', '--actions' => array('showAction getListAction:/_getlist/{max}:AcmeBlogBundle:List:post.html.twig createAction:/admin/create')), array('Post', 'annotation', 'twig', array(
                 'showAction' => array(
                     'name' => 'showAction',
                     'route' => '/show',
@@ -120,7 +120,7 @@ class GenerateControllerCommandTest extends GenerateCommandTest
                     'template' => 'default',
                 ),
             ))),
-            array(array('--controller' => 'AcmeBlogBundle:Post', '--route-format' => 'xml', '--template-format' => 'php', '--actions' => 'showAction::'), array('Post', 'xml', 'php', array(
+            array(array('--controller' => 'AcmeBlogBundle:Post', '--route-format' => 'xml', '--template-format' => 'php', '--actions' => array('showAction::')), array('Post', 'xml', 'php', array(
                 'showAction' => array(
                     'name' => 'showAction',
                     'route' => '/show',
