@@ -26,7 +26,13 @@ class DoctrineFormGeneratorTest extends GeneratorTest
 
         $metadata = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadataInfo')->disableOriginalConstructor()->getMock();
         $metadata->identifier = array('id');
-        $metadata->associationMappings = array('title' => array('type' => 'string'));
+        $metadata->fieldMappings = array(
+            'title' => array('type' => 'string'),
+            'createdAt' => array('type' => 'date'),
+            'publishedAt' => array('type' => 'time'),
+            'updatedAt' => array('type' => 'datetime'),
+        );
+        $metadata->associationMappings = $metadata->fieldMappings;
 
         $generator->generate($bundle, 'Post', $metadata);
 
@@ -34,6 +40,9 @@ class DoctrineFormGeneratorTest extends GeneratorTest
 
         $content = file_get_contents($this->tmpDir.'/Form/PostType.php');
         $this->assertContains('->add(\'title\')', $content);
+        $this->assertContains('->add(\'createdAt\', \'date\')', $content);
+        $this->assertContains('->add(\'publishedAt\', \'time\')', $content);
+        $this->assertContains('->add(\'updatedAt\', \'datetime\')', $content);
         $this->assertContains('class PostType extends AbstractType', $content);
         $this->assertContains("'data_class' => 'Foo\BarBundle\Entity\Post'", $content);
         $this->assertContains("'foo_barbundle_post'", $content);
