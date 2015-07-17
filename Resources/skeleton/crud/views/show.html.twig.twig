@@ -15,7 +15,7 @@
 
             {%- if metadata.type in ['date', 'datetime'] %}
 
-                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}' }}</td>
+                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
 
             {%- else %}
 
