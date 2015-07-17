@@ -31,14 +31,16 @@ class GenerateDoctrineFormCommand extends GenerateDoctrineCommand
     protected function configure()
     {
         $this
+            ->setName('doctrine:generate:form')
+            ->setAliases(array('generate:doctrine:form'))
+            ->setDescription('Generates a form type class based on a Doctrine entity')
             ->setDefinition(array(
                 new InputArgument('entity', InputArgument::REQUIRED, 'The entity class name to initialize (shortcut notation)'),
             ))
-            ->setDescription('Generates a form type class based on a Doctrine entity')
             ->setHelp(<<<EOT
-The <info>doctrine:generate:form</info> command generates a form class based on a Doctrine entity.
+The <info>%command.name%</info> command generates a form class based on a Doctrine entity.
 
-<info>php app/console doctrine:generate:form AcmeBlogBundle:Post</info>
+<info>php %command.full_name% AcmeBlogBundle:Post</info>
 
 Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
 
@@ -49,8 +51,6 @@ You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resour
 in order to know the file structure of the skeleton
 EOT
             )
-            ->setName('doctrine:generate:form')
-            ->setAliases(array('generate:doctrine:form'))
         ;
     }
 
@@ -64,7 +64,7 @@ EOT
 
         $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
         $metadata = $this->getEntityMetadata($entityClass);
-        $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
+        $bundle = $this->getApplication()->getKernel()->getBundle($bundle);
         $generator = $this->getGenerator($bundle);
 
         $generator->generate($bundle, $entity, $metadata[0]);

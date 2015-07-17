@@ -40,6 +40,9 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
     protected function configure()
     {
         $this
+            ->setName('doctrine:generate:crud')
+            ->setAliases(array('generate:doctrine:crud'))
+            ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setDefinition(array(
                 new InputArgument('entity', InputArgument::OPTIONAL, 'The entity class name to initialize (shortcut notation)'),
                 new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
@@ -48,13 +51,12 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
             ))
-            ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
-The <info>doctrine:generate:crud</info> command generates a CRUD based on a Doctrine entity.
+The <info>%command.name%</info> command generates a CRUD based on a Doctrine entity.
 
 The default command only generates the list and show actions.
 
-<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
+<info>php %command.full_name% --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
 
 Using the --with-write option allows to generate the new, edit and delete actions.
 
@@ -74,8 +76,6 @@ You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resour
 in order to know the file structure of the skeleton
 EOT
             )
-            ->setName('doctrine:generate:crud')
-            ->setAliases(array('generate:doctrine:crud'))
         ;
     }
 

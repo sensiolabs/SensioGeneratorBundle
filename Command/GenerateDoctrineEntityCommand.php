@@ -37,10 +37,10 @@ class GenerateDoctrineEntityCommand extends GenerateDoctrineCommand
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'The fields to create with the new entity')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation')
             ->setHelp(<<<EOT
-The <info>doctrine:generate:entity</info> task generates a new Doctrine
+The <info>%command.name%</info> task generates a new Doctrine
 entity inside a bundle:
 
-<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post</info>
+<info>php %command.full_name% --entity=AcmeBlogBundle:Blog/Post</info>
 
 The above command would initialize a new entity in the following entity
 namespace <info>Acme\BlogBundle\Entity\Blog\Post</info>.
@@ -53,16 +53,16 @@ entity:
 By default, the command uses annotations for the mapping information; change it
 with <comment>--format</comment>:
 
-<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=yml</info>
+<info>php %command.full_name% --entity=AcmeBlogBundle:Blog/Post --format=yml</info>
 
 To deactivate the interaction mode, simply use the <comment>--no-interaction</comment> option
 without forgetting to pass all needed options:
 
-<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(255) body:text" --no-interaction</info>
+<info>php %command.full_name% --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(255) body:text" --no-interaction</info>
 
 This also has support for passing field specific attributes:
 
-<info>php app/console doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(length=255 nullable=true unique=true) body:text ranking:decimal(precision:10 scale:0)" --no-interaction</info>
+<info>php %command.full_name% --entity=AcmeBlogBundle:Blog/Post --format=annotation --fields="title:string(length=255 nullable=true unique=true) body:text ranking:decimal(precision:10 scale:0)" --no-interaction</info>
 EOT
         );
     }
