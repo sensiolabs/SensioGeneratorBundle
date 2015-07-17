@@ -105,9 +105,14 @@ EOT
 
         $questionHelper->writeSection($output, 'CRUD generation');
 
-        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
-        $metadata    = $this->getEntityMetadata($entityClass);
-        $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
+        try {
+            $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
+            $metadata = $this->getEntityMetadata($entityClass);
+        } catch (\Exception $e) {
+            throw new \RuntimeException(sprintf('Entity "%s" does not exist in the "%s" bundle. Create it with the "doctrine:generate:entity" command and then execute this command again.', $entity, $bundle));
+        }
+
+        $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator($bundle);
         $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
@@ -145,11 +150,8 @@ EOT
             '',
             'This command helps you generate CRUD controllers and templates.',
             '',
-            'First, you need to give the entity for which you want to generate a CRUD.',
-            'You can give an entity that does not exist yet and the wizard will help',
-            'you defining it.',
-            '',
-            'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
+            'First, give the name of the existing entity for which you want to generate a CRUD',
+            '(use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>)',
             '',
         ));
 
@@ -209,8 +211,8 @@ EOT
             '',
             $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
             '',
-            sprintf("You are going to generate a CRUD controller for \"<info>%s:%s</info>\"", $bundle, $entity),
-            sprintf("using the \"<info>%s</info>\" format.", $format),
+            sprintf('You are going to generate a CRUD controller for "<info>%s:%s</info>"', $bundle, $entity),
+            sprintf('using the "<info>%s</info>" format.', $format),
             '',
         ));
     }
