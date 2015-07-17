@@ -44,8 +44,7 @@ inside bundles.
 
 By default, the command interacts with the developer to tweak the generation.
 Any passed option will be used as a default value for the interaction
-(<comment>--bundle</comment> and <comment>--controller</comment> are the only
-ones needed if you follow the conventions):
+(<comment>--controller</comment> is the only one needed if you follow the conventions):
 
 <info>php app/console generate:controller --controller=AcmeBlogBundle:Post</info>
 
@@ -266,17 +265,15 @@ EOT
             return $actions;
         }
 
-        $actionList = array();
-
-        if (1 == count($actions)) {
-            $actionList = explode(' ', $actions[0]);
-        } else {
-            $actionList = $actions;
+        // '$actions' can be an array with just 1 element defining several actions
+        // separated by white spaces: $actions = array('... ... ...');
+        if (1 === count($actions)) {
+            $actions = explode(' ', $actions[0]);
         }
 
-        $newActions = array();
+        $parsedActions = array();
 
-        foreach ($actionList as $action) {
+        foreach ($actions as $action) {
             $data = explode(':', $action);
 
             // name
@@ -296,7 +293,7 @@ EOT
             // template
             $template = (0 < count($data) && '' != $data[0]) ? implode(':', $data) : 'default';
 
-            $newActions[$name] = array(
+            $parsedActions[$name] = array(
                 'name'         => $name,
                 'route'        => $route,
                 'placeholders' => $placeholders,
@@ -304,7 +301,7 @@ EOT
             );
         }
 
-        return $newActions;
+        return $parsedActions;
     }
 
     public function getPlaceholdersFromRoute($route)

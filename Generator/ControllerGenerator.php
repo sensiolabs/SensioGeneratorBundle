@@ -185,6 +185,10 @@ EOT;
 
     protected function parseLogicalTemplateName($logicalname, $part = '')
     {
+        if (2 !== substr_count($logicalname, ':')) {
+            throw new \RuntimeException(sprintf('The given template name ("%s") is not correct (it must contain two colons).', $logicalname));
+        }
+
         $data = array();
 
         list($data['bundle'], $data['controller'], $data['template']) = explode(':', $logicalname);
