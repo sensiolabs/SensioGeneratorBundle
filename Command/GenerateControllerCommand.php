@@ -31,27 +31,28 @@ class GenerateControllerCommand extends GeneratorCommand
     public function configure()
     {
         $this
+            ->setName('generate:controller')
+            ->setDescription('Generates a controller')
             ->setDefinition(array(
                 new InputOption('controller', '', InputOption::VALUE_REQUIRED, 'The name of the controller to create'),
                 new InputOption('route-format', '', InputOption::VALUE_REQUIRED, 'The format that is used for the routing (yml, xml, php, annotation)', 'annotation'),
                 new InputOption('template-format', '', InputOption::VALUE_REQUIRED, 'The format that is used for templating (twig, php)', 'twig'),
                 new InputOption('actions', '', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The actions in the controller'),
             ))
-            ->setDescription('Generates a controller')
             ->setHelp(<<<EOT
-The <info>generate:controller</info> command helps you generates new controllers
+The <info>%command.name%</info> command helps you generates new controllers
 inside bundles.
 
 By default, the command interacts with the developer to tweak the generation.
 Any passed option will be used as a default value for the interaction
 (<comment>--controller</comment> is the only one needed if you follow the conventions):
 
-<info>php app/console generate:controller --controller=AcmeBlogBundle:Post</info>
+<info>php %command.full_name% --controller=AcmeBlogBundle:Post</info>
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment>
 but don't forget to pass all needed options:
 
-<info>php app/console generate:controller --controller=AcmeBlogBundle:Post --no-interaction</info>
+<info>php %command.full_name% --controller=AcmeBlogBundle:Post --no-interaction</info>
 
 Every generated file is based on a template. There are default templates but they can
 be overriden by placing custom templates in one of the following locations, by order of priority:
@@ -63,7 +64,6 @@ You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resour
 in order to know the file structure of the skeleton
 EOT
             )
-            ->setName('generate:controller')
         ;
     }
 

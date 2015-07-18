@@ -36,6 +36,8 @@ class GenerateBundleCommand extends GeneratorCommand
     protected function configure()
     {
         $this
+            ->setName('generate:bundle')
+            ->setDescription('Generates a bundle')
             ->setDefinition(array(
                 new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
                 new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle', 'src/'),
@@ -43,28 +45,26 @@ class GenerateBundleCommand extends GeneratorCommand
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
                 new InputOption('shared', '', InputOption::VALUE_NONE, 'Are you planning on sharing this bundle across multiple applications?'),
             ))
-            ->setDescription('Generates a bundle')
             ->setHelp(<<<EOT
-The <info>generate:bundle</info> command helps you generates new bundles.
+The <info>%command.name%</info> command helps you generates new bundles.
 
 By default, the command interacts with the developer to tweak the generation.
 Any passed option will be used as a default value for the interaction
 (<comment>--namespace</comment> is the only one needed if you follow the
 conventions):
 
-<info>php app/console generate:bundle --namespace=Acme/BlogBundle</info>
+<info>php %command.full_name% --namespace=Acme/BlogBundle</info>
 
 Note that you can use <comment>/</comment> instead of <comment>\\ </comment>for the namespace delimiter to avoid any
 problems.
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
 
-<info>php app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
+<info>php %command.full_name% --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
 
 Note that the bundle namespace must end with "Bundle".
 EOT
             )
-            ->setName('generate:bundle')
         ;
     }
 
