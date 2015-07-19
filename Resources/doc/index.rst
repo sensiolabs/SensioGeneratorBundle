@@ -1,10 +1,8 @@
 SensioGeneratorBundle
 =====================
 
-The ``SensioGeneratorBundle`` extends the default Symfony2 command line
-interface by providing new interactive and intuitive commands for generating
-code skeletons like bundles, form classes or CRUD controllers based on a
-Doctrine 2 schema.
+The SensioGeneratorBundle provides commands for generating code skeletons
+like bundles, form classes or CRUD controllers based on a Doctrine 2 schema.
 
 Installation
 ------------
@@ -17,24 +15,29 @@ Before using this bundle in your project, add it to your ``composer.json`` file:
 
 Then, like for any other bundle, include it in your Kernel class::
 
+    // app/AppKernel.php
+
+    // ...
     public function registerBundles()
     {
         $bundles = array(
-            ...
+            // ...
 
             new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
         );
 
-        ...
+        // ...
     }
 
 List of Available Commands
 --------------------------
 
-The ``SensioGeneratorBundle`` comes with four new commands that can be run in
-interactive mode or not. The interactive mode asks you some questions to
-configure the command parameters to generate the definitive code. The list of
-new commands are listed below:
+The SensioGeneratorBundle comes with five new commands that can be run in
+interactive or non-interactive mode. The interactive mode asks you some
+questions to configure the command parameters that actually generate the
+code.
+
+The list of new commands is:
 
 .. toctree::
    :maxdepth: 1
@@ -66,14 +69,14 @@ generator, create a ``crud/views/edit.html.twig.twig`` file under
 ``APP_PATH/Resources/SensioGeneratorBundle/skeleton``.
 
 When overriding a template, have a look at the default templates to learn more
-about the available templates, their path, and the variables they have access.
+about the available templates, their paths, and the variables they have access.
 
 Instead of copy/pasting the original template to create your own, you can also
 extend it and only override the relevant parts:
 
 .. code-block:: jinja
 
-  {# in app/Resources/SensioGeneratorBundle/skeleton/crud/actions/create.php.twig #}
+  {# app/Resources/SensioGeneratorBundle/skeleton/crud/actions/create.php.twig #}
 
   {# notice the "skeleton" prefix here -- more about it below #}
   {% extends "skeleton/crud/actions/create.php.twig" %}
@@ -103,5 +106,6 @@ skeleton template by prefixing its path with ``skeleton/`` like we did above:
 
   {% include 'skeleton/crud/views/others/record_actions.html.twig.twig' %}
 
-You can learn more about this neat "trick" in the official `Twig documentation
-<http://twig.sensiolabs.org/doc/recipes.html#overriding-a-template-that-also-extends-itself>`_.
+You can learn more about this neat "trick" in the official `Twig documentation`_.
+
+.. _`Twig documentation`: http://twig.sensiolabs.org/doc/recipes.html#overriding-a-template-that-also-extends-itself
