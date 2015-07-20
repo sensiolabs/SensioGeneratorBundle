@@ -82,6 +82,6 @@ class RoutingManipulator extends Manipulator
         $snakeCasedBundleName = Container::underscore(substr($bundle, 0, -6));
         $routePrefix = DoctrineCrudGenerator::getRouteNamePrefix($prefix);
 
-        return sprintf("%s%s%s", $snakeCasedBundleName, '' !== $routePrefix ? '_' : '' , $routePrefix);
+        return sprintf('%s%s%s', $snakeCasedBundleName, '' !== $routePrefix ? '_' : '' , $routePrefix);
     }
 }
