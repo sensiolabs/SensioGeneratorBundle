@@ -180,6 +180,33 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
         }
     }
 
+    /**
+     * @dataProvider getRoutePrefixes
+     */
+    public function testGetRouteNamePrefix($original, $expected)
+    {
+        $prefix = DoctrineCrudGenerator::getRouteNamePrefix($original);
+
+        $this->assertEquals($expected, $prefix);
+    }
+
+    public function getRoutePrefixes()
+    {
+        return array(
+            array('', ''),
+            array('/', ''),
+            array('//', ''),
+            array('/{_locale}', ''),
+            array('/{_locale}/foo', 'foo'),
+            array('/{_locale}/foo/', 'foo'),
+            array('/{_locale}/foo/{_format}', 'foo'),
+            array('/{_locale}/foo/{_format}/', 'foo'),
+            array('/{_locale}/foo/{_format}/bar', 'foo_bar'),
+            array('/{_locale}/foo/{_format}/bar/', 'foo_bar'),
+            array('/{_locale}/foo/{_format}/bar//', 'foo_bar'),
+        );
+    }
+
     protected function getGenerator()
     {
         $generator = new DoctrineCrudGenerator($this->filesystem);

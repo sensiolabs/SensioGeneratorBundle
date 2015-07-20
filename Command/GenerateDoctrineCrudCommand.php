@@ -40,9 +40,6 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
     protected function configure()
     {
         $this
-            ->setName('doctrine:generate:crud')
-            ->setAliases(array('generate:doctrine:crud'))
-            ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setDefinition(array(
                 new InputArgument('entity', InputArgument::OPTIONAL, 'The entity class name to initialize (shortcut notation)'),
                 new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
@@ -51,12 +48,13 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
             ))
+            ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
-The <info>%command.name%</info> command generates a CRUD based on a Doctrine entity.
+The <info>doctrine:generate:crud</info> command generates a CRUD based on a Doctrine entity.
 
 The default command only generates the list and show actions.
 
-<info>php %command.full_name% --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
+<info>php app/console doctrine:generate:crud --entity=AcmeBlogBundle:Post --route-prefix=post_admin</info>
 
 Using the --with-write option allows to generate the new, edit and delete actions.
 
@@ -76,6 +74,8 @@ You can check https://github.com/sensio/SensioGeneratorBundle/tree/master/Resour
 in order to know the file structure of the skeleton
 EOT
             )
+            ->setName('doctrine:generate:crud')
+            ->setAliases(array('generate:doctrine:crud'))
         ;
     }
 
@@ -105,14 +105,9 @@ EOT
 
         $questionHelper->writeSection($output, 'CRUD generation');
 
-        try {
-            $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
-            $metadata = $this->getEntityMetadata($entityClass);
-        } catch (\Exception $e) {
-            throw new \RuntimeException(sprintf('Entity "%s" does not exist in the "%s" bundle. Create it with the "doctrine:generate:entity" command and then execute this command again.', $entity, $bundle));
-        }
-
-        $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
+        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
+        $metadata    = $this->getEntityMetadata($entityClass);
+        $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator($bundle);
         $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
@@ -150,8 +145,11 @@ EOT
             '',
             'This command helps you generate CRUD controllers and templates.',
             '',
-            'First, give the name of the existing entity for which you want to generate a CRUD',
-            '(use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>)',
+            'First, you need to give the entity for which you want to generate a CRUD.',
+            'You can give an entity that does not exist yet and the wizard will help',
+            'you defining it.',
+            '',
+            'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
             '',
         ));
 
@@ -211,8 +209,8 @@ EOT
             '',
             $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
             '',
-            sprintf('You are going to generate a CRUD controller for "<info>%s:%s</info>"', $bundle, $entity),
-            sprintf('using the "<info>%s</info>" format.', $format),
+            sprintf("You are going to generate a CRUD controller for \"<info>%s:%s</info>\"", $bundle, $entity),
+            sprintf("using the \"<info>%s</info>\" format.", $format),
             '',
         ));
     }
@@ -256,7 +254,7 @@ EOT
                 '- Import the bundle\'s routing resource in the bundle routing file',
                 sprintf('  (%s).', $bundle->getPath().'/Resources/config/routing.yml'),
                 '',
-                sprintf('    <comment>%s:</comment>', $bundle->getName().('' !== $prefix ? '_'.str_replace('/', '_', $prefix) : '')),
+                sprintf('    <comment>%s:</comment>', $routing->getImportedResourceYamlKey($bundle->getName(), $prefix)),
                 $help,
                 '',
             );

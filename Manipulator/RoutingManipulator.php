@@ -12,6 +12,7 @@
 namespace Sensio\Bundle\GeneratorBundle\Manipulator;
 
 use Symfony\Component\DependencyInjection\Container;
+use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
 
 /**
  * Changes the PHP code of a YAML routing file.
@@ -47,7 +48,8 @@ class RoutingManipulator extends Manipulator
     public function addResource($bundle, $format, $prefix = '/', $path = 'routing')
     {
         $current = '';
-        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).str_replace(array('/{_locale}', '/'), array('', '_'), stripos(strrev($prefix), '/') === 0 ? rtrim($prefix, '/') : $prefix));
+        $code = sprintf("%s:\n", $this->getImportedResourceYamlKey($bundle, $prefix));
+
         if (file_exists($this->file)) {
             $current = file_get_contents($this->file);
 
@@ -73,5 +75,13 @@ class RoutingManipulator extends Manipulator
         }
 
         return true;
+    }
+
+    public function getImportedResourceYamlKey($bundle, $prefix)
+    {
+        $snakeCasedBundleName = Container::underscore(substr($bundle, 0, -6));
+        $routePrefix = DoctrineCrudGenerator::getRouteNamePrefix($prefix);
+
+        return sprintf("%s%s%s", $snakeCasedBundleName, '' !== $routePrefix ? '_' : '' , $routePrefix);
     }
 }
