@@ -13,54 +13,60 @@ structure:
 
 .. code-block:: bash
 
-    php app/console generate:bundle
+    $ php app/console generate:bundle
 
 To deactivate the interactive mode, use the `--no-interaction` option but don't
 forget to pass all needed options:
 
 .. code-block:: bash
 
-    php app/console generate:bundle --namespace=Acme/Bundle/BlogBundle --no-interaction
+    $ php app/console generate:bundle --namespace=Acme/Bundle/BlogBundle --no-interaction
 
 Available Options
 -----------------
 
-* ``--shared``: set this option if you are creating a bundle that will be shared
-  across several of your applications or if you are developing a third-party
-  bundle. Don't set this option if you are developing a bundle that will be
-  used solely in your application (e.g. ``AppBundle``).
+``--shared``
+    Provide this option if you are creating a bundle that will be shared across
+    several of your applications or if you are developing a third-party bundle.
+    Don't set this option if you are developing a bundle that will be used
+    solely in your application (e.g. ``AppBundle``).
 
-* ``--namespace``: The namespace of the bundle to create. The namespace should
-  begin with a "vendor" name like your company name, your project name, or
-  your client name, followed by one or more optional category sub-namespaces,
-  and it should end with the bundle name itself (which must have Bundle as a
-  suffix):
-
-  .. code-block:: bash
-
-        php app/console generate:bundle --namespace=Acme/Bundle/BlogBundle
-
-* ``--bundle-name``: The optional bundle name. It must be a string ending with
-  the ``Bundle`` suffix:
+``--namespace``
+    The namespace of the bundle to create. The namespace should begin with
+    a "vendor" name like your company name, your project name, or your client
+    name, followed by one or more optional category sub-namespaces, and it
+    should end with the bundle name itself (which must have Bundle as a suffix):
 
     .. code-block:: bash
 
-        php app/console generate:bundle --bundle-name=AcmeBlogBundle
+        $ php app/console generate:bundle --namespace=Acme/Bundle/BlogBundle
 
-* ``--dir``: The directory in which to store the bundle. By convention, the
-  command detects and uses the applications's ``src/`` folder:
-
-    .. code-block:: bash
-
-        php app/console generate:bundle --dir=/var/www/myproject/src
-
-* ``--format``: (**annotation**) [values: yml, xml, php or annotation]
-  Determine the format to use for the generated configuration files like
-  routing. By default, the command uses the ``annotation`` format. Choosing
-  the ``annotation`` format expects the ``SensioFrameworkExtraBundle`` is
-  already installed:
+``--bundle-name``
+    The optional bundle name. It must be a string ending with the ``Bundle``
+    suffix:
 
     .. code-block:: bash
 
-        php app/console generate:bundle --format=annotation
+        $ php app/console generate:bundle --bundle-name=AcmeBlogBundle
 
+``--dir``
+    The directory in which to store the bundle. By convention, the command
+    detects and uses the application's ``src/`` folder:
+
+    .. code-block:: bash
+
+        $ php app/console generate:bundle --dir=/var/www/myproject/src
+
+``--format``
+    **allowed values**: ``annotation|php|yml|xml`` **default**: ``annotation``
+
+    Determine the format to use for the generated configuration files (like
+    routing). By default, the command uses the ``annotation`` format (choosing
+    the ``annotation`` format expects the `SensioFrameworkExtraBundle`_ to
+    be installed):
+
+    .. code-block:: bash
+
+        $ php app/console generate:bundle --format=annotation
+
+.. _`SensioFrameworkExtraBundle`: http://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/index.html
