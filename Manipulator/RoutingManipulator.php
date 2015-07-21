@@ -13,6 +13,7 @@ namespace Sensio\Bundle\GeneratorBundle\Manipulator;
 
 use Symfony\Component\DependencyInjection\Container;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
+use Sensio\Bundle\GeneratorBundle\Generator\Generator;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -59,7 +60,7 @@ class RoutingManipulator extends Manipulator
                 throw new \RuntimeException(sprintf('Bundle "%s" is already imported.', $bundle));
             }
         } elseif (!is_dir($dir = dirname($this->file))) {
-            mkdir($dir, 0777, true);
+            Generator::mkdir($dir);
         }
 
         if ('annotation' == $format) {
@@ -71,7 +72,7 @@ class RoutingManipulator extends Manipulator
         $code .= "\n";
         $code .= $current;
 
-        if (false === file_put_contents($this->file, $code)) {
+        if (false === Generator::dump($this->file, $code)) {
             return false;
         }
 
@@ -137,6 +138,6 @@ class RoutingManipulator extends Manipulator
         $snakeCasedBundleName = Container::underscore(substr($bundle, 0, -6));
         $routePrefix = DoctrineCrudGenerator::getRouteNamePrefix($prefix);
 
-        return sprintf('%s%s%s', $snakeCasedBundleName, '' !== $routePrefix ? '_' : '' , $routePrefix);
+        return sprintf('%s%s%s', $snakeCasedBundleName, '' !== $routePrefix ? '_' : '', $routePrefix);
     }
 }
