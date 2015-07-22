@@ -88,6 +88,11 @@ class DoctrineEntityGenerator extends Generator
             $entityGenerator->setGenerateAnnotations(false);
             $entityCode = $entityGenerator->generateEntityClass($class);
         }
+        $entityCode = str_replace(
+            array("@var integer\n", "@var boolean\n", "@param integer\n", "@param boolean\n", "@return integer\n", "@return boolean\n"),
+            array("@var int\n", "@var bool\n", "@param int\n", "@param bool\n", "@return int\n", "@return bool\n"),
+            $entityCode
+        );
 
         $this->filesystem->mkdir(dirname($entityPath));
         file_put_contents($entityPath, $entityCode);
