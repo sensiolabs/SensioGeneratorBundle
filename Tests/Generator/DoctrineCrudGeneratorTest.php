@@ -196,6 +196,10 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
             array('', ''),
             array('/', ''),
             array('//', ''),
+            array('/{foo}', ''),
+            array('/{_foo}', ''),
+            array('/{/foo}', ''),
+            array('/{/foo/}', ''),
             array('/{_locale}', ''),
             array('/{_locale}/foo', 'foo'),
             array('/{_locale}/foo/', 'foo'),
@@ -204,6 +208,9 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
             array('/{_locale}/foo/{_format}/bar', 'foo_bar'),
             array('/{_locale}/foo/{_format}/bar/', 'foo_bar'),
             array('/{_locale}/foo/{_format}/bar//', 'foo_bar'),
+            array('/{foo}/foo/{bar}/bar', 'foo_bar'),
+            array('/{foo}/foo/{bar}/bar/', 'foo_bar'),
+            array('/{foo}/foo/{bar}/bar//', 'foo_bar'),
         );
     }
 

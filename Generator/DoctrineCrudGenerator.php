@@ -296,9 +296,9 @@ class DoctrineCrudGenerator extends Generator
 
     public static function getRouteNamePrefix($prefix)
     {
-        $prefix = str_replace(array('{_locale}', '{_format}'), array('', ''), $prefix);
+        $prefix = preg_replace('/{(.*?)}/', '', $prefix);   // {foo}_bar -> _bar
         $prefix = str_replace('/', '_', $prefix);
-        $prefix = preg_replace('/(_)\\1+/', '$1', $prefix);
+        $prefix = preg_replace('/(_)\\1+/', '$1', $prefix); // foo__bar -> foo_bar
         $prefix = trim($prefix, '_');
 
         return $prefix;
