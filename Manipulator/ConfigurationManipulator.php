@@ -92,9 +92,10 @@ EOF
     }
 
     /**
-     * Finds the last imported resource path in the YAML file
+     * Finds the last imported resource path in the YAML file.
      *
      * @param $yamlContents
+     *
      * @return bool|string
      */
     private function findLastImportedPath($yamlContents)

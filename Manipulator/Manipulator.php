@@ -24,8 +24,8 @@ class Manipulator
     /**
      * Sets the code to manipulate.
      *
-     * @param array   $tokens An array of PHP tokens
-     * @param int     $line   The start line of the code
+     * @param array $tokens An array of PHP tokens
+     * @param int   $line   The start line of the code
      */
     protected function setCode(array $tokens, $line = 0)
     {

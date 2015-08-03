@@ -12,7 +12,6 @@
 namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand;
 
 class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
 {

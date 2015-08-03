@@ -41,7 +41,7 @@ abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
     protected function getInputStream($input)
     {
         $stream = fopen('php://memory', 'r+', false);
-        fputs($stream, $input.str_repeat("\n", 10));
+        fwrite($stream, $input.str_repeat("\n", 10));
         rewind($stream);
 
         return $stream;

@@ -13,7 +13,6 @@ namespace Sensio\Bundle\GeneratorBundle\Tests\Command;
 
 use Sensio\Bundle\GeneratorBundle\Model\Bundle;
 use Symfony\Component\Console\Tester\CommandTester;
-use Sensio\Bundle\GeneratorBundle\Command\GenerateBundleCommand;
 
 class GenerateBundleCommandTest extends GenerateCommandTest
 {

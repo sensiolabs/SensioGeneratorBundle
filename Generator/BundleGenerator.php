@@ -47,8 +47,8 @@ class BundleGenerator extends Generator
 
         $parameters = array(
             'namespace' => $bundle->getNamespace(),
-            'bundle'    => $bundle->getName(),
-            'format'    => $bundle->getConfigurationFormat(),
+            'bundle' => $bundle->getName(),
+            'format' => $bundle->getConfigurationFormat(),
             'bundle_basename' => $bundle->getBasename(),
             'extension_alias' => $bundle->getExtensionAlias(),
         );

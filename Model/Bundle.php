@@ -5,7 +5,7 @@ namespace Sensio\Bundle\GeneratorBundle\Model;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Represents a bundle being built
+ * Represents a bundle being built.
  */
 class Bundle
 {
@@ -49,7 +49,7 @@ class Bundle
     }
 
     /**
-     * Returns the directory where the bundle will be generated
+     * Returns the directory where the bundle will be generated.
      *
      * @return string
      */
@@ -59,7 +59,7 @@ class Bundle
     }
 
     /**
-     * Returns the name of the bundle without the Bundle suffix
+     * Returns the name of the bundle without the Bundle suffix.
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class Bundle
     }
 
     /**
-     * Returns the dependency injection extension alias for this bundle
+     * Returns the dependency injection extension alias for this bundle.
      *
      * @return string
      */
@@ -119,7 +119,7 @@ class Bundle
     }
 
     /**
-     * Returns the class name of the Bundle class
+     * Returns the class name of the Bundle class.
      *
      * @return string
      */
