@@ -323,9 +323,9 @@ EOT
                     throw new \InvalidArgumentException(sprintf('Name "%s" is a reserved word.', $name));
                 }
 
-                // check for valid php variable name
-                if (!is_null($name) && !$generator->isFieldNameValidPhpVariable($name)) {
-                    throw new \InvalidArgumentException(sprintf('Name "%s" doesn\'t result in a valid php variable.', $name));
+                // check for valid PHP variable name
+                if (!is_null($name) && !$generator->isValidPhpVariableName($name)) {
+                    throw new \InvalidArgumentException(sprintf('"%s" is not a valid PHP variable name.', $name));
                 }
 
                 return $name;
