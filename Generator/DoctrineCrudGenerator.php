@@ -59,7 +59,7 @@ class DoctrineCrudGenerator extends Generator
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
     {
         $this->routePrefix = $routePrefix;
-        $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
+        $this->routeNamePrefix = self::getRouteNamePrefix($routePrefix);
         $this->actions = $needWriteActions ? array('index', 'show', 'new', 'edit', 'delete') : array('index', 'show');
 
         if (count($metadata->identifier) != 1) {
@@ -292,5 +292,15 @@ class DoctrineCrudGenerator extends Generator
         return array_filter($this->actions, function ($item) {
             return in_array($item, array('show', 'edit'));
         });
+    }
+
+    public static function getRouteNamePrefix($prefix)
+    {
+        $prefix = preg_replace('/{(.*?)}/', '', $prefix); // {foo}_bar -> _bar
+        $prefix = str_replace('/', '_', $prefix);
+        $prefix = preg_replace('/_+/', '_', $prefix);     // foo__bar -> foo_bar
+        $prefix = trim($prefix, '_');
+
+        return $prefix;
     }
 }

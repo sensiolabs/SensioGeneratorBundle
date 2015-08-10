@@ -256,7 +256,7 @@ EOT
                 '- Import the bundle\'s routing resource in the bundle routing file',
                 sprintf('  (%s).', $bundle->getPath().'/Resources/config/routing.yml'),
                 '',
-                sprintf('    <comment>%s:</comment>', $bundle->getName().('' !== $prefix ? '_'.str_replace('/', '_', $prefix) : '')),
+                sprintf('    <comment>%s:</comment>', $routing->getImportedResourceYamlKey($bundle->getName(), $prefix)),
                 $help,
                 '',
             );
