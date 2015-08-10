@@ -48,8 +48,8 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
                 new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
                 new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
-                new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'The format used for configuration files (php, xml, yml, or annotation)', 'annotation'),
+                new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Overwrite any existing controller or form class when generating the CRUD contents'),
             ))
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command generates a CRUD based on a Doctrine entity.
@@ -216,9 +216,9 @@ EOT
     /**
      * Tries to generate forms if they don't exist yet and if we need write operations on entities.
      */
-    protected function generateForm($bundle, $entity, $metadata, $forceOverwrite)
+    protected function generateForm($bundle, $entity, $metadata, $forceOverwrite = false)
     {
-        $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0],$forceOverwrite);
+        $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0], $forceOverwrite);
     }
 
     protected function updateRouting(QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output, BundleInterface $bundle, $format, $entity, $prefix)
