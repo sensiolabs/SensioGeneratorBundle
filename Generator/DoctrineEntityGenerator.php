@@ -131,4 +131,18 @@ class DoctrineEntityGenerator extends Generator
     {
         return new EntityRepositoryGenerator();
     }
+
+    /**
+     * checks if the given fieldname is a valid php variable.
+     *
+     * @see http://php.net/manual/en/language.variables.basics.php
+     *
+     * @param $fieldname string
+     *
+     * @return bool
+     */
+    public function isFieldNameValidPhpVariable($name)
+    {
+        return (bool) preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $name, $matches);
+    }
 }
