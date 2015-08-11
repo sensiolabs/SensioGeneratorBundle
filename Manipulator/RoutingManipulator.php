@@ -91,13 +91,13 @@ class RoutingManipulator extends Manipulator
             return false;
         }
 
-        $config = Yaml::parse($this->file);
+        $config = Yaml::parse(file_get_contents($this->file));
 
         $search = sprintf('@%s/Controller/', $bundle);
 
         foreach ($config as $resource) {
             if (array_key_exists('resource', $resource)) {
-                return $resource['resource'] == $search;
+                return $resource['resource'] === $search;
             }
         }
 
@@ -130,10 +130,14 @@ class RoutingManipulator extends Manipulator
         $code .= "\n";
         $code .= $current;
 
-        if (false === file_put_contents($this->file, $code)) {
-            return false;
-        }
+        return false !== file_put_contents($this->file, $code);
+    }
 
-        return true;
+    public function getImportedResourceYamlKey($bundle, $prefix)
+    {
+        $snakeCasedBundleName = Container::underscore(substr($bundle, 0, -6));
+        $routePrefix = DoctrineCrudGenerator::getRouteNamePrefix($prefix);
+
+        return sprintf('%s%s%s', $snakeCasedBundleName, '' !== $routePrefix ? '_' : '' , $routePrefix);
     }
 }

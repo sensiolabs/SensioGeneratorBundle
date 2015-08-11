@@ -130,7 +130,7 @@ EOT
 
         // routing
         if ('annotation' != $format) {
-            $runner($this->updateRouting($dialog, $input, $output, $bundle, $format, $entity, $prefix));
+            $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format, $entity, $prefix));
         } else {
             $runner($this->updateAnnotationRouting($bundle, $entity, $prefix));
         }
@@ -269,7 +269,6 @@ EOT
         $routing = new RoutingManipulator($rootDir.'/config/routing.yml');
 
         if (!$routing->hasResourceInAnnotation($bundle->getName())) {
-
             $parts = explode('\\', $entity);
             $controller = array_pop($parts);
 

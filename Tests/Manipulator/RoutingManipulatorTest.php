@@ -57,6 +57,7 @@ class RoutingManipulatorTest extends \PHPUnit_Framework_TestCase
             array('AcmeBlogBundle', '/{_locale}/foo/{_format}/bar/', 'acme_blog_foo_bar'),
             array('AcmeBlogBundle', '/{_locale}/foo/{_format}/bar//', 'acme_blog_foo_bar'),
         );
+    }
 
     public function testHasResourceInAnnotation()
     {
