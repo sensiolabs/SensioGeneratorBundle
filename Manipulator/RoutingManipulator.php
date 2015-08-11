@@ -79,7 +79,7 @@ class RoutingManipulator extends Manipulator
     }
 
     /**
-     * Check if the routing file contain a line for the bundle
+     * Check if the routing file contain a line for the bundle.
      *
      * @param string $bundle
      *
@@ -105,7 +105,7 @@ class RoutingManipulator extends Manipulator
     }
 
     /**
-     * Add an annotation controller resource
+     * Add an annotation controller resource.
      *
      * @param string $bundle
      * @param string $controller

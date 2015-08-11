@@ -10,6 +10,7 @@
  */
 
 namespace Sensio\Bundle\GeneratorBundle\Tests\Generator;
+
 namespace Sensio\Bundle\GeneratorBundle\Tests\Manipulator;
 
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
