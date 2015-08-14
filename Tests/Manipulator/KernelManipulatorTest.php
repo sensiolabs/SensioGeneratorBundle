@@ -13,7 +13,6 @@ namespace Sensio\Bundle\GeneratorBundle\Tests\Manipulator;
 
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\PhpExecutableFinder;
-
 use Sensio\Bundle\GeneratorBundle\Tests\Generator\GeneratorTest;
 use Sensio\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 
