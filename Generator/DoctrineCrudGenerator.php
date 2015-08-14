@@ -260,6 +260,7 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix' => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'actions' => $this->actions,
+            'fields' => $this->metadata->fieldMappings,
         ));
     }
 
