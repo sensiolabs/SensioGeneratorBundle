@@ -79,7 +79,6 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
 acme_blog:
     resource: "@AcmeBlogBundle/Resources/config/routing.xml"
     prefix:   /
-
 DATA;
 
         file_put_contents($rootDir.'/config/routing.yml', $routing);
@@ -144,7 +143,6 @@ DATA;
 acme_blog:
     resource: "@AcmeBlogBundle/Controller/OtherController.php"
     type:     annotation
-
 DATA;
 
         file_put_contents($rootDir.'/config/routing.yml', $routing);
