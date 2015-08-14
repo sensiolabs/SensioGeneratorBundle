@@ -95,12 +95,12 @@ class KernelManipulator extends Manipulator
                 $leadingContent = rtrim(preg_replace('#\)$#', '', rtrim($leadingContent)));
                 if (substr($leadingContent, -1) !== '(') {
                     // end of leading content is not open parentheses, then assume that array contains at least one element
-                    $leadingContent = rtrim($leadingContent, ',') . ',';
+                    $leadingContent = rtrim($leadingContent, ',').',';
                 }
 
                 $lines = array_merge(
                     array($leadingContent, "\n"),
-                    array(str_repeat(' ', 12), sprintf("new %s(),", $bundle), "\n"),
+                    array(str_repeat(' ', 12), sprintf('new %s(),', $bundle), "\n"),
                     array(str_repeat(' ', 8), ');', "\n"),
                     array_slice($src, $this->line)
                 );

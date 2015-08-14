@@ -12,7 +12,6 @@
 namespace KernelManipulatorTest\Stubs;
 
 use Symfony\Component\HttpKernel\Tests\Fixtures\KernelForTest;
-
 use Sensio\Bundle\GeneratorBundle\Tests\Manipulator\Stubs\StubBundle;
 
 class ContainsCommaKernelStub extends KernelForTest

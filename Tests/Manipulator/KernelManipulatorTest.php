@@ -19,7 +19,7 @@ use Sensio\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 class KernelManipulatorTest extends GeneratorTest
 {
     const STUB_BUNDLE_CLASS_NAME = 'Sensio\\Bundle\\GeneratorBundle\\Tests\\Manipulator\\Stubs\\StubBundle';
-    const STUB_NAMESPACE         = 'KernelManipulatorTest\\Stubs';
+    const STUB_NAMESPACE = 'KernelManipulatorTest\\Stubs';
 
     /**
      * @dataProvider kernelStubFilenamesProvider
@@ -31,19 +31,19 @@ class KernelManipulatorTest extends GeneratorTest
         $params = $this->prepareTestKernel($kernelOriginFilePath);
 
         list($kernelClassName, $fullpath) = $params;
-        $kernelClassName = self::STUB_NAMESPACE . '\\' . $kernelClassName;
+        $kernelClassName = self::STUB_NAMESPACE.'\\'.$kernelClassName;
         $this->registerClassLoader($kernelClassName, $fullpath);
 
-        $kernel      = new  $kernelClassName('test', true);
+        $kernel = new  $kernelClassName('test', true);
         $manipulator = new KernelManipulator($kernel);
         $manipulator->addBundle(self::STUB_BUNDLE_CLASS_NAME);
 
-        $phpFinder     = new PhpExecutableFinder();
+        $phpFinder = new PhpExecutableFinder();
         $phpExecutable = $phpFinder->find();
 
         $this->assertNotSame(false, $phpExecutable, 'Php executable binary found');
 
-        $pb      = new ProcessBuilder();
+        $pb = new ProcessBuilder();
         $process = $pb->add($phpExecutable)->add('-l')->add($fullpath)->getProcess();
         $process->run();
 
@@ -57,16 +57,16 @@ class KernelManipulatorTest extends GeneratorTest
     public function kernelStubFilenamesProvider()
     {
         return array(
-            'With empty bundles array'               => array(__DIR__ . '/Stubs/EmptyBundlesKernelStub.php'),
-            'With empty multiline bundles array'     => array(__DIR__ . '/Stubs/EmptyBundlesMultilineKernelStub.php'),
-            'With bundles array contains comma'      => array(__DIR__ . '/Stubs/ContainsCommaKernelStub.php'),
-            'With bundles added w/o trailing comma'  => array(__DIR__ . '/Stubs/ContainsBundlesKernelStub.php'),
-            'With some extra code and bad formatted' => array(__DIR__ . '/Stubs/ContainsExtraCodeKernelStub.php')
+            'With empty bundles array' => array(__DIR__.'/Stubs/EmptyBundlesKernelStub.php'),
+            'With empty multiline bundles array' => array(__DIR__.'/Stubs/EmptyBundlesMultilineKernelStub.php'),
+            'With bundles array contains comma' => array(__DIR__.'/Stubs/ContainsCommaKernelStub.php'),
+            'With bundles added w/o trailing comma' => array(__DIR__.'/Stubs/ContainsBundlesKernelStub.php'),
+            'With some extra code and bad formatted' => array(__DIR__.'/Stubs/ContainsExtraCodeKernelStub.php'),
         );
     }
 
     /**
-     * Copy stub file to tmp
+     * Copy stub file to tmp.
      *
      * @param string $kernelOriginFilePath
      *
@@ -74,14 +74,14 @@ class KernelManipulatorTest extends GeneratorTest
      */
     protected function prepareTestKernel($kernelOriginFilePath)
     {
-        $pathInfo  = pathinfo($kernelOriginFilePath);
-        $fileName  = $pathInfo['basename'];
+        $pathInfo = pathinfo($kernelOriginFilePath);
+        $fileName = $pathInfo['basename'];
         $className = $pathInfo['filename'];
 
-        $targetDir = $this->tmpDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, self::STUB_NAMESPACE);
+        $targetDir = $this->tmpDir.DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, self::STUB_NAMESPACE);
         $this->filesystem->mkdir($targetDir);
 
-        $targetPath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
+        $targetPath = $targetDir.DIRECTORY_SEPARATOR.$fileName;
         $this->filesystem->copy($kernelOriginFilePath, $targetPath, true);
 
         return array($className, $targetPath);

@@ -12,7 +12,6 @@
 namespace KernelManipulatorTest\Stubs;
 
 use Symfony\Component\HttpKernel\Tests\Fixtures\KernelForTest;
-
 use Sensio\Bundle\GeneratorBundle\Tests\Manipulator\Stubs\StubBundle;
 
 class ContainsExtraCodeKernelStub extends KernelForTest
@@ -25,8 +24,7 @@ class ContainsExtraCodeKernelStub extends KernelForTest
         $bundles = array(
             new StubBundle(),
 
-            new StubBundle()
-
+            new StubBundle(),
 
         );
 
