@@ -166,6 +166,13 @@ EOT
         $input->setOption('entity', $entity);
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
 
+        try {
+            $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle).'\\'.$entity;
+            $metadata = $this->getEntityMetadata($entityClass);
+        } catch (\Exception $e) {
+            throw new \RuntimeException(sprintf('Entity "%s" does not exist in the "%s" bundle. You may have mistyped the bundle name or maybe the entity doesn\'t exist yet (create it first with the "doctrine:generate:entity" command).', $entity, $bundle));
+        }
+
         // write?
         $withWrite = $input->getOption('with-write') ?: false;
         $output->writeln(array(
