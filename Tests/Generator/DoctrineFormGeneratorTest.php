@@ -17,6 +17,40 @@ class DoctrineFormGeneratorTest extends GeneratorTest
 {
     public function testGenerate()
     {
+        $this->generateForm(false);
+
+        $this->assertTrue(file_exists($this->tmpDir.'/Form/PostType.php'));
+
+        $content = file_get_contents($this->tmpDir.'/Form/PostType.php');
+        $this->assertContains('->add(\'title\')', $content);
+        $this->assertContains('->add(\'createdAt\', \'date\')', $content);
+        $this->assertContains('->add(\'publishedAt\', \'time\')', $content);
+        $this->assertContains('->add(\'updatedAt\', \'datetime\')', $content);
+        $this->assertContains('class PostType extends AbstractType', $content);
+        $this->assertContains("'data_class' => 'Foo\BarBundle\Entity\Post'", $content);
+        $this->assertContains("'foo_barbundle_post'", $content);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessageRegExp: Unable to generate the PostType form class as it already exists under the .* file
+     */
+    public function testNonOverwrittenForm()
+    {
+        $this->generateForm(false);
+        $this->generateForm(false);
+    }
+
+    public function testOverwrittenForm()
+    {
+        $this->generateForm(false);
+        $this->generateForm(true);
+
+        $this->assertTrue(file_exists($this->tmpDir.'/Form/PostType.php'));
+    }
+
+    private function generateForm($overwrite)
+    {
         $generator = new DoctrineFormGenerator($this->filesystem);
         $generator->setSkeletonDirs(__DIR__.'/../../Resources/skeleton');
 
@@ -34,17 +68,6 @@ class DoctrineFormGeneratorTest extends GeneratorTest
         );
         $metadata->associationMappings = $metadata->fieldMappings;
 
-        $generator->generate($bundle, 'Post', $metadata);
-
-        $this->assertTrue(file_exists($this->tmpDir.'/Form/PostType.php'));
-
-        $content = file_get_contents($this->tmpDir.'/Form/PostType.php');
-        $this->assertContains('->add(\'title\')', $content);
-        $this->assertContains('->add(\'createdAt\', \'date\')', $content);
-        $this->assertContains('->add(\'publishedAt\', \'time\')', $content);
-        $this->assertContains('->add(\'updatedAt\', \'datetime\')', $content);
-        $this->assertContains('class PostType extends AbstractType', $content);
-        $this->assertContains("'data_class' => 'Foo\BarBundle\Entity\Post'", $content);
-        $this->assertContains("'foo_barbundle_post'", $content);
+        $generator->generate($bundle, 'Post', $metadata, $overwrite);
     }
 }
