@@ -28,6 +28,10 @@ class KernelManipulatorTest extends GeneratorTest
      */
     public function testAddToArray($kernelOriginFilePath)
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('Not supported in HHVM since it doesn\'t allow to lint PHP files.');
+        }
+
         $params = $this->prepareTestKernel($kernelOriginFilePath);
 
         list($kernelClassName, $fullpath) = $params;

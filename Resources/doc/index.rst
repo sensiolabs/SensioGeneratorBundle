@@ -55,6 +55,7 @@ Read the following articles to learn how to use the new commands:
    :maxdepth: 1
 
    commands/generate_bundle
+   commands/generate_command
    commands/generate_controller
    commands/generate_doctrine_crud
    commands/generate_doctrine_entity
