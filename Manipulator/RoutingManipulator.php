@@ -13,6 +13,7 @@ namespace Sensio\Bundle\GeneratorBundle\Manipulator;
 
 use Symfony\Component\DependencyInjection\Container;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Changes the PHP code of a YAML routing file.
@@ -75,6 +76,61 @@ class RoutingManipulator extends Manipulator
         }
 
         return true;
+    }
+
+    /**
+     * Check if the routing file contain a line for the bundle.
+     *
+     * @param string $bundle
+     *
+     * @return bool
+     */
+    public function hasResourceInAnnotation($bundle)
+    {
+        if (!file_exists($this->file)) {
+            return false;
+        }
+
+        $config = Yaml::parse(file_get_contents($this->file));
+
+        $search = sprintf('@%s/Controller/', $bundle);
+
+        foreach ($config as $resource) {
+            if (array_key_exists('resource', $resource)) {
+                return $resource['resource'] === $search;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Add an annotation controller resource.
+     *
+     * @param string $bundle
+     * @param string $controller
+     * @param string $prefix
+     *
+     * @return bool
+     */
+    public function addAnnotationController($bundle, $controller)
+    {
+        $current = '';
+
+        if (file_exists($this->file)) {
+            $current = file_get_contents($this->file);
+        } elseif (!is_dir($dir = dirname($this->file))) {
+            mkdir($dir, 0777, true);
+        }
+
+        $code = sprintf("%s:\n", Container::underscore(substr($bundle, 0, -6)).'_'.Container::underscore($controller));
+
+        $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"\n    type:     annotation\n", $bundle, $controller);
+
+        $code .= "\n";
+        $code .= $current;
+
+        return false !== file_put_contents($this->file, $code);
     }
 
     public function getImportedResourceYamlKey($bundle, $prefix)

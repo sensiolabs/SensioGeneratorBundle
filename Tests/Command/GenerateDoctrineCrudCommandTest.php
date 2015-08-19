@@ -71,6 +71,103 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
         );
     }
 
+    public function testCreateCrudWithAnnotationInNonAnnotationBundle()
+    {
+        $rootDir = $this->getContainer()->getParameter('kernel.root_dir');
+
+        $routing = <<<DATA
+acme_blog:
+    resource: "@AcmeBlogBundle/Resources/config/routing.xml"
+    prefix:   /
+DATA;
+
+        file_put_contents($rootDir.'/config/routing.yml', $routing);
+
+        $options = array();
+        $input = "AcmeBlogBundle:Blog/Post\ny\nannotation\n/foobar\n";
+        $expected = array('Blog\\Post', 'annotation', 'foobar', true);
+
+        list($entity, $format, $prefix, $withWrite) = $expected;
+
+        $generator = $this->getGenerator();
+        $generator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
+        ;
+
+        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester->execute($options);
+
+        $expected = 'acme_blog_post:';
+
+        $this->assertContains($expected, file_get_contents($rootDir.'/config/routing.yml'));
+    }
+
+    public function testCreateCrudWithAnnotationInAnnotationBundle()
+    {
+        $rootDir = $this->getContainer()->getParameter('kernel.root_dir');
+
+        $routing = <<<DATA
+acme_blog:
+    resource: "@AcmeBlogBundle/Controller/"
+    type:     annotation
+DATA;
+
+        file_put_contents($rootDir.'/config/routing.yml', $routing);
+
+        $options = array();
+        $input = "AcmeBlogBundle:Blog/Post\ny\nyml\n/foobar\n";
+        $expected = array('Blog\\Post', 'yml', 'foobar', true);
+
+        list($entity, $format, $prefix, $withWrite) = $expected;
+
+        $generator = $this->getGenerator();
+        $generator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
+        ;
+
+        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester->execute($options);
+
+        $this->assertEquals($routing, file_get_contents($rootDir.'/config/routing.yml'));
+    }
+
+    public function testAddACrudWithOneAlreadyDefined()
+    {
+        $rootDir = $this->getContainer()->getParameter('kernel.root_dir');
+
+        $routing = <<<DATA
+acme_blog:
+    resource: "@AcmeBlogBundle/Controller/OtherController.php"
+    type:     annotation
+DATA;
+
+        file_put_contents($rootDir.'/config/routing.yml', $routing);
+
+        $options = array();
+        $input = "AcmeBlogBundle:Blog/Post\ny\nannotation\n/foobar\n";
+        $expected = array('Blog\\Post', 'annotation', 'foobar', true);
+
+        list($entity, $format, $prefix, $withWrite) = $expected;
+
+        $generator = $this->getGenerator();
+        $generator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
+        ;
+
+        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester->execute($options);
+
+        $expected = '@AcmeBlogBundle/Controller/PostController.php';
+
+        $this->assertContains($expected, file_get_contents($rootDir.'/config/routing.yml'));
+    }
+
     protected function getCommand($generator, $input)
     {
         $command = $this
@@ -121,6 +218,19 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
             ->setMethods(array('generate'))
             ->getMock()
         ;
+    }
+
+    protected function getBundle()
+    {
+        $bundle = parent::getBundle();
+
+        $bundle
+            ->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('AcmeBlogBundle'))
+        ;
+
+        return $bundle;
     }
 
     protected function getContainer()
