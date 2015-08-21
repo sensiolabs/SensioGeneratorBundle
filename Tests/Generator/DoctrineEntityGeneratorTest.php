@@ -57,6 +57,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
         );
 
         $annotations = array(
+            '@ORM\Table(name="foo")',
             '@ORM\Column(name="bar"',
             '@ORM\Column(name="baz"',
         );
