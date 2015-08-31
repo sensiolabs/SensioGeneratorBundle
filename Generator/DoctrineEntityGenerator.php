@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
+use Doctrine\Common\Util\Inflector;
 
 /**
  * Generates a Doctrine entity class based on its name, fields and format.
@@ -73,6 +74,7 @@ class DoctrineEntityGenerator extends Generator
         $entityGenerator = $this->getEntityGenerator();
         if ('annotation' === $format) {
             $entityGenerator->setGenerateAnnotations(true);
+            $class->setPrimaryTable(array('name' => Inflector::tableize($entity)));
             $entityCode = $entityGenerator->generateEntityClass($class);
             $mappingPath = $mappingCode = false;
         } else {
