@@ -11,46 +11,50 @@ $collection = new RouteCollection();
 
 {% block body %}
 {% if 'index' in actions %}
-$collection->add('{{ route_name_prefix }}', new Route('/', array(
-    '_controller' => '{{ bundle }}:{{ entity }}:index',
-)));
-{% endif %}
-
-{% if 'show' in actions %}
-$collection->add('{{ route_name_prefix }}_show', new Route('/{id}/show', array(
-    '_controller' => '{{ bundle }}:{{ entity }}:show',
-)));
-{% endif %}
-
-{% if 'new' in actions %}
-$collection->add('{{ route_name_prefix }}_new', new Route('/new', array(
-    '_controller' => '{{ bundle }}:{{ entity }}:new',
-)));
-
-$collection->add('{{ route_name_prefix }}_create', new Route(
-    '/create',
-    array('_controller' => '{{ bundle }}:{{ entity }}:create'),
+$collection->add('{{ route_name_prefix }}_index', new Route(
+    '/',
+    array('_controller' => '{{ bundle }}:{{ entity }}:index'),
     array(),
     array(),
     '',
     array(),
-    'POST'
+    array('GET')
+));
+{% endif %}
+
+{% if 'show' in actions %}
+$collection->add('{{ route_name_prefix }}_show', new Route(
+    '/{id}/show',
+    array('_controller' => '{{ bundle }}:{{ entity }}:show'),
+    array(),
+    array(),
+    '',
+    array(),
+    array('GET')
+));
+{% endif %}
+
+{% if 'new' in actions %}
+$collection->add('{{ route_name_prefix }}_new', new Route(
+    '/new',
+    array('_controller' => '{{ bundle }}:{{ entity }}:new'),
+    array(),
+    array(),
+    '',
+    array(),
+    array('GET', 'POST')
 ));
 {% endif %}
 
 {% if 'edit' in actions %}
-$collection->add('{{ route_name_prefix }}_edit', new Route('/{id}/edit', array(
-    '_controller' => '{{ bundle }}:{{ entity }}:edit',
-)));
-
-$collection->add('{{ route_name_prefix }}_update', new Route(
-    '/{id}/update',
-    array('_controller' => '{{ bundle }}:{{ entity }}:update'),
+$collection->add('{{ route_name_prefix }}_edit', new Route(
+    '/{id}/edit',
+    array('_controller' => '{{ bundle }}:{{ entity }}:edit'),
     array(),
     array(),
     '',
     array(),
-    array('POST', 'PUT')
+    array('GET', 'POST')
 ));
 {% endif %}
 
@@ -62,7 +66,7 @@ $collection->add('{{ route_name_prefix }}_delete', new Route(
     array(),
     '',
     array(),
-    array('POST', 'DELETE')
+    array('DELETE')
 ));
 {% endif %}
 {% endblock body %}

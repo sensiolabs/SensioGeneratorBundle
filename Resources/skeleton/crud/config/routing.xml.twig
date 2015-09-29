@@ -5,36 +5,28 @@
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
 {% block body %}
-    <route id="{{ route_name_prefix }}" path="/">
+    <route id="{{ route_name_prefix }}_index" path="/" methods="GET">
         <default key="_controller">{{ bundle }}:{{ entity }}:index</default>
     </route>
 
-    <route id="{{ route_name_prefix }}_show" path="/{id}/show">
+    <route id="{{ route_name_prefix }}_show" path="/{id}/show" methods="GET">
         <default key="_controller">{{ bundle }}:{{ entity }}:show</default>
     </route>
 
 {% if 'new' in actions %}
-    <route id="{{ route_name_prefix }}_new" path="/new">
+    <route id="{{ route_name_prefix }}_new" path="/new" methods="GET|POST">
         <default key="_controller">{{ bundle }}:{{ entity }}:new</default>
-    </route>
-
-    <route id="{{ route_name_prefix }}_create" path="/create" methods="POST">
-        <default key="_controller">{{ bundle }}:{{ entity }}:create</default>
     </route>
 {% endif %}
 
 {% if 'edit' in actions %}
-    <route id="{{ route_name_prefix }}_edit" path="/{id}/edit">
+    <route id="{{ route_name_prefix }}_edit" path="/{id}/edit" methods="GET|POST">
         <default key="_controller">{{ bundle }}:{{ entity }}:edit</default>
-    </route>
-
-    <route id="{{ route_name_prefix }}_update" path="/{id}/update" methods="POST|PUT">
-        <default key="_controller">{{ bundle }}:{{ entity }}:update</default>
     </route>
 {% endif %}
 
 {% if 'delete' in actions %}
-    <route id="{{ route_name_prefix }}_delete" path="/{id}/delete" methods="POST|DELETE">
+    <route id="{{ route_name_prefix }}_delete" path="/{id}/delete" methods="DELETE">
         <default key="_controller">{{ bundle }}:{{ entity }}:delete</default>
     </route>
 {% endif %}

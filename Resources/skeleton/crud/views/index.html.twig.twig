@@ -1,12 +1,12 @@
 {% block extends %}
-{{ "{% extends '::base.html.twig' %}" }}
+{{ "{% extends 'base.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
 {{ "{% block body %}" }}
     <h1>{{ entity }} list</h1>
 
-    <table class="records_list">
+    <table>
         <thead>
             <tr>
             {%- for field, metadata in fields %}
@@ -56,7 +56,17 @@
             {%- if loop.last %}
 
                 <td>
-                    {%- include "crud/views/others/actions.html.twig.twig" %}
+                    <ul>
+
+                    {%- for action in record_actions %}
+
+                        <li>
+                            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_" ~ action ~ "', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ action }}</a>
+                        </li>
+
+                    {%- endfor %}
+
+                    </ul>
                 </td>
 
             {%- endif %}
@@ -67,14 +77,13 @@
         </tbody>
     </table>
 
-    {% if 'new' in actions %}
+    {% if 'new' in actions -%}
     <ul>
         <li>
-            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">
-                Create a new entry
-            </a>
+            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">Create a new entry</a>
         </li>
     </ul>
-    {% endif %}
+    {%- endif %}
+
 {{ "{% endblock %}" }}
 {% endblock body %}

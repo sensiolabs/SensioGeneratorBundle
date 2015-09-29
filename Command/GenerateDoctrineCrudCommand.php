@@ -129,6 +129,7 @@ EOT
         }
 
         // routing
+        $output->write('Updating the routing: ');
         if ('annotation' != $format) {
             $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format, $entity, $prefix));
         } else {
@@ -289,7 +290,10 @@ EOT
 
     protected function createGenerator($bundle = null)
     {
-        return new DoctrineCrudGenerator($this->getContainer()->get('filesystem'));
+        return new DoctrineCrudGenerator(
+            $this->getContainer()->get('filesystem'),
+            $this->getContainer()->getParameter('kernel.root_dir')
+        );
     }
 
     protected function getFormGenerator($bundle = null)

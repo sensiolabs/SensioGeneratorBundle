@@ -42,7 +42,7 @@ class QuestionHelper extends BaseQuestionHelper
                 $output->writeln('<fg=red>FAILED</>');
                 $errors = array_merge($errors, $err);
             } else {
-                $output->writeln('<comment>OK!</comment>');
+                $output->writeln('<info>OK</info>');
             }
         };
 

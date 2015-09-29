@@ -12,25 +12,17 @@
 {% endblock phpdoc_method_annotations %}
      */
 {% block method_definition %}
-    public function showAction($id)
+    public function showAction({{ entity_class }} ${{ entity_singularized }})
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $em = $this->getDoctrine()->getManager();
-
-        ${{ entity_singularized }} = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
-
-        if (!${{ entity_singularized }}) {
-            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
-        }
 {% if 'delete' in actions %}
-
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm(${{ entity_singularized }});
 {% endif %}
 {% endblock method_body %}
 
 {% block method_return %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
+        return $this->render('{{ entity|lower|replace({'\\': '/'}) }}/show.html.twig', array(
             '{{ entity_singularized }}' => ${{ entity_singularized }},
 {% if 'delete' in actions %}
             'delete_form' => $deleteForm->createView(),
