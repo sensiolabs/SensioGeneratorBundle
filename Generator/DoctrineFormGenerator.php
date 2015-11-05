@@ -88,6 +88,7 @@ class DoctrineFormGenerator extends Generator
             // Add 'setDefaultOptions' method with deprecated type hint, if the new 'configureOptions' isn't available.
             // Required as long as Symfony 2.6 is supported.
             'configure_options_available' => method_exists('Symfony\Component\Form\AbstractType', 'configureOptions'),
+            'get_name_required' => !method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix'),
         ));
     }
 

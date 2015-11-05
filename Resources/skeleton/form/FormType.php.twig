@@ -66,6 +66,8 @@ class {{ form_class }} extends AbstractType
         ));
     }
 
+    {%- if get_name_required %}
+
     /**
      * @return string
      */
@@ -73,5 +75,7 @@ class {{ form_class }} extends AbstractType
     {
         return '{{ form_type_name }}';
     }
+    {% endif %}
+
 {% endblock class_body %}
 }
