@@ -107,7 +107,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @param string $format The configuration format
      */
-    private function setFormat($format)
+    protected function setFormat($format)
     {
         switch ($format) {
             case 'yml':
