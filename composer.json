@@ -11,20 +11,23 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "~2.6|~3.0",
-        "symfony/console": "~2.6|~3.0",
-        "symfony/process": "~2.6|~3.0",
-        "symfony/yaml": "~2.6|~3.0"
+        "symfony/framework-bundle": "~2.7|~3.0",
+        "symfony/console": "~2.7|~3.0",
+        "symfony/process": "~2.7|~3.0",
+        "symfony/yaml": "~2.7|~3.0"
     },
     "require-dev": {
-        "symfony/doctrine-bridge": "~2.2|~3.0",
-        "doctrine/orm": "~2.2,>=2.2.3",
+        "symfony/doctrine-bridge": "~2.7|~3.0",
+        "doctrine/orm": "~2.4",
         "twig/twig": "~1.18"
     },
     "autoload": {
-        "psr-0": { "Sensio\\Bundle\\GeneratorBundle": "" }
+        "psr-4": { "Sensio\\Bundle\\GeneratorBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
-    "target-dir": "Sensio/Bundle/GeneratorBundle",
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "3.0.x-dev"
