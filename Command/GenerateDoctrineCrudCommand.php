@@ -241,6 +241,8 @@ EOT
 
         $output->write('Importing the CRUD routes: ');
         $this->getContainer()->get('filesystem')->mkdir($bundle->getPath().'/Resources/config/');
+
+        // first, import the routing file from the bundle's main routing.yml file
         $routing = new RoutingManipulator($bundle->getPath().'/Resources/config/routing.yml');
         try {
             $ret = $auto ? $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity))) : false;
@@ -258,6 +260,37 @@ EOT
                 '',
                 sprintf('    <comment>%s:</comment>', $routing->getImportedResourceYamlKey($bundle->getName(), $prefix)),
                 $help,
+                '',
+            );
+        }
+
+        // second, import the bundle's routing.yml file from the application's routing.yml file
+        $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml');
+        try {
+            $ret = $auto ? $routing->addResource($bundle->getName(), 'yml') : false;
+        } catch (\RuntimeException $e) {
+            // the bundle is already imported form app's routing.yml file
+            $errorMessage = sprintf(
+                "\n\n[ERROR] The bundle's \"Resources/config/routing.yml\" file cannot be imported\n".
+                "from \"app/config/routing.yml\" because the \"%s\" bundle is\n".
+                "already imported. Make sure you are not using two different\n".
+                "configuration/routing formats in the same bundle because it won't work.\n",
+                $bundle->getName()
+            );
+            $output->write($errorMessage);
+            $ret = true;
+        } catch (\Exception $e) {
+            $ret = false;
+        }
+
+        if (!$ret) {
+            return array(
+                '- Import the bundle\'s routing.yml file in the application routing.yml file',
+                sprintf('# app/config/routing.yml'),
+                sprintf('%s:', $bundle->getName()),
+                sprintf('    <comment>resource: "@%s/Resources/config/routing.yml"</comment>', $bundle->getName()),
+                '',
+                '# ...',
                 '',
             );
         }
