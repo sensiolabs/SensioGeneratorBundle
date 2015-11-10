@@ -59,6 +59,7 @@ class KernelManipulator extends Manipulator
         }
 
         $this->setCode(token_get_all('<?php '.implode('', $lines)), $method->getStartLine());
+
         while ($token = $this->next()) {
             // $bundles
             if (T_VARIABLE !== $token[0] || '$bundles' !== $token[1]) {
@@ -91,17 +92,26 @@ class KernelManipulator extends Manipulator
 
                 // trim semicolon
                 $leadingContent = rtrim(rtrim($leadingContent), ';');
+
+                // We want to match ) & ]
+                $closingSymbolRegex = '#(\)|])$#';
+
+                // get closing symbol used
+                preg_match($closingSymbolRegex, $leadingContent, $matches);
+                $closingSymbol = $matches[0];
+
                 // remove last close parentheses
-                $leadingContent = rtrim(preg_replace('#\)$#', '', rtrim($leadingContent)));
-                if (substr($leadingContent, -1) !== '(') {
-                    // end of leading content is not open parentheses, then assume that array contains at least one element
+                $leadingContent = rtrim(preg_replace($closingSymbolRegex, '', rtrim($leadingContent)));
+
+                if (substr($leadingContent, -1) !== '(' && substr($leadingContent, -1) !== '[' ) {
+                    // end of leading content is not open parentheses or bracket, then assume that array contains at least one element
                     $leadingContent = rtrim($leadingContent, ',').',';
                 }
 
                 $lines = array_merge(
                     array($leadingContent, "\n"),
                     array(str_repeat(' ', 12), sprintf('new %s(),', $bundle), "\n"),
-                    array(str_repeat(' ', 8), ');', "\n"),
+                    array(str_repeat(' ', 8), $closingSymbol.';', "\n"),
                     array_slice($src, $this->line)
                 );
 
