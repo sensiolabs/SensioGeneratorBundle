@@ -27,7 +27,6 @@
             "/Tests/"
         ]
     },
-    "target-dir": "Sensio/Bundle/GeneratorBundle",
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {

@@ -67,7 +67,7 @@ class RoutingManipulatorTest extends \PHPUnit_Framework_TestCase
 
         $routing = <<<DATA
 acme_demo:
-    resource: @AcmeDemoBundle/Controller/
+    resource: "@AcmeDemoBundle/Controller/"
     type:     annotation
 DATA;
 
