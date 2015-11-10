@@ -22,7 +22,10 @@
         "twig/twig": "~1.18"
     },
     "autoload": {
-        "psr-0": { "Sensio\\Bundle\\GeneratorBundle": "" }
+        "psr-4": { "Sensio\\Bundle\\GeneratorBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "target-dir": "Sensio/Bundle/GeneratorBundle",
     "minimum-stability": "dev",
