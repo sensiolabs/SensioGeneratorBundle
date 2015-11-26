@@ -26,7 +26,7 @@ class {{ form_class }} extends AbstractType
         $builder
 
         {%- for field in fields -%}
-            {%- if fields_mapping[field]['type'] in ['date', 'time', 'datetime'] %}
+            {%- if fields_mapping[field] is defined and fields_mapping[field]['type'] in ['date', 'time', 'datetime'] %}
 
             ->add('{{ field }}', '{{ fields_mapping[field]['type'] }}')
 
