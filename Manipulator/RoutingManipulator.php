@@ -109,7 +109,6 @@ class RoutingManipulator extends Manipulator
      *
      * @param string $bundle
      * @param string $controller
-     * @param string $prefix
      *
      * @return bool
      */

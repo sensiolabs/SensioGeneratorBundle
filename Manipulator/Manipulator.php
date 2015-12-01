@@ -36,7 +36,7 @@ class Manipulator
     /**
      * Gets the next token.
      *
-     * @param mixed A PHP token
+     * @return mixed
      */
     protected function next()
     {
@@ -54,7 +54,9 @@ class Manipulator
     /**
      * Peeks the next token.
      *
-     * @param mixed A PHP token
+     * @param int $nb
+     * 
+     * @return mixed
      */
     protected function peek($nb = 1)
     {
@@ -75,7 +77,9 @@ class Manipulator
     /**
      * Gets the value of a token.
      *
-     * @param string The token value
+     * @param string|string[] $token The token value
+     *
+     * @return string
      */
     protected function value($token)
     {

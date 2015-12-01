@@ -50,7 +50,7 @@ interactively. If you want to disable any user interaction, use
 <comment>--no-interaction</comment>, but don't forget to pass all needed arguments.
 
 Every generated file is based on a template. There are default templates but they can
-be overriden by placing custom templates in one of the following locations, by order of priority:
+be overridden by placing custom templates in one of the following locations, by order of priority:
 
 <info>BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/command
 APP_PATH/Resources/SensioGeneratorBundle/skeleton/command</info>
