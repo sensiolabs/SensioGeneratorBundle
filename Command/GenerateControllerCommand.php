@@ -243,8 +243,10 @@ EOT
             $placeholders = $this->getPlaceholdersFromRoute($route);
 
             // template
-            $defaultTemplate = $input->getOption('controller').':'.substr($actionName, 0, -6).'.html.'.$input->getOption('template-format');
-            $question = new Question($questionHelper->getQuestion('Template name (optional)', $defaultTemplate), 'default');
+            $defaultTemplate = $input->getOption('controller').':'.
+                strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), array('\\1_\\2', '\\1_\\2'), strtr(substr($actionName, 0, -6), '_', '.')))
+                .'.html.'.$input->getOption('template-format');
+            $question = new Question($questionHelper->getQuestion('Template name (optional)', $defaultTemplate), $defaultTemplate);
             $template = $questionHelper->ask($input, $output, $question);
 
             // adding action

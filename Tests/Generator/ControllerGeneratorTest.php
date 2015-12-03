@@ -54,7 +54,7 @@ class ControllerGeneratorTest extends GeneratorTest
                 'name' => 'showPageAction',
                 'route' => '/{id}/{slug}',
                 'placeholders' => array('id', 'slug'),
-                'template' => 'default',
+                'template' => 'FooBarBundle:Page:show_page.html.twig',
             ),
             1 => array(
                 'name' => 'getListOfPagesAction',
@@ -67,7 +67,7 @@ class ControllerGeneratorTest extends GeneratorTest
         $generator->generate($this->getBundle(), 'Page', 'annotation', 'twig', $actions);
 
         $files = array(
-            'Resources/views/Page/showPage.html.twig',
+            'Resources/views/Page/show_page.html.twig',
             'Resources/views/Page/pages_list.html.twig',
         );
         foreach ($files as $file) {
@@ -78,7 +78,7 @@ class ControllerGeneratorTest extends GeneratorTest
         $strings = array(
             'public function showPageAction($id, $slug)',
             'public function getListOfPagesAction($max_count)',
-            'return $this->render(\'FooBarBundle:Page:showPage.html.twig\', array(',
+            'return $this->render(\'FooBarBundle:Page:show_page.html.twig\', array(',
             'return $this->render(\'FooBarBundle:Page:pages_list.html.twig\', array(',
         );
         foreach ($strings as $string) {
