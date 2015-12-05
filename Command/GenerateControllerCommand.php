@@ -55,7 +55,7 @@ but don't forget to pass all needed options:
 <info>php %command.full_name% --controller=AcmeBlogBundle:Post --no-interaction</info>
 
 Every generated file is based on a template. There are default templates but they can
-be overriden by placing custom templates in one of the following locations, by order of priority:
+be overridden by placing custom templates in one of the following locations, by order of priority:
 
 <info>BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/controller
 APP_PATH/Resources/SensioGeneratorBundle/skeleton/controller</info>
@@ -244,7 +244,7 @@ EOT
 
             // template
             $defaultTemplate = $input->getOption('controller').':'.substr($actionName, 0, -6).'.html.'.$input->getOption('template-format');
-            $question = new Question($questionHelper->getQuestion('Templatename (optional)', $defaultTemplate), 'default');
+            $question = new Question($questionHelper->getQuestion('Template name (optional)', $defaultTemplate), 'default');
             $template = $questionHelper->ask($input, $output, $question);
 
             // adding action

@@ -55,7 +55,7 @@ class DoctrineCrudGenerator extends Generator
      * @param ClassMetadataInfo $metadata         The entity class metadata
      * @param string            $format           The configuration format (xml, yaml, annotation)
      * @param string            $routePrefix      The route name prefix
-     * @param array             $needWriteActions Wether or not to generate write actions
+     * @param array             $needWriteActions Whether or not to generate write actions
      *
      * @throws \RuntimeException
      */

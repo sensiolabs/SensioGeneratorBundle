@@ -52,7 +52,7 @@ class ControllerGenerator extends Generator
         );
 
         foreach ($actions as $i => $action) {
-            // get the actioname without the suffix Action (for the template logical name)
+            // get the action name without the suffix Action (for the template logical name)
             $actions[$i]['basename'] = substr($action['name'], 0, -6);
             $params = $parameters;
             $params['action'] = $actions[$i];
@@ -183,15 +183,15 @@ EOT;
         return $data['controller'].'/'.$data['template'];
     }
 
-    protected function parseLogicalTemplateName($logicalname, $part = '')
+    protected function parseLogicalTemplateName($logicalName, $part = '')
     {
-        if (2 !== substr_count($logicalname, ':')) {
-            throw new \RuntimeException(sprintf('The given template name ("%s") is not correct (it must contain two colons).', $logicalname));
+        if (2 !== substr_count($logicalName, ':')) {
+            throw new \RuntimeException(sprintf('The given template name ("%s") is not correct (it must contain two colons).', $logicalName));
         }
 
         $data = array();
 
-        list($data['bundle'], $data['controller'], $data['template']) = explode(':', $logicalname);
+        list($data['bundle'], $data['controller'], $data['template']) = explode(':', $logicalName);
 
         return ($part ? $data[$part] : $data);
     }
