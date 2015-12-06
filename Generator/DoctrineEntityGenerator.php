@@ -139,7 +139,7 @@ class DoctrineEntityGenerator extends Generator
      *
      * @see http://php.net/manual/en/language.variables.basics.php
      *
-     * @param $fieldname string
+     * @param $name string
      *
      * @return bool
      */

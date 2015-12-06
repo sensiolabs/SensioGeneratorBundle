@@ -15,7 +15,7 @@ determine the bundle and the command name:
     $ php app/console generate:command
 
 The command can be run in a non interactive mode by using the
-``--no-interaction`` and poviding the needed arguments:
+``--no-interaction`` and providing the needed arguments:
 
 .. code-block:: bash
 
