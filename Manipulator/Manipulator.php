@@ -77,7 +77,7 @@ class Manipulator
     /**
      * Gets the value of a token.
      *
-     * @param string $token The token value
+     * @param string|string[] $token The token value
      *
      * @return string
      */
