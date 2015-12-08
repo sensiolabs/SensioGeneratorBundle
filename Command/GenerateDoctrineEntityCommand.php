@@ -192,13 +192,13 @@ EOT
                 if (isset($matches[2][0]) && $length = $matches[2][0]) {
                     $attributesFound = array();
                     if (false !== strpos($length, '=')) {
-                        $attributesFound = preg_match_all('{([^,= ]+)=([^,= ]+)}', $length, $result);
+                        preg_match_all('{([^,= ]+)=([^,= ]+)}', $length, $result);
                         $attributesFound = array_combine($result[1], $result[2]);
                     } else {
                         $fieldAttributes['length'] = $length;
                     }
                     $fieldAttributes = array_merge($fieldAttributes, $attributesFound);
-                    foreach (array('length', 'presicion', 'scale') as $intAttribute) {
+                    foreach (array('length', 'precision', 'scale') as $intAttribute) {
                         if (isset($fieldAttributes[$intAttribute])) {
                             $fieldAttributes[$intAttribute] = (int) $fieldAttributes[$intAttribute];
                         }
