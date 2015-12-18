@@ -54,7 +54,7 @@ class GenerateControllerCommandTest extends GenerateCommandTest
                     'name' => 'showAction',
                     'route' => '/show',
                     'placeholders' => array(),
-                    'template' => 'default',
+                    'template' => 'AcmeBlogBundle:Post:show.html.php',
                 ),
                 'getListAction' => array(
                     'name' => 'getListAction',
