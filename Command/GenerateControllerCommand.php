@@ -14,6 +14,7 @@ namespace Sensio\Bundle\GeneratorBundle\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
 use Sensio\Bundle\GeneratorBundle\Generator\ControllerGenerator;
@@ -72,7 +73,7 @@ EOT
         $questionHelper = $this->getQuestionHelper();
 
         if ($input->isInteractive()) {
-            $question = new Question($questionHelper->getQuestion('Do you confirm generation', 'yes', '?'), true);
+            $question = new ConfirmationQuestion($questionHelper->getQuestion('Do you confirm generation', 'yes', '?'), true);
             if (!$questionHelper->ask($input, $output, $question)) {
                 $output->writeln('<error>Command aborted</error>');
 
