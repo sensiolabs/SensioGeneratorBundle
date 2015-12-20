@@ -39,10 +39,10 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
     public function getInteractiveCommandData()
     {
         return array(
-            array(array(), "AcmeBlogBundle:Blog/Post\n", array('Blog\\Post', 'annotation', array())),
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), '', array('Blog\\Post', 'annotation', array())),
-            array(array(), "AcmeBlogBundle:Blog/Post\nyml\n\n", array('Blog\\Post', 'yml', array())),
-            array(array(), "AcmeBlogBundle:Blog/Post\nyml\ncreated_by\n\n255\nfalse\nfalse\ndescription\ntext\nfalse\ntrue\nupdated_at\ndatetime\ntrue\nfalse\nrating\ndecimal\n5\n3\nfalse\nfalse\n\n", array('Blog\\Post', 'yml', array(
+            array(array(), "Acme2BlogBundle:Blog/Post\n", array('Blog\\Post', 'annotation', array())),
+            array(array('--entity' => 'Acme2BlogBundle:Blog/Post'), '', array('Blog\\Post', 'annotation', array())),
+            array(array(), "Acme2BlogBundle:Blog/Post\nyml\n\n", array('Blog\\Post', 'yml', array())),
+            array(array(), "Acme2BlogBundle:Blog/Post\nyml\ncreated_by\n\n255\nfalse\nfalse\ndescription\ntext\nfalse\ntrue\nupdated_at\ndatetime\ntrue\nfalse\nrating\ndecimal\n5\n3\nfalse\nfalse\n\n", array('Blog\\Post', 'yml', array(
                 array('fieldName' => 'createdBy', 'type' => 'string', 'length' => 255, 'columnName' => 'created_by'),
                 array('fieldName' => 'description', 'type' => 'text', 'unique' => true, 'columnName' => 'description'),
                 array('fieldName' => 'updatedAt', 'type' => 'datetimetz', 'nullable' => true, 'columnName' => 'updated_at'),
@@ -78,8 +78,8 @@ class GenerateDoctrineEntityCommandTest extends GenerateCommandTest
     public function getNonInteractiveCommandData()
     {
         return array(
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post'), array('Blog\\Post', 'annotation', array())),
-            array(array('--entity' => 'AcmeBlogBundle:Blog/Post', '--format' => 'yml', '--fields' => 'created_by:string(255) updated_by:string(length=128 nullable=true) description:text rating:decimal(precision=7 scale=2)'), array('Blog\\Post', 'yml', array(
+            array(array('--entity' => 'Acme2BlogBundle:Blog/Post'), array('Blog\\Post', 'annotation', array())),
+            array(array('--entity' => 'Acme2BlogBundle:Blog/Post', '--format' => 'yml', '--fields' => 'created_by:string(255) updated_by:string(length=128 nullable=true) description:text rating:decimal(precision=7 scale=2)'), array('Blog\\Post', 'yml', array(
                 array('fieldName' => 'created_by', 'type' => 'string', 'length' => 255),
                 array('fieldName' => 'updated_by', 'type' => 'string', 'length' => 128, 'nullable' => true),
                 array('fieldName' => 'description', 'type' => 'text'),
