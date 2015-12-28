@@ -120,7 +120,7 @@ class Validators
      */
     public static function validateEntityName($entity)
     {
-        if (!preg_match('{^[a-zA-Z_\x7f-\xff]+:[a-zA-Z0-9_\x7f-\xff\\\/]+$}', $entity)) {
+        if (!preg_match('{^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*:[a-zA-Z0-9_\x7f-\xff\\\/]+$}', $entity)) {
             throw new \InvalidArgumentException(sprintf('The entity name isn\'t valid ("%s" given, expecting something like AcmeBlogBundle:Blog/Post)', $entity));
         }
 
