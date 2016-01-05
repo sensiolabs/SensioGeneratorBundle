@@ -1,6 +1,12 @@
 Generating a New Form Type Class Based on a Doctrine Entity
 ===========================================================
 
+.. caution::
+
+    If your application is based on Symfony 3, replace ``php app/console`` by
+    ``php bin/console`` before executing any of the console commands included
+    in this article.
+
 Usage
 -----
 
