@@ -205,7 +205,7 @@ EOT
                     }
                     foreach (array('nullable', 'unique') as $boolAttribute) {
                         if (isset($fieldAttributes[$boolAttribute])) {
-                            $fieldAttributes[$boolAttribute] = (bool) $fieldAttributes[$boolAttribute];
+                            $fieldAttributes[$boolAttribute] = filter_var($fieldAttributes[$boolAttribute], FILTER_VALIDATE_BOOLEAN);
                         }
                     }
                 }
