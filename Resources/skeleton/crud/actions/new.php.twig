@@ -26,7 +26,7 @@
             $em->flush();
 
             {% if 'show' in actions -%}
-                return $this->redirectToRoute('{{ route_name_prefix }}_show', array('id' => ${{ entity_class|lower }}->getId()));
+                return $this->redirectToRoute('{{ route_name_prefix }}_show', array('id' => ${{ entity_singularized }}->getId()));
             {%- else -%}
                 return $this->redirectToRoute('{{ route_name_prefix }}_index'));
             {%- endif %}
