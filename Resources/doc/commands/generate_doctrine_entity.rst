@@ -44,7 +44,7 @@ Available Options
 
     .. code-block:: bash
 
-        $ php app/console generate:doctrine:entity --fields="title:string(length=100 nullable=true unique=false) body:text ranking:decimal(precision:10 scale:0)"
+        $ php app/console generate:doctrine:entity --fields="title:string(length=100 nullable=true unique=false) body:text ranking:decimal(precision=10 scale=0)"
 
     .. versionadded:: 3.0
         Ability to pass named options to fields was added in version 3.0.
