@@ -48,7 +48,7 @@ namespace <info>Acme\BlogBundle\Entity\Blog\Post</info>.
 You can also optionally specify the fields you want to generate in the new
 entity:
 
-<info>php %command.full_name% doctrine:generate:entity --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"</info>
+<info>php %command.full_name% --entity=AcmeBlogBundle:Blog/Post --fields="title:string(255) body:text"</info>
 
 By default, the command uses annotations for the mapping information; change it
 with <comment>--format</comment>:
