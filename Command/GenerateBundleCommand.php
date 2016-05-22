@@ -386,19 +386,30 @@ EOT
         }
         $format = Validators::validateFormat($input->getOption('format'));
 
+        // an assumption that the kernel root dir is in a directory (like app/)
+        $projectRootDirectory = $this->getContainer()->getParameter('kernel.root_dir').'/..';
+
         if (!$this->getContainer()->get('filesystem')->isAbsolutePath($dir)) {
-            $dir = getcwd().'/'.$dir;
+            $dir = $projectRootDirectory.'/'.$dir;
         }
         // add trailing / if necessary
         $dir = '/' === substr($dir, -1, 1) ? $dir : $dir.'/';
 
-        return new Bundle(
+        $bundle = new Bundle(
             $namespace,
             $bundleName,
             $dir,
             $format,
             $shared
         );
+
+        // not shared - put the tests in the root
+        if (!$shared) {
+            $testsDir = $projectRootDirectory.'/tests/'.$bundleName;
+            $bundle->setTestsDirectory($testsDir);
+        }
+
+        return $bundle;
     }
 
     protected function createGenerator()

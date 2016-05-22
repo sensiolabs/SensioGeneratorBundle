@@ -24,6 +24,13 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         list($namespace, $bundleName, $dir, $format, $shared) = $expected;
         $bundle = new Bundle($namespace, $bundleName, $dir, $format, $shared);
 
+        $container = $this->getContainer();
+
+        // not shared? the tests should be at the root of the project
+        if (!$shared) {
+            $bundle->setTestsDirectory($container->getParameter('kernel.root_dir').'/../tests/'.$bundleName);
+        }
+
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
@@ -31,7 +38,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
             ->with($bundle)
         ;
 
-        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester = new CommandTester($this->getCommand($generator, $input, $container));
         $tester->execute($options);
     }
 
@@ -75,6 +82,13 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         list($namespace, $bundleName, $dir, $format, $shared) = $expected;
         $bundle = new Bundle($namespace, $bundleName, $dir, $format, $shared);
 
+        $container = $this->getContainer();
+
+        // not shared? the tests should be at the root of the project
+        if (!$shared) {
+            $bundle->setTestsDirectory($container->getParameter('kernel.root_dir').'/../tests/'.$bundleName);
+        }
+
         $generator = $this->getGenerator();
         $generator
             ->expects($this->once())
@@ -82,7 +96,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
             ->with($bundle)
         ;
 
-        $tester = new CommandTester($this->getCommand($generator, ''));
+        $tester = new CommandTester($this->getCommand($generator, '', $container));
         $tester->execute($options, array('interactive' => false));
     }
 
@@ -106,7 +120,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
         );
     }
 
-    protected function getCommand($generator, $input)
+    protected function getCommand($generator, $input, $container)
     {
         $command = $this
             ->getMockBuilder('Sensio\Bundle\GeneratorBundle\Command\GenerateBundleCommand')
@@ -114,7 +128,7 @@ class GenerateBundleCommandTest extends GenerateCommandTest
             ->getMock()
         ;
 
-        $command->setContainer($this->getContainer());
+        $command->setContainer($container);
         $command->setHelperSet($this->getHelperSet($input));
         $command->setGenerator($generator);
 
