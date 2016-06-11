@@ -85,12 +85,12 @@ EOT
                 '',
             ));
 
+            $bundleNames = array_keys($this->getContainer()->get('kernel')->getBundles());
+
             $question = new Question($questionHelper->getQuestion('Bundle name', $bundle), $bundle);
-            $container = $this->getContainer();
-            $question->setValidator(function ($answer) use ($container) {
-                try {
-                   $b = $container->get('kernel')->getBundle($answer);
-                } catch (\Exception $e) {
+            $question->setAutocompleterValues($bundleNames);
+            $question->setValidator(function ($answer) use ($bundleNames) {
+                if (!in_array($answer, $bundleNames)) {
                     throw new \RuntimeException(sprintf('Bundle "%s" does not exist.', $answer));
                 }
 

@@ -122,8 +122,11 @@ EOT
             '',
         ));
 
+        $bundleNames = array_keys($this->getContainer()->get('kernel')->getBundles());
+
         while (true) {
             $question = new Question($questionHelper->getQuestion('Controller name', $input->getOption('controller')), $input->getOption('controller'));
+            $question->setAutocompleterValues($bundleNames);
             $question->setValidator(array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateControllerName'));
             $controller = $questionHelper->ask($input, $output, $question);
             list($bundle, $controller) = $this->parseShortcutNotation($controller);
