@@ -61,7 +61,7 @@ class DoctrineFormGeneratorTest extends GeneratorTest
         $generator = new DoctrineFormGenerator($this->filesystem);
         $generator->setSkeletonDirs(__DIR__.'/../../Resources/skeleton');
 
-        $bundle = $this->getMock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle->expects($this->any())->method('getPath')->will($this->returnValue($this->tmpDir));
         $bundle->expects($this->any())->method('getNamespace')->will($this->returnValue('Foo\BarBundle'));
 

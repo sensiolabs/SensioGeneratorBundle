@@ -66,14 +66,14 @@ class EntitiesAutoCompleterTest extends \PHPUnit_Framework_TestCase
      */
     protected function getEntityManagerMock($aliases, $classes)
     {
-        $cache = $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
+        $cache = $this->getMockBuilder('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver')->getMock();
         $cache
             ->expects($this->any())
             ->method('getAllClassNames')
             ->will($this->returnValue($classes))
         ;
 
-        $configuration = $this->getMock('Doctrine\ORM\Configuration');
+        $configuration = $this->getMockBuilder('Doctrine\ORM\Configuration')->getMock();
         $configuration
             ->expects($this->any())
             ->method('getMetadataDriverImpl')
@@ -86,7 +86,7 @@ class EntitiesAutoCompleterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($aliases))
         ;
 
-        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $manager = $this->getMockBuilder('Doctrine\ORM\EntityManagerInterface')->getMock();
         $manager
             ->expects($this->any())
             ->method('getConfiguration')

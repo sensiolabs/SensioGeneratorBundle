@@ -112,7 +112,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
     protected function getBundle()
     {
-        $bundle = $this->getMock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle->expects($this->any())->method('getPath')->will($this->returnValue($this->tmpDir));
         $bundle->expects($this->any())->method('getName')->will($this->returnValue('FooBarBundle'));
         $bundle->expects($this->any())->method('getNamespace')->will($this->returnValue('Foo\BarBundle'));
@@ -130,7 +130,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
     public function getRegistry()
     {
-        $registry = $this->getMock('Symfony\Bridge\Doctrine\RegistryInterface');
+        $registry = $this->getMockBuilder('Symfony\Bridge\Doctrine\RegistryInterface')->getMock();
         $registry->expects($this->any())->method('getManager')->will($this->returnValue($this->getManager()));
         $registry->expects($this->any())->method('getAliasNamespace')->will($this->returnValue('Foo\\BarBundle\\Entity'));
 
@@ -139,7 +139,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
     public function getManager()
     {
-        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $manager = $this->getMockBuilder('Doctrine\ORM\EntityManagerInterface')->getMock();
         $manager->expects($this->any())
             ->method('getConfiguration')
             ->will($this->returnValue($this->getConfiguration()));
@@ -149,7 +149,7 @@ class DoctrineEntityGeneratorTest extends GeneratorTest
 
     public function getConfiguration()
     {
-        $config = $this->getMock('Doctrine\ORM\Configuration');
+        $config = $this->getMockBuilder('Doctrine\ORM\Configuration')->getMock();
         $config->expects($this->any())->method('getEntityNamespaces')->will($this->returnValue(array('Foo\\BarBundle')));
 
         return $config;

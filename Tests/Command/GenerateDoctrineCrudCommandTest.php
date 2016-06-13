@@ -244,14 +244,14 @@ DATA;
 
     protected function getDoctrine()
     {
-        $cache = $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
+        $cache = $this->getMockBuilder('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver')->getMock();
         $cache
             ->expects($this->any())
             ->method('getAllClassNames')
             ->will($this->returnValue(array('Acme\Bundle\BlogBundle\Entity\Post')))
         ;
 
-        $configuration = $this->getMock('Doctrine\ORM\Configuration');
+        $configuration = $this->getMockBuilder('Doctrine\ORM\Configuration')->getMock();
         $configuration
             ->expects($this->any())
             ->method('getMetadataDriverImpl')
@@ -264,14 +264,14 @@ DATA;
             ->will($this->returnValue(array('AcmeBlogBundle' => 'Acme\Bundle\BlogBundle\Entity')))
         ;
 
-        $manager = $this->getMock('Doctrine\ORM\EntityManagerInterface');
+        $manager = $this->getMockBuilder('Doctrine\ORM\EntityManagerInterface')->getMock();
         $manager
             ->expects($this->any())
             ->method('getConfiguration')
             ->will($this->returnValue($configuration))
         ;
 
-        $registry = $this->getMock('Symfony\Bridge\Doctrine\RegistryInterface');
+        $registry = $this->getMockBuilder('Symfony\Bridge\Doctrine\RegistryInterface')->getMock();
         $registry
             ->expects($this->any())
             ->method('getAliasNamespace')
