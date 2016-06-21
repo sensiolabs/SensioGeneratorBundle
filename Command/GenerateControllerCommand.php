@@ -109,7 +109,7 @@ EOT
     public function interact(InputInterface $input, OutputInterface $output)
     {
         $questionHelper = $this->getQuestionHelper();
-        $questionHelper->writeSection($output, 'Welcome to the Symfony2 controller generator');
+        $questionHelper->writeSection($output, 'Welcome to the Symfony controller generator');
 
         // namespace
         $output->writeln(array(
