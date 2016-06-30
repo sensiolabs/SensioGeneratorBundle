@@ -69,7 +69,7 @@ class CommandGeneratorTest extends GeneratorTest
 
     protected function getBundle()
     {
-        $bundle = $this->getMock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle->expects($this->any())->method('getPath')->will($this->returnValue($this->tmpDir));
         $bundle->expects($this->any())->method('getName')->will($this->returnValue('FooBarBundle'));
         $bundle->expects($this->any())->method('getNamespace')->will($this->returnValue('Foo\BarBundle'));
