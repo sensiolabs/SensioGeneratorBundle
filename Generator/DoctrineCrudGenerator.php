@@ -69,15 +69,18 @@ class DoctrineCrudGenerator extends Generator
         }
 
         $this->entity = $entity;
-        $this->entitySingularized = lcfirst(Inflector::singularize($entity));
-        $this->entityPluralized = lcfirst(Inflector::pluralize($entity));
+        $entity = str_replace('\\', '/', $entity);
+        $entityParts = explode('/', $entity);
+        $entityName = end($entityParts);
+        $this->entitySingularized = lcfirst(Inflector::singularize($entityName));
+        $this->entityPluralized = lcfirst(Inflector::pluralize($entityName));
         $this->bundle = $bundle;
         $this->metadata = $metadata;
         $this->setFormat($format);
 
         $this->generateControllerClass($forceOverwrite);
 
-        $dir = sprintf('%s/Resources/views/%s', $this->rootDir, str_replace('\\', '/', strtolower($this->entity)));
+        $dir = sprintf('%s/Resources/views/%s', $this->rootDir, strtolower($entity));
 
         if (!file_exists($dir)) {
             $this->filesystem->mkdir($dir, 0777);

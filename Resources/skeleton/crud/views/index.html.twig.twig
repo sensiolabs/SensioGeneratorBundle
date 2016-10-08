@@ -4,7 +4,7 @@
 
 {% block body %}
 {{ "{% block body %}" }}
-    <h1>{{ entity }} list</h1>
+    <h1>{{ entity_pluralized|capitalize }} list</h1>
 
     <table>
         <thead>
@@ -80,7 +80,7 @@
     {% if 'new' in actions -%}
     <ul>
         <li>
-            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">Create a new entry</a>
+            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">Create a new {{ entity_singularized }}</a>
         </li>
     </ul>
     {%- endif %}

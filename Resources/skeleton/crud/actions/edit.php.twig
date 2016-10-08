@@ -1,7 +1,7 @@
 
     /**
 {% block phpdoc_method_header %}
-     * Displays a form to edit an existing {{ entity }} entity.
+     * Displays a form to edit an existing {{ entity_singularized }} entity.
 {% endblock phpdoc_method_header %}
      *
 {% block phpdoc_method_annotations %}
@@ -17,7 +17,7 @@
     {
 {% block method_body %}
         $deleteForm = $this->createDeleteForm(${{ entity_singularized }});
-        $editForm = $this->createForm('{{ namespace }}\Form\{{ entity_class }}Type', ${{ entity_singularized }});
+        $editForm = $this->createForm('{{ namespace }}\Form\{{ entity }}Type', ${{ entity_singularized }});
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

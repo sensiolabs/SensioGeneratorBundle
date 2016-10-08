@@ -16,7 +16,7 @@
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $form = $this->createForm('{{ namespace }}\Form\{{ entity_class }}Type', ${{ entity_singularized }});
+        $form = $this->createForm('{{ namespace }}\Form\{{ entity }}Type');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
