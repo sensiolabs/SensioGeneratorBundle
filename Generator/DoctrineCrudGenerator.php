@@ -183,6 +183,8 @@ class DoctrineCrudGenerator extends Generator
             'namespace' => $this->bundle->getNamespace(),
             'entity_namespace' => $entityNamespace,
             'format' => $this->format,
+            // BC with Symfony 2.7
+            'use_form_type_instance' => !method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix'),
         ));
     }
 

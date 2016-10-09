@@ -202,9 +202,15 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
             'public function showAction(Post $post)',
             '\'post\' => $post,',
             '\'posts\' => $posts,',
-            '$form = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\');',
-            '$editForm = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\', $post);',
         );
+        if (method_exists('Symfony\Compoennt\Form\AbstractType', 'getBlockPrefix')) {
+            // Symfony >= 2.8
+            $strings[] = '$form = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\');';
+            $strings[] = '$editForm = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\', $post);';
+        } else {
+            $strings[] = '$form = $this->createForm(new PostType());';
+            $strings[] = '$editForm = $this->createForm(new PostType(), $post);';
+        }
         foreach ($strings as $string) {
             $this->assertContains($string, $content);
         }
