@@ -84,11 +84,6 @@ class DoctrineFormGenerator extends Generator
             'bundle' => $bundle->getName(),
             'form_class' => $this->className,
             'form_type_name' => strtolower(str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.substr($this->className, 0, -4)),
-
-            // Add 'setDefaultOptions' method with deprecated type hint, if the new 'configureOptions' isn't available.
-            // Required as long as Symfony 2.6 is supported.
-            'configure_options_available' => method_exists('Symfony\Component\Form\AbstractType', 'configureOptions'),
-            'get_name_required' => !method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix'),
         ));
     }
 

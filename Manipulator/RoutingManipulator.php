@@ -25,8 +25,6 @@ class RoutingManipulator extends Manipulator
     private $file;
 
     /**
-     * Constructor.
-     *
      * @param string $file The YAML routing file path
      */
     public function __construct($file)

@@ -36,10 +36,8 @@ class DoctrineCrudGenerator extends Generator
     protected $actions;
 
     /**
-     * Constructor.
-     *
-     * @param Filesystem $filesystem A Filesystem instance
-     * @param string     $rootDir    The root dir
+     * @param Filesystem $filesystem
+     * @param string     $rootDir
      */
     public function __construct(Filesystem $filesystem, $rootDir)
     {
@@ -55,7 +53,8 @@ class DoctrineCrudGenerator extends Generator
      * @param ClassMetadataInfo $metadata         The entity class metadata
      * @param string            $format           The configuration format (xml, yaml, annotation)
      * @param string            $routePrefix      The route name prefix
-     * @param array             $needWriteActions Whether or not to generate write actions
+     * @param bool              $needWriteActions Whether or not to generate write actions
+     * @param bool              $forceOverwrite   Whether or not to overwrite the controller
      *
      * @throws \RuntimeException
      */

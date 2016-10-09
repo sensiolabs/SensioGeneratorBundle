@@ -42,7 +42,7 @@ The <info>%command.name%</info> command generates a form class based on a Doctri
 
 <info>php %command.full_name% AcmeBlogBundle:Post</info>
 
-Every generated file is based on a template. There are default templates but they can be overriden by placing custom templates in one of the following locations, by order of priority:
+Every generated file is based on a template. There are default templates but they can be overridden by placing custom templates in one of the following locations, by order of priority:
 
 <info>BUNDLE_PATH/Resources/SensioGeneratorBundle/skeleton/form
 APP_PATH/Resources/SensioGeneratorBundle/skeleton/form</info>

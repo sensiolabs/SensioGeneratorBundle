@@ -41,7 +41,7 @@ class Generator
     }
 
     /**
-     * Get the twig environment that will render skeletons.
+     * Gets the twig environment that will render skeletons.
      *
      * @return \Twig_Environment
      */
