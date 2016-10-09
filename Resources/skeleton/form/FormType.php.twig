@@ -20,19 +20,11 @@ class {{ form_class }} extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            {%- for field in fields -%}
 
-        {%- for field in fields -%}
-            {%- if fields_mapping[field] is defined and fields_mapping[field]['type'] in ['date', 'time', 'datetime'] %}
+                ->add('{{ field }}')
 
-            ->add('{{ field }}', '{{ fields_mapping[field]['type'] }}')
-
-            {%- else %}
-
-            ->add('{{ field }}')
-
-            {%- endif -%}
-        {%- endfor %}
-
+            {%- endfor %}
         ;
     }
     {% endif %}
@@ -46,6 +38,25 @@ class {{ form_class }} extends AbstractType
             'data_class' => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ entity_class }}'
         ));
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return '{{ form_type_name }}';
+    }
+
+{# BC with Symfony 2.7 #}
+{%- if get_name_required %}
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+{% endif %}
 
 {% endblock class_body %}
 }

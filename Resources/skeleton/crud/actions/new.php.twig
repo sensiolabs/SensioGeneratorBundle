@@ -1,7 +1,7 @@
 
     /**
 {% block phpdoc_method_header %}
-     * Creates a new {{ entity }} entity.
+     * Creates a new {{ entity_singularized }} entity.
 {% endblock phpdoc_method_header %}
      *
 {% block phpdoc_method_annotations %}
@@ -16,7 +16,11 @@
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $form = $this->createForm('{{ namespace }}\Form\{{ entity }}Type');
+        {% if use_form_type_instance -%}
+            $form = $this->createForm(new {{ entity_singularized|capitalize }}Type());
+        {% else -%}
+            $form = $this->createForm('{{ namespace }}\Form\{{ entity }}Type');
+        {% endif -%}
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

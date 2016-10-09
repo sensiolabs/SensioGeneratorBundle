@@ -25,9 +25,9 @@ class DoctrineFormGeneratorTest extends GeneratorTest
         $this->assertContains('namespace Foo\BarBundle\Form', $content);
         $this->assertContains('class PostType extends AbstractType', $content);
         $this->assertContains('->add(\'title\')', $content);
-        $this->assertContains('->add(\'createdAt\', \'date\')', $content);
-        $this->assertContains('->add(\'publishedAt\', \'time\')', $content);
-        $this->assertContains('->add(\'updatedAt\', \'datetime\')', $content);
+        $this->assertContains('->add(\'createdAt\')', $content);
+        $this->assertContains('->add(\'publishedAt\')', $content);
+        $this->assertContains('->add(\'updatedAt\')', $content);
         $this->assertContains('public function configureOptions(OptionsResolver $resolver)', $content);
         $this->assertContains('\'data_class\' => \'Foo\BarBundle\Entity\Post\'', $content);
     }
@@ -42,11 +42,20 @@ class DoctrineFormGeneratorTest extends GeneratorTest
         $this->assertContains('namespace Foo\BarBundle\Form\Blog', $content);
         $this->assertContains('class PostType extends AbstractType', $content);
         $this->assertContains('->add(\'title\')', $content);
-        $this->assertContains('->add(\'createdAt\', \'date\')', $content);
-        $this->assertContains('->add(\'publishedAt\', \'time\')', $content);
-        $this->assertContains('->add(\'updatedAt\', \'datetime\')', $content);
+        $this->assertContains('->add(\'createdAt\')', $content);
+        $this->assertContains('->add(\'publishedAt\')', $content);
+        $this->assertContains('->add(\'updatedAt\')', $content);
         $this->assertContains('public function configureOptions(OptionsResolver $resolver)', $content);
         $this->assertContains('\'data_class\' => \'Foo\BarBundle\Entity\Blog\Post\'', $content);
+        $this->assertContains('public function getBlockPrefix()', $content);
+        $this->assertContains('return \'foo_barbundle_blog_post\';', $content);
+        if (method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')) {
+            // Symfony >= 2.8
+            $this->assertNotContains('public function getName()', $content);
+        } else {
+            // BC Symfony 2.7
+            $this->assertContains('public function getName()', $content);
+        }
     }
 
     /**

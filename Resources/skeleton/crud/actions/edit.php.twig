@@ -17,13 +17,15 @@
     {
 {% block method_body %}
         $deleteForm = $this->createDeleteForm(${{ entity_singularized }});
-        $editForm = $this->createForm('{{ namespace }}\Form\{{ entity }}Type', ${{ entity_singularized }});
+        {% if use_form_type_instance -%}
+            $editForm = $this->createForm(new {{ entity_singularized|capitalize }}Type(), ${{ entity_singularized }});
+        {% else -%}
+            $editForm = $this->createForm('{{ namespace }}\Form\{{ entity }}Type', ${{ entity_singularized }});
+        {% endif -%}
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist(${{ entity_singularized }});
-            $em->flush();
+            $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('{{ route_name_prefix }}_edit', array('id' => ${{ entity_singularized }}->getId()));
         }
