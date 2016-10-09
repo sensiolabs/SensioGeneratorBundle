@@ -4,7 +4,7 @@
 
 {% block body %}
 {{ "{% block body %}" }}
-    <h1>{{ entity }} creation</h1>
+    <h1>{{ entity_singularized|capitalize }} creation</h1>
 
     {{ '{{ form_start(form) }}' }}
         {{ '{{ form_widget(form) }}' }}

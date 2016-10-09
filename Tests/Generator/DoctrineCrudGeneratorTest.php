@@ -180,6 +180,36 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
         }
     }
 
+    public function testGenerateNamespacedEntity()
+    {
+        $this->getGenerator()->generate($this->getBundle(), 'Blog\Post', $this->getMetadata(), 'annotation', '/blog_post', true, true);
+
+        $files = array(
+            'Controller/Blog/PostController.php',
+            'Tests/Controller/Blog/PostControllerTest.php',
+            'Resources/views/blog/post/index.html.twig',
+            'Resources/views/blog/post/show.html.twig',
+            'Resources/views/blog/post/new.html.twig',
+            'Resources/views/blog/post/edit.html.twig',
+        );
+        foreach ($files as $file) {
+            $this->assertTrue(file_exists($this->tmpDir.'/'.$file), sprintf('%s has been generated', $file));
+        }
+
+        $content = file_get_contents($this->tmpDir.'/Controller/Blog/PostController.php');
+        $strings = array(
+            'namespace Foo\BarBundle\Controller\Blog;',
+            'public function showAction(Post $post)',
+            '\'post\' => $post,',
+            '\'posts\' => $posts,',
+            '$form = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\');',
+            '$editForm = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\', $post);',
+        );
+        foreach ($strings as $string) {
+            $this->assertContains($string, $content);
+        }
+    }
+
     /**
      * @dataProvider getRoutePrefixes
      */
