@@ -26,7 +26,7 @@ use {{ namespace }}\Form\{{ entity }}Type;
  *
 {% block phpdoc_class_annotations %}
 {% if 'annotation' == format %}
- * @Route("/{{ route_prefix }}")
+ * @Route("{{ route_prefix|default('/') }}")
 {% endif %}
 {% endblock phpdoc_class_annotations %}
  */
