@@ -36,7 +36,7 @@ class Manipulator
     /**
      * Gets the next token.
      *
-     * @return mixed
+     * @return string|null
      */
     protected function next()
     {
