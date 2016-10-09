@@ -164,7 +164,9 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
             'namespace Foo\BarBundle\Controller;',
             'public function indexAction',
             'public function showAction',
-            '@Route',
+            '@Route("/post")', // Controller level
+            '@Route("/", name="post_index")',
+            '@Route("/{id}", name="post_show")',
         );
         foreach ($strings as $string) {
             $this->assertContains($string, $content);
@@ -199,6 +201,12 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
         $content = file_get_contents($this->tmpDir.'/Controller/Blog/PostController.php');
         $strings = array(
             'namespace Foo\BarBundle\Controller\Blog;',
+            '@Route("/blog_post")', // Controller level
+            '@Route("/", name="blog_post_index")',
+            '@Route("/{id}", name="blog_post_show")',
+            '@Route("/new", name="blog_post_new")',
+            '@Route("/{id}/edit", name="blog_post_edit")',
+            '@Route("/{id}", name="blog_post_delete")',
             'public function showAction(Post $post)',
             '\'post\' => $post,',
             '\'posts\' => $posts,',
