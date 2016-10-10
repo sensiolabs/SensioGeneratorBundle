@@ -16,15 +16,15 @@
 {% endblock method_definition %}
     {
 {% block method_body %}
+        ${{ entity_singularized }} = new {{ entity_singularized|capitalize }}();
         {% if use_form_type_instance -%}
-            $form = $this->createForm(new {{ entity_singularized|capitalize }}Type());
+            $form = $this->createForm(new {{ entity_singularized|capitalize }}Type(), ${{ entity_singularized }});
         {% else -%}
-            $form = $this->createForm('{{ namespace }}\Form\{{ entity }}Type');
+            $form = $this->createForm('{{ namespace }}\Form\{{ entity }}Type', ${{ entity_singularized }});
         {% endif -%}
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            ${{ entity_singularized }} = $form->getData();
             $em = $this->getDoctrine()->getManager();
             $em->persist(${{ entity_singularized }});
             $em->flush(${{ entity_singularized }});

@@ -213,10 +213,10 @@ class DoctrineCrudGeneratorTest extends GeneratorTest
         );
         if (method_exists('Symfony\Compoennt\Form\AbstractType', 'getBlockPrefix')) {
             // Symfony >= 2.8
-            $strings[] = '$form = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\');';
+            $strings[] = '$form = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\', $post);';
             $strings[] = '$editForm = $this->createForm(\'Foo\BarBundle\Form\Blog\PostType\', $post);';
         } else {
-            $strings[] = '$form = $this->createForm(new PostType());';
+            $strings[] = '$form = $this->createForm(new PostType(), $post);';
             $strings[] = '$editForm = $this->createForm(new PostType(), $post);';
         }
         foreach ($strings as $string) {
