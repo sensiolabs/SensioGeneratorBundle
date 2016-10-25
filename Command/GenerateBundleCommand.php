@@ -350,7 +350,7 @@ EOT
             $manipulator->addResource($bundle);
         } catch (\RuntimeException $e) {
             return array(
-                sprintf('- Import the bundle\'s %s resource in the app\'s main configuration file:', $bundle->getServicesConfigurationFilename()),
+                sprintf('- Import the bundle\'s "%s" resource in the app\'s main configuration file:', $bundle->getServicesConfigurationFilename()),
                 '',
                 $manipulator->getImportCode($bundle),
                 '',
