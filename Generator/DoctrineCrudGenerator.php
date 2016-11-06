@@ -83,7 +83,7 @@ class DoctrineCrudGenerator extends Generator
         $dir = sprintf('%s/Resources/views/%s', $this->rootDir, strtolower($entity));
 
         if (!file_exists($dir)) {
-            $this->filesystem->mkdir($dir, 0777);
+            self::mkdir($dir);
         }
 
         $this->generateIndexView($dir);
