@@ -60,9 +60,7 @@ class Generator
 
     protected function renderFile($template, $target, $parameters)
     {
-        if (!is_dir(dirname($target))) {
-            self::mkdir(dirname($target));
-        }
+        self::mkdir(dirname($target));
 
         return self::dump($target, $this->render($template, $parameters));
     }
@@ -72,8 +70,10 @@ class Generator
      */
     public static function mkdir($dir, $mode = 0777, $recursive = true)
     {
-        mkdir($dir, $mode, $recursive);
-        self::writeln(sprintf('  <fg=green>created</> %s', self::relativizePath($dir)));
+        if (!is_dir($dir)) {
+            mkdir($dir, $mode, $recursive);
+            self::writeln(sprintf('  <fg=green>created</> %s', self::relativizePath($dir)));
+        }
     }
 
     /**
