@@ -22,7 +22,7 @@
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove(${{ entity_singularized }});
-            $em->flush(${{ entity_singularized }});
+            $em->flush();
         }
 {% endblock method_body %}
 
