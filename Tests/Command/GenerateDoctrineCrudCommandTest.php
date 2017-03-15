@@ -29,7 +29,8 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
             ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
         ;
 
-        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester = new CommandTester($command = $this->getCommand($generator));
+        $this->setInputs($tester, $command, $input);
         $tester->execute($options);
     }
 
@@ -59,7 +60,7 @@ class GenerateDoctrineCrudCommandTest extends GenerateCommandTest
             ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
         ;
 
-        $tester = new CommandTester($this->getCommand($generator, ''));
+        $tester = new CommandTester($this->getCommand($generator));
         $tester->execute($options, array('interactive' => false));
     }
 
@@ -96,7 +97,8 @@ DATA;
             ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
         ;
 
-        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester = new CommandTester($command = $this->getCommand($generator));
+        $this->setInputs($tester, $command, $input);
         $tester->execute($options);
 
         $this->assertContains('acme_blog_post:', file_get_contents($rootDir.'/config/routing.yml'));
@@ -127,7 +129,8 @@ DATA;
             ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
         ;
 
-        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester = new CommandTester($command = $this->getCommand($generator));
+        $this->setInputs($tester, $command, $input);
         $tester->execute($options);
 
         $this->assertEquals($routing, file_get_contents($rootDir.'/config/routing.yml'));
@@ -158,7 +161,8 @@ DATA;
             ->with($this->getBundle(), $entity, $this->getDoctrineMetadata(), $format, $prefix, $withWrite)
         ;
 
-        $tester = new CommandTester($this->getCommand($generator, $input));
+        $tester = new CommandTester($command = $this->getCommand($generator));
+        $this->setInputs($tester, $command, $input);
         $tester->execute($options);
 
         $expected = '@AcmeBlogBundle/Controller/PostController.php';
@@ -166,7 +170,7 @@ DATA;
         $this->assertContains($expected, file_get_contents($rootDir.'/config/routing.yml'));
     }
 
-    protected function getCommand($generator, $input)
+    protected function getCommand($generator)
     {
         $command = $this
             ->getMockBuilder('Sensio\Bundle\GeneratorBundle\Command\GenerateDoctrineCrudCommand')
@@ -181,7 +185,7 @@ DATA;
         ;
 
         $command->setContainer($this->getContainer());
-        $command->setHelperSet($this->getHelperSet($input));
+        $command->setHelperSet($this->getHelperSet());
         $command->setGenerator($generator);
         $command->setFormGenerator($this->getFormGenerator());
 

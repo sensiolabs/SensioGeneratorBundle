@@ -18,12 +18,23 @@ use Symfony\Component\DependencyInjection\Container;
 
 abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
 {
-    protected function getHelperSet($input)
+    protected function getHelperSet()
     {
-        $question = new QuestionHelper();
-        $question->setInputStream($this->getInputStream($input));
+        return new HelperSet(array(new FormatterHelper(), new QuestionHelper()));
+    }
 
-        return new HelperSet(array(new FormatterHelper(), $question));
+    protected function setInputs($tester, $command, $input)
+    {
+        $input .= str_repeat("\n", 10);
+        if (method_exists($tester, 'setInputs')) {
+            $tester->setInputs(explode("\n", $input));
+        } else {
+            $stream = fopen('php://memory', 'r+', false);
+            fwrite($stream, $input);
+            rewind($stream);
+
+            $command->getHelperSet()->get('question')->setInputStream($stream);
+        }
     }
 
     protected function getBundle()
@@ -36,15 +47,6 @@ abstract class GenerateCommandTest extends \PHPUnit_Framework_TestCase
         ;
 
         return $bundle;
-    }
-
-    protected function getInputStream($input)
-    {
-        $stream = fopen('php://memory', 'r+', false);
-        fwrite($stream, $input.str_repeat("\n", 10));
-        rewind($stream);
-
-        return $stream;
     }
 
     protected function getContainer()
