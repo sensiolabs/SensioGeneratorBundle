@@ -19,6 +19,8 @@
     },
     "require-dev": {
         "symfony/doctrine-bridge": "~2.7|~3.0",
+        "symfony/filesystem": "~2.7|~3.0",
+        "symfony/phpunit-bridge": "^3.3",
         "doctrine/orm": "~2.4"
     },
     "autoload": {
