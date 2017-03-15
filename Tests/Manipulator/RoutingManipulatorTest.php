@@ -61,6 +61,7 @@ class RoutingManipulatorTest extends \PHPUnit_Framework_TestCase
     public function testHasResourceInAnnotation()
     {
         $tmpDir = sys_get_temp_dir().'/sf';
+        mkdir($tmpDir, 0777, true);
         $file = tempnam($tmpDir, 'routing');
 
         $routing = <<<DATA

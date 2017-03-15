@@ -99,9 +99,7 @@ DATA;
         $tester = new CommandTester($this->getCommand($generator, $input));
         $tester->execute($options);
 
-        $expected = 'acme_blog_post:';
-
-        $this->assertContains($expected, file_get_contents($rootDir.'/config/routing.yml'));
+        $this->assertContains('acme_blog_post:', file_get_contents($rootDir.'/config/routing.yml'));
     }
 
     public function testCreateCrudWithAnnotationInAnnotationBundle()
