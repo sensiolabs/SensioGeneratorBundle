@@ -82,6 +82,7 @@ acme_blog:
     prefix:   /
 DATA;
 
+        @mkdir($rootDir.'/config', 0777, true);
         file_put_contents($rootDir.'/config/routing.yml', $routing);
 
         $options = array();
@@ -114,6 +115,7 @@ acme_blog:
     type:     annotation
 DATA;
 
+        @mkdir($rootDir.'/config', 0777, true);
         file_put_contents($rootDir.'/config/routing.yml', $routing);
 
         $options = array();
@@ -146,6 +148,7 @@ acme_blog:
     type:     annotation
 DATA;
 
+        @mkdir($rootDir.'/config', 0777, true);
         file_put_contents($rootDir.'/config/routing.yml', $routing);
 
         $options = array();
@@ -225,7 +228,6 @@ DATA;
     protected function getBundle()
     {
         $bundle = parent::getBundle();
-
         $bundle
             ->expects($this->any())
             ->method('getName')

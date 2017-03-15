@@ -18,7 +18,6 @@ use Sensio\Bundle\GeneratorBundle\Command\GenerateCommandCommand;
 class GenerateCommandCommandTest extends GenerateCommandTest
 {
     protected $generator;
-    protected $bundle;
 
     /**
      * @dataProvider getInteractiveCommandData
