@@ -28,6 +28,21 @@ forget to pass all needed options:
 
     $ php app/console generate:bundle --namespace=Acme/Bundle/BlogBundle --no-interaction
 
+.. caution::
+
+    A recent change in the way the ``composer.json`` file is written means that you need to register your bundles in your composer.json autoloader, you can do this by adding the following line to your ``composer.json`` file within the ``psr-4`` section
+    ``"Acme\\Bundle\\BlogBundle\\": "src/Acme/Bundle/BlogBundle"``
+    
+.. code-block:: json
+
+    "autoload": {
+        "psr-4": {
+            "Acme\\Bundle\\BlogBundle\\": "src/Acme/Bundle/BlogBundle"
+        },
+        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
+    },
+
+
 Available Options
 -----------------
 
