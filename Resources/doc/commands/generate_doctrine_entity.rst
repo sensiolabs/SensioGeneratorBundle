@@ -3,8 +3,8 @@ Generating a New Doctrine Entity Stub
 
 .. caution::
 
-    If your application is based on Symfony 2, replace ``php bin/console`` by
-    ``php app/console`` before executing any of the console commands included
+    If your application is based on Symfony 2.x version, replace ``php bin/console``
+    with ``php app/console`` before executing any of the console commands included
     in this article.
 
 Usage
