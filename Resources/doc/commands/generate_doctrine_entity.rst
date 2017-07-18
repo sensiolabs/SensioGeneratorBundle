@@ -20,17 +20,35 @@ determine the bundle name, location, configuration format and default structure:
 
     $ php bin/console generate:doctrine:entity
 
-The command can be run in a non-interactive mode by using the ``--no-interaction``
-option, but don't forget to pass all needed options:
+To deactivate the interactive mode, use the ``--no-interaction`` option or its
+alias ``-n``, but don't forget to pass all needed options:
 
 .. code-block:: bash
 
-    $ php bin/console generate:doctrine:entity --no-interaction --entity=AcmeBlogBundle:Post --fields="title:string(100) body:text" --format=xml
+    $ php bin/console generate:doctrine:entity AcmeBlogBundle:Post -n --fields="title:string(100) body:text" --format=xml
+
+Arguments
+---------
+
+``entity``
+    The entity name given as a shortcut notation containing the bundle name
+    in which the entity is located and the name of the entity (for example,
+    ``AcmeBlogBundle:Post``):
+
+    .. code-block:: bash
+
+        $ php bin/console generate:doctrine:entity AcmeBlogBundle:Post
 
 Available Options
 -----------------
 
 ``--entity``
+
+    .. caution::
+
+        This option has been deprecated in version 3.0, and will be removed in 4.0.
+        Pass it as argument instead.
+
     The entity name given as a shortcut notation containing the bundle name
     in which the entity is located and the name of the entity (for example,
     ``AcmeBlogBundle:Post``):
