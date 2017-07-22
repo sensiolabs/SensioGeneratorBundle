@@ -64,7 +64,7 @@ alias <comment>-n</comment>, without forgetting to pass all needed options:
 
 This also has support for passing field specific attributes:
 
-<info>php %command.full_name% AcmeBlogBundle:Blog/Post -n --format=annotation --fields="title:string(length=255 nullable=true unique=true) body:text ranking:decimal(precision:10 scale:0)"</info>
+<info>php %command.full_name% AcmeBlogBundle:Blog/Post -n --format=annotation --fields="title:string(length=255 nullable=true unique=true) body:text ranking:decimal(precision=10 scale=0)"</info>
 EOT
         );
     }
