@@ -195,10 +195,8 @@ EOT
         $input->setOption('actions', $this->addActions($input, $output, $questionHelper));
 
         // summary
+        $questionHelper->writeSection($output, 'Summary before generation');
         $output->writeln(array(
-            '',
-            $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg-white', true),
-            '',
             sprintf('You are going to generate a "<info>%s:%s</info>" controller', $bundle, $controller),
             sprintf('using the "<info>%s</info>" format for the routing and the "<info>%s</info>" format', $routeFormat, $templateFormat),
             'for templating',
