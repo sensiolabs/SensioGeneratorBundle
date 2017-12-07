@@ -220,10 +220,8 @@ EOT
         $input->setOption('route-prefix', $prefix);
 
         // summary
+        $questionHelper->writeSection($output, 'Summary before generation');
         $output->writeln(array(
-            '',
-            $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
-            '',
             sprintf('You are going to generate a CRUD controller for "<info>%s:%s</info>"', $bundle, $entity),
             sprintf('using the "<info>%s</info>" format.', $format),
             '',
